@@ -1,8 +1,8 @@
 //
-//  content-view.tsx
+//  image-view.tsx
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/7/25.
+//  Created by Fang Ling on 2025/7/26.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,14 +17,28 @@
 //  limitations under the License.
 //
 
-import LoginView from './login-view'
-import ToolbarView from './toolbar-view'
-
-export default function ContentView() {
+export default function ImageView({
+  urls,
+  className
+}: {
+  urls: string[],
+  className?: string
+}) {
   return (
-    <div className="relative">
-      <ToolbarView source="login" />
-      <LoginView />
-    </div>
+    <picture>
+      {
+        urls.slice(0, -1).map((url, index) => (
+          <source
+            key={index}
+            srcSet={url}
+            type={`image/${url.split('.').pop()?.toLowerCase()}`}
+          />
+        ))
+      }
+      <img
+        src={urls[urls.length - 1]}
+        className={className}
+      />
+    </picture>
   )
 }

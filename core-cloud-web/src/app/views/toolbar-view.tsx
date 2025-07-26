@@ -48,10 +48,10 @@ export default function ToolbarView({
     >
       <SFSymbolView
         systemName="icloud.fill"
-        className="fill-black h-[14px] mr-0.5 dark:fill-white"
+        className="fill-systemBlack h-[14px] mr-0.5"
       />
-      <span className="font-semibold text-[21px] text-black dark:text-white">
-        {process.env.TITLE}
+      <span className="font-semibold text-[21px] text-systemBlack">
+        {process.env.NEXT_PUBLIC_TITLE}
       </span>
     </header>
   )

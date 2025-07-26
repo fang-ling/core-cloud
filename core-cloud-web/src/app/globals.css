@@ -21,11 +21,37 @@
 
 :root {
   color-scheme: light dark;
+
+  /* COLORS */
+  --theme-color-backgroundPrimary: hsl(0, 0, 100);
+  --theme-color-boxShadow: purple; /* TODO */
+  --theme-color-fillSecondary: rgba(120, 120, 128, 0.16);
+  --theme-color-labelPrimary: rgba(0, 0, 0, 0.88);
+  --theme-color-systemBlack: rgb(0, 0, 0);
 }
 
-@theme {
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* COLORS */
+    --theme-color-backgroundPrimary: hsl(240, 3.4, 11.4);
+    --theme-color-boxShadow: rgba(0, 0, 0, 0.65);
+    --theme-color-fillSecondary: purple; /* TODO */
+    --theme-color-labelPrimary: hsla(0, 0, 100, 0.98);
+    --theme-color-systemBlack: rgb(255, 255, 255);
+  }
+}
+
+@theme inline {
+  /* COLORS */
+  --color-backgroundPrimary: var(--theme-color-backgroundPrimary);
+  --color-boxShadow: var(--theme-color-boxShadow);
+  --color-fillSecondary: var(--theme-color-fillSecondary);
+  --color-labelPrimary: var(--theme-color-labelPrimary);
+  --color-systemBlack: var(--theme-color-systemBlack);
+
   /* TYPOGRAPHY */
   --text-base: 17px;
+  --text-3xl: 32px;
 }
 
 /*@keyframes opacity-60-25-0-12 {

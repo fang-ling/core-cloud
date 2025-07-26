@@ -1,8 +1,8 @@
 //
-//  content-view.tsx
+//  text-field-view-model.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/7/25.
+//  Created by Fang Ling on 2025/7/26.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,14 +17,29 @@
 //  limitations under the License.
 //
 
-import LoginView from './login-view'
-import ToolbarView from './toolbar-view'
+export default function useTextFieldViewModel({
+  setText,
+  setIsFocused
+}: {
+  setText: React.Dispatch<React.SetStateAction<string>>,
+  setIsFocused: React.Dispatch<React.SetStateAction<boolean>>
+}) {
+  /* MARK: - Event handlers */
+  function handleOnChange(newText: string) {
+    setText(newText)
+  }
 
-export default function ContentView() {
-  return (
-    <div className="relative">
-      <ToolbarView source="login" />
-      <LoginView />
-    </div>
-  )
+  function handleOnFocus() {
+    setIsFocused(true)
+  }
+
+  function handleOnBlur() {
+    setIsFocused(false)
+  }
+
+  return {
+    handleOnChange,
+    handleOnFocus,
+    handleOnBlur
+  }
 }
