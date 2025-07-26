@@ -283,7 +283,10 @@ export default function LoginView() {
                 : (
                   <SFSymbolView
                     systemName="icloud.fill"
-                    className="w-7.5 absolute top-1/2 left-1/2 -translate-1/2"
+                    className={
+                      'w-7.5 absolute top-1/2 left-1/2 -translate-1/2 ' +
+                        'fill-systemBlack'
+                    }
                   />
                 )
             }
