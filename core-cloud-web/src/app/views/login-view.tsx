@@ -297,7 +297,7 @@ export default function LoginView() {
         >
           {`Sign in with ${process.env.NEXT_PUBLIC_TITLE} Account`}
         </div>
-        <div className="min-h-45.5 max-w-120 w-120 mt-5.5">
+        <div className="min-h-45.5 max-w-120 w-120 mt-5.5 relative">
           <TextFieldView
             text={viewModel.username}
             setText={viewModel.setUsername}
@@ -305,6 +305,27 @@ export default function LoginView() {
             setIsFocused={viewModel.setIsUsernameFocused}
             prompt="Email or Phone Number"
           />
+
+          <button
+            className={
+              'absolute left-[438px] py-0.25 pr-0.25 pl-1 z-3 ' +
+                'transition-all duration-125 ease-[ease-in] ' + (
+                  viewModel.username.length <= 0
+                    ? 'pointer-events-none opacity-60 '
+                    : 'cursor-pointer '
+                ) + (
+                  (viewModel.isUsernameFocused || viewModel.username.length > 0)
+                    ? 'top-5.75'
+                    : 'top-3.75'
+                )
+            }
+          >
+            <SFSymbolView
+              className="fill-[#494949] dark:fill-[#666] size-7 p-0.25"
+              systemName="arrowshape.right.circle"
+              variant="thin"
+            />
+          </button>
         </div>
       </div>
     </div>
