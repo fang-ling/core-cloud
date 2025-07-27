@@ -24,6 +24,7 @@ import SFSymbolView from '@/ui-elements/views/sf-symbol-view'
 import TextFieldView from './text-field-view'
 import useLoginViewModel from '../view-models/login-view-model'
 import ProgressView from '@/ui-elements/views/progress-view'
+import RegisterView from './register-view'
 
 export default function LoginView() {
   const viewModel = useLoginViewModel()
@@ -367,6 +368,25 @@ export default function LoginView() {
             </div>
           </div>
         </div>
+        <div className="flex flex-col items-center relative -top-46">
+          <button
+            className="cursor-pointer text-sm leading-4.5 text-systemBlue"
+            onClick={() => viewModel.handleRegisterButtonClick()}
+          >
+            {'Create '}
+            <span
+              dangerouslySetInnerHTML={{
+                __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+              }}
+            />
+            {' Account'}
+          </button>
+        </div>
+
+        <RegisterView
+          isPresented={viewModel.isRegisterFormPresented}
+          setIsPresented={viewModel.setIsRegisterFormPresented}
+        />
       </div>
     </div>
   )

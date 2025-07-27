@@ -28,6 +28,7 @@ export default function useLoginViewModel() {
   const [isPasswordFocused, setIsPasswordFocused] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [stage, setStage] = useState<'username' | 'password'>('username')
+  const [isRegisterFormPresented, setIsRegisterFormPresented] = useState(false)
 
   /* MARK: Event handlers */
   async function handleContinueButtonClick() {
@@ -42,6 +43,10 @@ export default function useLoginViewModel() {
     }
   }
 
+  function handleRegisterButtonClick() {
+    setIsRegisterFormPresented(true)
+  }
+
   return {
     username,
     setUsername,
@@ -53,6 +58,9 @@ export default function useLoginViewModel() {
     setIsPasswordFocused,
     isLoading,
     stage,
-    handleContinueButtonClick
+    isRegisterFormPresented,
+    setIsRegisterFormPresented,
+    handleContinueButtonClick,
+    handleRegisterButtonClick
   }
 }
