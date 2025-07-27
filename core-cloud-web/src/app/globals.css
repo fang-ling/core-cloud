@@ -18,6 +18,7 @@
 /*===----------------------------------------------------------------------===*/
 
 @import "tailwindcss";
+@source "../../.env";
 
 :root {
   color-scheme: light dark;

@@ -298,7 +298,13 @@ export default function LoginView() {
               'leading-9'
           }
         >
-          {`Sign in with ${process.env.NEXT_PUBLIC_TITLE} Account`}
+          {'Sign in with '}
+          <span
+            dangerouslySetInnerHTML={{
+              __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+            }}
+          />
+          {' Account'}
         </div>
         <div className="min-h-45.5 max-w-120 w-120 mt-5.5 relative">
           <TextFieldView

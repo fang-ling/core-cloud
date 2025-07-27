@@ -17,6 +17,7 @@
 //  limitations under the License.
 //
 
+import ImageView from '@/ui-elements/views/image-view'
 import SFSymbolView from '@/ui-elements/views/sf-symbol-view'
 
 export default function ToolbarView({
@@ -46,13 +47,28 @@ export default function ToolbarView({
           )
       }
     >
-      <SFSymbolView
-        systemName="icloud.fill"
-        className="fill-systemBlack h-[14px] mr-0.5"
-      />
-      <span className="font-semibold text-[21px] text-systemBlack">
-        {process.env.NEXT_PUBLIC_TITLE}
-      </span>
+      {
+        process.env.NEXT_PUBLIC_PRIMARY_ICON_URLS
+          ? (
+            <ImageView
+              urls={process.env.NEXT_PUBLIC_PRIMARY_ICON_URLS.split(',')}
+              className="size-6 mr-0.5 rounded-md"
+            />
+          )
+          : (
+            <SFSymbolView
+              systemName="icloud.fill"
+              className="fill-systemBlack h-3.5 mr-0.5"
+            />
+          )
+      }
+      <div className="font-semibold text-[21px] text-systemBlack">
+        <div
+          dangerouslySetInnerHTML={{
+            __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+          }}
+        />
+      </div>
     </header>
   )
 }
