@@ -31,6 +31,8 @@
   --theme-color-labelPrimary: rgba(0, 0, 0, 0.88);
   --theme-color-systemBlack: rgb(0, 0, 0);
   --theme-color-systemBlue: rgb(0, 113, 227);
+  --sk-body-link-color: #06c;
+  --sk-body-text-color: #1d1d1f;
   --sk-button-background: #0071e3;
   --sk-button-border-color: #06c;
   --sk-button-color: #06c;
@@ -48,6 +50,8 @@
     --theme-color-labelPrimary: hsla(0, 0, 100, 0.98);
     --theme-color-systemBlack: rgb(255, 255, 255);
     --theme-color-systemBlue: rgb(0, 154, 255);
+    --sk-body-link-color: #2997ff;
+    --sk-body-text-color: #f5f5f7;
     --sk-button-background: #0071e3;
     --sk-button-border-color: #2997ff;
     --sk-button-color: #2997ff;
@@ -65,6 +69,8 @@
   --color-labelPrimary: var(--theme-color-labelPrimary);
   --color-systemBlack: var(--theme-color-systemBlack);
   --color-systemBlue: var(--theme-color-systemBlue);
+  --color-sk-body-link-color: var(--sk-body-link-color);
+  --color-sk-body-text-color: var(--sk-body-text-color);
   --color-sk-button-background: var(--sk-button-background);
   --color-sk-button-border-color: var(--sk-button-border-color);
   --color-sk-button-color: var(--sk-button-color);
