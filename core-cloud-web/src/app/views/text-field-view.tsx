@@ -25,25 +25,32 @@ export default function TextFieldView({
   isFocused,
   setIsFocused,
   prompt,
-  disabled
+  disabled,
+  paddingRightClassName = 'pr-10.75',
+  required = false,
+  onBlur
 }: {
   text: string,
   setText: React.Dispatch<React.SetStateAction<string>>,
   isFocused: boolean,
   setIsFocused: React.Dispatch<React.SetStateAction<boolean>>,
   prompt: string,
-  disabled?: boolean
+  disabled?: boolean,
+  paddingRightClassName?: string,
+  required?: boolean,
+  onBlur?: () => void
 }) {
   const viewModel = useTextFieldViewModel({
     setText: setText,
-    setIsFocused: setIsFocused
+    setIsFocused: setIsFocused,
+    onBlur: onBlur
   })
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <input
         className={
-          'pr-10.75 pt-4.5 h-14 ' +
+          `pt-4.5 h-14 ${paddingRightClassName} ` +
             'border rounded-xl text-base leading-9 w-full focus:border-2 ' +
             'focus:outline-hidden ' +
             'focus:border-[#0071e3] pl-4 focus:pl-3.75 text-ellipsis ' + (
@@ -54,10 +61,18 @@ export default function TextFieldView({
                     'bg-[rgba(0,0,0,.01)] dark:bg-[hsla(0,0%,100%,.01)] ' +
                     'text-[#6e6e73] dark:text-[#86868b]'
                 )
-                : (
-                  'border-[#86868b] dark:border-[#6e6e73] ' +
-                    'bg-[hsla(0,0%,100%,.8)] dark:bg-[hsla(0,0%,100%,.04)] ' +
-                    'text-[#494949] dark:text-labelPrimary'
+                : 'text-[#494949] dark:text-labelPrimary ' + (
+                  required
+                    ? (
+                      'border-[#e30000] dark:border-[#ff3037] ' +
+                        'bg-[#fff2f4] dark:bg-[#300] ' +
+                        'focus:bg-[hsla(0,0%,100%,.8)] ' +
+                        'focus:dark:bg-[hsla(0,0%,100%,.04)] '
+                    )
+                    : (
+                      'border-[#86868b] dark:border-[#6e6e73] ' +
+                        'bg-[hsla(0,0%,100%,.8)] dark:bg-[hsla(0,0%,100%,.04)]'
+                    )
                 )
             )
         }
@@ -74,11 +89,14 @@ export default function TextFieldView({
       <span
         className={
           'absolute pointer-events-none left-4.25 transition-all ' +
-            'text-[#6e6e73] dark:text-[#86868b] duration-125 ' +
-            'ease-[ease-in] ' + (
+            'duration-125 ease-[ease-in] ' + (
               (isFocused || text.length > 0)
-                ? 'text-xs h-4 leading-4 top-2.5'
-                : 'text-base h-5.25 leading-5.25 top-4.5'
+                ? 'text-xs h-4 leading-4 top-2.5 '
+                : 'text-base h-5.25 leading-5.25 top-4.5 '
+            ) + (
+              required
+                ? 'text-[#e30000] dark:text-[#ff3037]'
+                : 'text-[#6e6e73] dark:text-[#86868b]'
             )
         }
       >

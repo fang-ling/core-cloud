@@ -2,7 +2,7 @@
 //  register-view.tsx
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/7/26.
+//  Created by Fang Ling on 2025/7/27.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@
 import ImageView from '@/ui-elements/views/image-view'
 import SFSymbolView from '@/ui-elements/views/sf-symbol-view'
 import ReactDOM from 'react-dom'
+import TextFieldView from './text-field-view'
+import useRegisterViewModel from '../view-models/register-view-model'
 
 export default function RegisterView({
   isPresented,
@@ -30,6 +32,8 @@ export default function RegisterView({
   isPresented: boolean,
   setIsPresented: React.Dispatch<React.SetStateAction<boolean>>
 }) {
+  const viewModel = useRegisterViewModel()
+
   if (!isPresented) {
     return null
   }
@@ -165,6 +169,95 @@ export default function RegisterView({
                       </svg>
                     </button>
                   </p>
+
+                  <div
+                    className={
+                      'pt-2.5 flex gap-2.5 w-full ' + (
+                        (
+                          !viewModel.isFirstNameVirginal &&
+                            !!!viewModel.firstName
+                        ) || (
+                          !viewModel.isLastNameVirginal &&
+                            !!!viewModel.lastName
+                        )
+                          ? ''
+                          : 'mb-3.5'
+                      )
+                    }
+                  >
+                    <div className="w-full">
+                      <TextFieldView
+                        text={viewModel.firstName}
+                        setText={viewModel.setFirstName}
+                        isFocused={viewModel.isFirstNameFocused}
+                        setIsFocused={viewModel.setIsFirstNameFocused}
+                        prompt="First Name"
+                        paddingRightClassName="pr-4 focus:pr-3.75"
+                        required={
+                          !viewModel.isFirstNameVirginal &&
+                            !!!viewModel.firstName
+                        }
+                        onBlur={() => viewModel.handleFirstNameDeflower()}
+                      />
+                      {
+                        (
+                          !viewModel.isFirstNameVirginal &&
+                            !!!viewModel.firstName
+                        ) && (
+                          <div
+                            className={
+                              'mt-2 mb-3 text-[#e30000] dark:text-[#ff3037] ' +
+                                'text-sm leading-4 flex'
+                            }
+                          >
+                            <SFSymbolView
+                              systemName="exclamationmark.circle"
+                              className={
+                                'w-4 mr-1 fill-[#e30000] dark:fill-[#ff3037]'
+                              }
+                            />
+                            {'Enter your first name.'}
+                          </div>
+                        )
+                      }
+                    </div>
+                    <div className="w-full">
+                      <TextFieldView
+                        text={viewModel.lastName}
+                        setText={viewModel.setLastName}
+                        isFocused={viewModel.isLastNameFocused}
+                        setIsFocused={viewModel.setIsLastNameFocused}
+                        prompt="Last Name"
+                        paddingRightClassName="pr-4 focus:pr-3.75"
+                        required={
+                          !viewModel.isLastNameVirginal && !!!viewModel.lastName
+                        }
+                        onBlur={() => viewModel.handleLastNameDeflower()}
+                      />
+                      {
+                        (
+                          !viewModel.isLastNameVirginal &&
+                            !!!viewModel.lastName
+                        ) && (
+                          <div
+                            className={
+                              'mt-2 mb-3 text-[#e30000] dark:text-[#ff3037] ' +
+                                'text-sm leading-4 flex'
+                            }
+                          >
+                            <SFSymbolView
+                              systemName="exclamationmark.circle"
+                              className={
+                                'w-4 mr-1 fill-[#e30000] dark:fill-[#ff3037]'
+                              }
+                            />
+                            {'Enter your last name.'}
+                          </div>
+                        )
+                      }
+                    </div>
+                  </div>
+                  <div className="bg-[purple]">placeholder</div>
                 </div>
               </div>
 

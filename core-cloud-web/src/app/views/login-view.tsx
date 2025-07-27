@@ -321,11 +321,11 @@ export default function LoginView() {
               />
             </div>
             {
-              !viewModel.isLoading && (
+              (!viewModel.isLoading && !viewModel.isRegisterFormPresented) && (
                 <button
                   className={
                     'absolute right-2.5 border border-transparent pr-0.25 ' +
-                      'pl-0.5 z-10 animate-[fade-in_.5s_ease-in-out] ' +
+                      'pl-0.5 z-100 animate-[fade-in_.5s_ease-in-out] ' +
                       'transition-all duration-125 ease-[ease-in] ' + (
                         viewModel.username.length <= 0
                           ? 'pointer-events-none opacity-60 '
