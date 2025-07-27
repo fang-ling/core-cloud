@@ -24,11 +24,35 @@ import { useState } from 'react'
 export default function useLoginViewModel() {
   const [username, setUsername] = useState('')
   const [isUsernameFocused, setIsUsernameFocused] = useState(false)
+  const [password, setPassword] = useState('')
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [stage, setStage] = useState<'username' | 'password'>('username')
+
+  /* MARK: Event handlers */
+  async function handleContinueButtonClick() {
+    if (password.length <= 0) {
+      setIsLoading(true)
+
+      /* Wait 1s unconditionally. */
+      await new Promise(reslove => setTimeout(reslove, 1000))
+
+      setStage('password')
+      setIsLoading(false)
+    }
+  }
 
   return {
     username,
     setUsername,
     isUsernameFocused,
-    setIsUsernameFocused
+    setIsUsernameFocused,
+    password,
+    setPassword,
+    isPasswordFocused,
+    setIsPasswordFocused,
+    isLoading,
+    stage,
+    handleContinueButtonClick
   }
 }

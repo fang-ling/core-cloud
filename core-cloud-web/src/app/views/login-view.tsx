@@ -23,20 +23,21 @@ import ImageView from '@/ui-elements/views/image-view'
 import SFSymbolView from '@/ui-elements/views/sf-symbol-view'
 import TextFieldView from './text-field-view'
 import useLoginViewModel from '../view-models/login-view-model'
+import ProgressView from '@/ui-elements/views/progress-view'
 
 export default function LoginView() {
   const viewModel = useLoginViewModel()
 
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col items-center">
       <div
         className={
           'mt-11 w-160 shadow-[0_11px_34px_0_var(--color-fillSecondary)] ' +
-            'dark:shadow-[0_11px_34px_0_var(--color-boxShadow)] ' +
-            'rounded-[34px] flex flex-col items-center bg-backgroundPrimary'
+            'dark:shadow-[0_11px_34px_0_var(--color-boxShadow)] h-152.5 ' +
+            'rounded-[34px] bg-backgroundPrimary'
         }
       >
-        <div className="px-20 pt-10 flex justify-center">
+        <div className="mx-20 mt-10 flex flex-col items-center">
           <div className="relative">
             <svg
               viewBox="0 0 160 160"
@@ -291,50 +292,80 @@ export default function LoginView() {
                 )
             }
           </div>
-        </div>
-        <div
-          className={
-            'mt-5 text-3xl select-none text-labelPrimary font-semibold ' +
-              'leading-9'
-          }
-        >
-          {'Sign in with '}
-          <span
-            dangerouslySetInnerHTML={{
-              __html: process.env.NEXT_PUBLIC_TITLE ?? ''
-            }}
-          />
-          {' Account'}
-        </div>
-        <div className="min-h-45.5 max-w-120 w-120 mt-5.5 relative">
-          <TextFieldView
-            text={viewModel.username}
-            setText={viewModel.setUsername}
-            isFocused={viewModel.isUsernameFocused}
-            setIsFocused={viewModel.setIsUsernameFocused}
-            prompt="Email or Phone Number"
-          />
-
-          <button
+          <div
             className={
-              'absolute left-[438px] py-0.25 pr-0.25 pl-1 z-3 ' +
-                'transition-all duration-125 ease-[ease-in] ' + (
-                  viewModel.username.length <= 0
-                    ? 'pointer-events-none opacity-60 '
-                    : 'cursor-pointer '
-                ) + (
-                  (viewModel.isUsernameFocused || viewModel.username.length > 0)
-                    ? 'top-5.75'
-                    : 'top-3.75'
-                )
+              'mt-5 text-3xl select-none text-labelPrimary font-semibold ' +
+                'leading-9'
             }
           >
-            <SFSymbolView
-              className="fill-[#494949] dark:fill-[#666] size-7 p-0.25"
-              systemName="arrowshape.right.circle"
-              variant="thin"
+            {'Sign in with '}
+            <span
+              dangerouslySetInnerHTML={{
+                __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+              }}
             />
-          </button>
+            {' Account'}
+          </div>
+        </div>
+        <div className="w-144 h-120 mx-auto flex items-center relative -top-18">
+          <div className="relative max-w-120 mx-auto h-67">
+            <div className="min-h-45.5 max-w-120 w-120 relative">
+              <TextFieldView
+                text={viewModel.username}
+                setText={viewModel.setUsername}
+                isFocused={viewModel.isUsernameFocused}
+                setIsFocused={viewModel.setIsUsernameFocused}
+                prompt="Email or Phone Number"
+                disabled={viewModel.isLoading}
+              />
+            </div>
+            {
+              !viewModel.isLoading && (
+                <button
+                  className={
+                    'absolute right-2.5 border border-transparent pr-0.25 ' +
+                      'pl-0.5 z-10 animate-[fade-in_.5s_ease-in-out] ' +
+                      'transition-all duration-125 ease-[ease-in] ' + (
+                        viewModel.username.length <= 0
+                          ? 'pointer-events-none opacity-60 '
+                          : 'cursor-pointer '
+                      ) + (
+                        viewModel.stage === 'username'
+                          ? (
+                            viewModel.isUsernameFocused ||
+                              viewModel.username.length > 0
+                          )
+                            ? 'top-5.75 '
+                            : 'top-3.75 '
+                          : (
+                            viewModel.isPasswordFocused ||
+                              viewModel.password.length > 0
+                          )
+                            ? 'top-19.75 '
+                            : 'top-18.25 '
+                      )
+                  }
+                  onClick={() => viewModel.handleContinueButtonClick()}
+                >
+                  <SFSymbolView
+                    className="fill-[#494949] dark:fill-[#666] size-7 p-0.25"
+                    systemName="arrowshape.right.circle"
+                    variant="thin"
+                  />
+                </button>
+              )
+            }
+            <div
+              className="absolute right-6.5 top-7.25 pointer-events-none z-10"
+              style={{ visibility: viewModel.isLoading ? 'visible' : 'hidden' }}
+            >
+              <ProgressView
+                widthClassName="w-[7.25px]"
+                heightClassName="h-[2.25px]"
+                translateX={6.25}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
