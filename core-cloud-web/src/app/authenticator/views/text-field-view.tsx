@@ -28,7 +28,10 @@ export default function TextFieldView({
   disabled,
   paddingRightClassName = 'pr-10.75',
   required = false,
-  onBlur
+  onBlur,
+  type = 'plain',
+  autoComplete = undefined,
+  onChange
 }: {
   text: string,
   setText: React.Dispatch<React.SetStateAction<string>>,
@@ -38,12 +41,16 @@ export default function TextFieldView({
   disabled?: boolean,
   paddingRightClassName?: string,
   required?: boolean,
-  onBlur?: () => void
+  onBlur?: () => void,
+  type?: 'plain' | 'secure',
+  autoComplete?: 'username' | 'new-password',
+  onChange?: (newText: string) => void
 }) {
   const viewModel = useTextFieldViewModel({
     setText: setText,
     setIsFocused: setIsFocused,
-    onBlur: onBlur
+    onBlur: onBlur,
+    onChange: onChange
   })
 
   return (
@@ -77,8 +84,10 @@ export default function TextFieldView({
             )
         }
         disabled={disabled}
+        type={type === 'secure' ? 'password' : undefined}
         required
-        autoComplete="username"
+        spellCheck={false}
+        autoComplete={autoComplete}
         autoCorrect="off"
         autoCapitalize="off"
         value={text}

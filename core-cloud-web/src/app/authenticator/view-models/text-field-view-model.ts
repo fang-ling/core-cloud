@@ -20,15 +20,18 @@
 export default function useTextFieldViewModel({
   setText,
   setIsFocused,
-  onBlur
+  onBlur,
+  onChange
 }: {
   setText: React.Dispatch<React.SetStateAction<string>>,
   setIsFocused: React.Dispatch<React.SetStateAction<boolean>>,
-  onBlur?: () => void
+  onBlur?: () => void,
+  onChange?: (newText: string) => void
 }) {
   /* MARK: - Event handlers */
   function handleOnChange(newText: string) {
     setText(newText)
+    onChange?.(newText)
   }
 
   function handleOnFocus() {

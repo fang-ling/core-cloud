@@ -17,6 +17,17 @@
 //  limitations under the License.
 //
 
+/**
+ * A view that displays an image.
+ *
+ * This view renders a responsive image element using the `<picture>` element,
+ * allowing for multiple source formats.
+ *
+ * @param urls - An array of image URLs. The last URL in the array is used as
+ *               the fallback image if none of the sources match.
+ * @param className - An optional class name to apply to the `<img>` element for
+ *                    custom styling.
+ */
 export default function ImageView({
   urls,
   className
