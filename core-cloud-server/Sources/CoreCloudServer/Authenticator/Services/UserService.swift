@@ -1,0 +1,53 @@
+//
+//  UserService.swift
+//  core-cloud-server
+//
+//  Created by Fang Ling on 2025/7/29.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
+import Fluent
+import Vapor
+
+struct UserService {
+  /**
+   * Returns a Boolean value indicating whether the database contains a user
+   * that has the given username.
+   *
+   * - Parameters:
+   *   - username: The username of the user to check for.
+   *   - database: The database to search for the user.
+   *
+   * - Returns: `true` if the user was found in the database;
+   *            otherwise, `false`.
+   *
+   * - Throws:
+   *   - ``UserError/databaseError``: if there is an issue accessing the
+   *                                  database.
+   */
+  func peekUser(
+    by username: String,
+    on database: Database
+  ) async throws -> Bool {
+    do {
+      let matchedUserCount = try await User.query(on: database)
+        .filter(\.$username == username)
+        .count()
+
+      return matchedUserCount > 0
+    } catch {
+      throw UserError.databaseError
+    }
+  }
+}
