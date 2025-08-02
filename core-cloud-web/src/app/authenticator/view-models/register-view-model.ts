@@ -17,10 +17,14 @@
 //  limitations under the License.
 //
 
-import { useState } from "react"
-import UserService from "../services/user-service"
+import { useState } from 'react'
+import UserService from '../services/user-service'
 
-export default function useRegisterViewModel() {
+export default function useRegisterViewModel({
+  setIsPresented
+}: {
+  setIsPresented: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const DIGIT_REGEX = /\d/
   const UPPERCASE_LETTER_REGEX = /[A-Z]/
   const LOWERCASE_LETTER_REGEX = /[a-z]/
@@ -71,6 +75,7 @@ export default function useRegisterViewModel() {
     confirmMasterPasswordMessage,
     setConfirmMasterPasswordMessage
   ] = useState('')
+  const [isClosing, setIsClosing] = useState(false)
 
   /* MARK: - Event handlers */
   function handleFirstNameDeflower() {
@@ -232,6 +237,12 @@ export default function useRegisterViewModel() {
     }
   }
 
+  async function handleViewDisappear() {
+    setIsClosing(true)
+    await new Promise(resolve => setTimeout(resolve, 200))
+    setIsPresented(false)
+  }
+
   return {
     firstName,
     setFirstName,
@@ -282,6 +293,7 @@ export default function useRegisterViewModel() {
     isConfirmMasterPasswordVirginal,
     setIsConfirmMasterPasswordVirginal,
     confirmMasterPasswordMessage,
+    isClosing,
     handleFirstNameDeflower,
     handleLastNameDeflower,
     handleUsernameBlur,
@@ -290,6 +302,7 @@ export default function useRegisterViewModel() {
     handleConfirmPasswordBlur,
     handleMasterPasswordBlur,
     handleMasterPasswordQuestionHover,
-    handleConfirmMasterPasswordBlur
+    handleConfirmMasterPasswordBlur,
+    handleViewDisappear
   }
 }

@@ -383,10 +383,14 @@ export default function LoginView() {
           </button>
         </div>
 
-        <RegisterView
-          isPresented={viewModel.isRegisterFormPresented}
-          setIsPresented={viewModel.setIsRegisterFormPresented}
-        />
+        {
+          /* We need conditional rendering to reset the state variables. */
+          viewModel.isRegisterFormPresented && (
+            <RegisterView
+              setIsPresented={viewModel.setIsRegisterFormPresented}
+            />
+          )
+        }
       </div>
     </div>
   )

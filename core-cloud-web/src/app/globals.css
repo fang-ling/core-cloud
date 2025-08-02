@@ -192,4 +192,9 @@
     0% { opacity: 0; transform: scale(.9) }
     to { transform: scale(1); opacity: 1 }
   }
+
+  @keyframes fadeOut {
+    0% { opacity: 1 }
+    to { opacity: 0 }
+  }
 }

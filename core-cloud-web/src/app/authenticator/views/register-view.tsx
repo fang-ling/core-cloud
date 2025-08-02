@@ -26,25 +26,24 @@ import TextFieldView from './text-field-view'
 import useRegisterViewModel from '../view-models/register-view-model'
 
 export default function RegisterView({
-  isPresented,
   setIsPresented
 }: {
-  isPresented: boolean,
   setIsPresented: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-  const viewModel = useRegisterViewModel()
-
-  if (!isPresented) {
-    return null
-  }
+  const viewModel = useRegisterViewModel({
+    setIsPresented: setIsPresented
+  })
 
   return ReactDOM.createPortal(
     (
       <>
         <div
           className={
-            'bg-backdrop fixed inset-0 z-11 ' +
-              'animate-[fadeIn_.2s_cubic-bezier(.32,.08,.24,1)_forwards]'
+            'bg-backdrop fixed inset-0 z-11 ' + (
+              viewModel.isClosing
+                ? 'animate-[fadeOut_.2s_cubic-bezier(.32,.08,.24.1)_forwards]'
+                : 'animate-[fadeIn_.2s_cubic-bezier(.32,.08,.24,1)_forwards]'
+            )
           }
         />
         <div className="fixed inset-0 z-12 flex items-center justify-center">
@@ -52,8 +51,12 @@ export default function RegisterView({
             className={
               'w-160 h-4/5 m-5 bg-backgroundPrimary rounded-[11px] ' +
                 'dark:shadow-[0_11px_34px_rgba(0,0,0,.65)] ' +
-                'shadow-[0_11px_34px_rgba(0,0,0,.16)] ' +
+                'shadow-[0_11px_34px_rgba(0,0,0,.16)] ' + (
+                  viewModel.isClosing
+                    ? 'animate-[fadeOut_.2s_ease_forwards]'
+                    :
                 'animate-[fadeInAndBarelyScale_.2s_cubic-bezier(.32,.08,.24,1)]'
+                )
             }
           >
             <div className="h-full flex flex-col">
@@ -129,6 +132,7 @@ export default function RegisterView({
                         'pr-[18.7px] text-sk-body-link-color cursor-pointer ' +
                           'text-base relative'
                       }
+                      onClick={() => viewModel.handleViewDisappear()}
                     >
                       {'Sign In'}
                       <svg
@@ -1273,6 +1277,7 @@ export default function RegisterView({
                         'border-sk-button-border-color text-sk-button-color ' +
                         'hover:text-white hover:bg-sk-button-background-hover'
                     }
+                    onClick={() => viewModel.handleViewDisappear()}
                   >
                     {'Cancel'}
                   </button>
