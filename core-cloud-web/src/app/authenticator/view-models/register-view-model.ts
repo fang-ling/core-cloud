@@ -58,6 +58,19 @@ export default function useRegisterViewModel() {
     isMasterPasswordQuestionPresented,
     setIsMasterPasswordQuestionPresented
   ] = useState(false)
+  const [confirmMasterPassword, setConfirmMasterPassword] = useState('')
+  const [
+    isConfirmMasterPasswordFocused,
+    setIsConfirmMasterPasswordFocused
+  ] = useState(false)
+  const [
+    isConfirmMasterPasswordVirginal,
+    setIsConfirmMasterPasswordVirginal
+  ] = useState(true)
+  const [
+    confirmMasterPasswordMessage,
+    setConfirmMasterPasswordMessage
+  ] = useState('')
 
   /* MARK: - Event handlers */
   function handleFirstNameDeflower() {
@@ -179,6 +192,8 @@ export default function useRegisterViewModel() {
       setMasterPasswordMessage('Upper & lowercase letters')
     } else if (!hasSpecialCharacter) {
       setMasterPasswordMessage('At least one special character')
+    } else if (masterPassword === password) {
+      setMasterPasswordMessage('___')
     } else {
       setMasterPasswordMessage('')
     }
@@ -186,6 +201,35 @@ export default function useRegisterViewModel() {
 
   function handleMasterPasswordQuestionHover(isEnter: boolean) {
     setIsMasterPasswordQuestionPresented(isEnter)
+  }
+
+  function handleConfirmMasterPasswordBlur() {
+    setIsConfirmMasterPasswordVirginal(false)
+
+    const hasDigit = DIGIT_REGEX.test(confirmMasterPassword)
+    const hasUppercaseLetter = UPPERCASE_LETTER_REGEX.test(
+      confirmMasterPassword
+    )
+    const hasLowercaseLetter = LOWERCASE_LETTER_REGEX.test(
+      confirmMasterPassword
+    )
+    const hasSpecialCharacter = SPECIAL_CHARACTER_REGEX.test(
+      confirmMasterPassword
+    )
+
+    if (confirmMasterPassword.length < 8) {
+      setConfirmMasterPasswordMessage('8 or more characters')
+    } else if (!hasDigit) {
+      setConfirmMasterPasswordMessage('At least one number')
+    } else if (!hasUppercaseLetter || !hasLowercaseLetter) {
+      setConfirmMasterPasswordMessage('Upper & lowercase letters')
+    } else if (!hasSpecialCharacter) {
+      setConfirmMasterPasswordMessage('At least one special character')
+    } else if (confirmMasterPassword !== masterPassword) {
+      setConfirmMasterPasswordMessage('The passwords you entered do not match.')
+    } else {
+      setConfirmMasterPasswordMessage('')
+    }
   }
 
   return {
@@ -231,6 +275,13 @@ export default function useRegisterViewModel() {
     setIsMasterPasswordVirginal,
     isMasterPasswordQuestionPresented,
     masterPasswordMessage,
+    confirmMasterPassword,
+    setConfirmMasterPassword,
+    isConfirmMasterPasswordFocused,
+    setIsConfirmMasterPasswordFocused,
+    isConfirmMasterPasswordVirginal,
+    setIsConfirmMasterPasswordVirginal,
+    confirmMasterPasswordMessage,
     handleFirstNameDeflower,
     handleLastNameDeflower,
     handleUsernameBlur,
@@ -238,6 +289,7 @@ export default function useRegisterViewModel() {
     handlePasswordBlur,
     handleConfirmPasswordBlur,
     handleMasterPasswordBlur,
-    handleMasterPasswordQuestionHover
+    handleMasterPasswordQuestionHover,
+    handleConfirmMasterPasswordBlur
   }
 }
