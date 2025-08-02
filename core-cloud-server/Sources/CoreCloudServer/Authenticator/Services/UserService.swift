@@ -17,6 +17,7 @@
 //  limitations under the License.
 //
 
+import _CryptoExtras
 import Fluent
 import Vapor
 
@@ -46,6 +47,88 @@ struct UserService {
         .count()
 
       return matchedUserCount > 0
+    } catch {
+      throw UserError.databaseError
+    }
+  }
+
+  /**
+   * Adds a new user.
+   *
+   * - Parameters:
+   *   - firstName: The first name of the user.
+   *   - lastName: The last name of the user.
+   *   - username: The desired username for the user.
+   *   - password: The password of the user.
+   *   - masterPassword: The master password of the user.
+   *   - database: The database to insert for the user.
+   *
+   * - Throws:
+   *   - ``UserError/cryptoError``: if there is an error during key derivation
+   *                                or encryption.
+   *   - ``UserError/databaseError``: if there is an issue accessing the
+   *                                  database.
+   */
+  func insertUser(
+    firstName: String,
+    lastName: String,
+    username: String,
+    password: String,
+    masterPassword: String,
+    on database: Database
+  ) async throws {
+    var key: SymmetricKey
+    let salt = SymmetricKey(size: .bits256)
+    do {
+      key = try KDF.Scrypt.deriveKey(
+        from: Data(password.utf8),
+        salt: salt.withUnsafeBytes({ Data($0) }),
+        outputByteCount: Authenticator.SCRYPT_OUTPUT_BYTE_COUNT,
+        rounds: Authenticator.SCRYPT_ROUNDS,
+        blockSize: Authenticator.SCRYPT_BLOCK_SIZE,
+        parallelism: Authenticator.SCRYPT_PARALLELISM
+      )
+    } catch {
+      throw UserError.cryptoError
+    }
+
+    var masterKeySealedBox: Data
+    let masterKeySealedBoxSalt = SymmetricKey(size: .bits256)
+    do {
+      let masterKeySealedBoxKey = try KDF.Scrypt.deriveKey(
+        from: Data(masterPassword.utf8),
+        salt: masterKeySealedBoxSalt.withUnsafeBytes({ Data($0) }),
+        outputByteCount: Authenticator.SCRYPT_OUTPUT_BYTE_COUNT,
+        rounds: Authenticator.SCRYPT_ROUNDS,
+        blockSize: Authenticator.SCRYPT_BLOCK_SIZE,
+        parallelism: Authenticator.SCRYPT_PARALLELISM
+      )
+
+      let masterKey = SymmetricKey(size: .bits256)
+      masterKeySealedBox = try AES.GCM
+        .seal(
+          masterKey.withUnsafeBytes({ Data($0) }),
+          using: masterKeySealedBoxKey
+        )
+        .combined! /* We are using the default size of nonce, it is safe. */
+    } catch {
+      throw UserError.cryptoError
+    }
+
+    do {
+      let user = User(
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
+        key: key.withUnsafeBytes({ Data($0) }),
+        salt: salt.withUnsafeBytes({ Data($0) }),
+        masterKeySealedBox: masterKeySealedBox,
+        masterKeySealedBoxSalt: masterKeySealedBoxSalt.withUnsafeBytes({
+          Data($0)
+        }),
+        avatarURLs: ""
+      )
+      try await user.save(on: database)
     } catch {
       throw UserError.databaseError
     }

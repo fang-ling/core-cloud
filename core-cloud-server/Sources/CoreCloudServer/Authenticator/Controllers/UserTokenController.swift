@@ -37,7 +37,8 @@ struct UserTokenController: RouteCollection {
    *   - rememberMe [Bool] (required): Remember me or not.
    *
    * - Response Codes:
-   *   - 200 OK: The request was successful.
+   *   - 201 Created: The request has been fulfilled, resulting in the creation
+   *                  of a new user token.
    *   - 400 Bad Request: The server cannot or will not process the request due
    *                      to an apparent client error.
    *   - 401 Unauthorized: A response indicating an incorrect Authorization
@@ -63,12 +64,12 @@ struct UserTokenController: RouteCollection {
       let token = try await userTokenService.insertUserToken(
         username: username,
         password: password,
-        database: request.db,
-        jwt: request.jwt
+        on: request.db,
+        with: request.jwt
       )
 
       return Response(
-        status: .ok,
+        status: .created,
         headers: .init([(
           "Set-Cookie",
           "Token=\(token); " +

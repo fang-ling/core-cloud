@@ -45,8 +45,8 @@ struct UserTokenService {
   func insertUserToken(
     username: String,
     password: String,
-    database: Database,
-    jwt: Request.JWT
+    on database: Database,
+    with jwt: Request.JWT
   ) async throws -> String {
     var token: UserToken
     do {

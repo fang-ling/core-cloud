@@ -28,6 +28,12 @@ struct UserController: RouteCollection {
       .grouped("v1")
       .grouped("user")
       .on(.HEAD, use: peekUserHandler)
+
+    routes
+      .grouped("api")
+      .grouped("v1")
+      .grouped("user")
+      .post(use: insertUserHandler)
   }
 
   /**
@@ -52,6 +58,7 @@ struct UserController: RouteCollection {
     ) else {
       return .badRequest
     }
+
     do {
       let isExist = try await userService.peekUser(
         by: peekRequest.username,
@@ -59,6 +66,46 @@ struct UserController: RouteCollection {
       )
 
       return isExist ? .ok : .noContent
+    } catch UserError.databaseError {
+      return .serviceUnavailable
+    } catch {
+      return .internalServerError
+    }
+  }
+
+  /**
+   * - URL: POST /api/v1/user
+   *
+   * - Response Codes:
+   *   - 201 Created: The request has been fulfilled, resulting in the creation
+   *                  of a new user.
+   *   - 400 Bad Request: The server cannot or will not process the request due
+   *                      to an apparent client error.
+   *   - 500 Internal Server Error: A response indicating an error occurred on
+   *                                the server.
+   *   - 503 Service Unavailable: A response indicating that the server is not
+   *                              ready to handle the request.
+   */
+  func insertUserHandler(request: Request) async -> HTTPStatus {
+    guard let insertRequest = try? request.content.decode(
+      User.Singular.Input.Insertion.self
+    ) else {
+      return .badRequest
+    }
+
+    do {
+      try await userService.insertUser(
+        firstName: insertRequest.firstName,
+        lastName: insertRequest.lastName,
+        username: insertRequest.username,
+        password: insertRequest.password,
+        masterPassword: insertRequest.masterPassword,
+        on: request.db
+      )
+
+      return .created
+    } catch UserError.cryptoError {
+      return .serviceUnavailable
     } catch UserError.databaseError {
       return .serviceUnavailable
     } catch {

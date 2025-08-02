@@ -49,6 +49,8 @@ let package = Package(
       name: "CoreCloudServerTests",
       dependencies: [
         .target(name: "CoreCloudServer"),
+        .product(name: "Crypto", package: "swift-crypto"),
+        .product(name: "_CryptoExtras", package: "swift-crypto"),
         .product(name: "VaporTesting", package: "vapor")
       ]
     )

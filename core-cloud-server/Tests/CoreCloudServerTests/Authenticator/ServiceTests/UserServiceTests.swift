@@ -18,6 +18,7 @@
 //
 
 @testable import CoreCloudServer
+import _CryptoExtras
 import Fluent
 import Testing
 import VaporTesting
@@ -25,7 +26,7 @@ import VaporTesting
 @Suite("UserServiceTests")
 struct UserServiceTests {
   @Test
-  func peekUser() async throws {
+  func testPeekUser() async throws {
     let userService = UserService()
 
     try await withApp(configure: CoreCloudServer.configure) { app in
@@ -84,6 +85,43 @@ struct UserServiceTests {
         on: app.db
       )
       #expect(exists == false)
+    }
+  }
+
+  @Test
+  func testInsertUser() async throws {
+    let userService = UserService()
+
+    try await withApp(configure: CoreCloudServer.configure) { app in
+      try await userService.insertUser(
+        firstName: "Lorna",
+        lastName: "Chu",
+        username: "lorna@example.com",
+        password: "Top-1-Secret",
+        masterPassword: "Top-0-Secret",
+        on: app.db
+      )
+
+      let count = try await User.query(on: app.db).count()
+      #expect(count == 1)
+
+      /* Try to unlock the master key. */
+      let user = try await User.query(on: app.db).first()
+      #expect(user != nil)
+      let masterKeySealedBoxKey = try KDF.Scrypt.deriveKey(
+        from: Data("Top-0-Secret".utf8),
+        salt: user!.masterKeySealedBoxSalt,
+        outputByteCount: Authenticator.SCRYPT_OUTPUT_BYTE_COUNT,
+        rounds: Authenticator.SCRYPT_ROUNDS,
+        blockSize: Authenticator.SCRYPT_BLOCK_SIZE,
+        parallelism: Authenticator.SCRYPT_PARALLELISM
+      )
+      #expect(masterKeySealedBoxKey.bitCount == 256)
+      let masterKey = try AES.GCM.open(
+        AES.GCM.SealedBox(combined: user!.masterKeySealedBox),
+        using: masterKeySealedBoxKey
+      )
+      #expect(masterKey.count == 256 / 8)
     }
   }
 }

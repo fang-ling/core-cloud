@@ -21,4 +21,5 @@ enum UserError: Error {
   case databaseError
   case noSuchUser
   case invalidCredentials
+  case cryptoError
 }

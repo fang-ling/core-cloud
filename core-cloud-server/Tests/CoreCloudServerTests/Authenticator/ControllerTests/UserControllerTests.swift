@@ -21,10 +21,63 @@
 import Testing
 import VaporTesting
 
-@Suite("UserControllerTests")
-struct UserControllerTests {
-  @Test
-  func peekUserHandler() async throws {
-    #warning("TODO")
+extension User.Singular.Input.Insertion: Content { }
+
+@Test("UserControllerTests")
+func testUserController() async throws {
+  try await withApp(configure: CoreCloudServer.configure) { app in
+    try await app.testing().test(
+      .HEAD,
+      "api/v1/user?username=tracy%40example.com",
+      afterResponse: { response async throws in
+        #expect(response.status == .noContent)
+      }
+    )
+
+    try await app.testing().test(
+      .POST,
+      "api/v1/user",
+      beforeRequest: { request async throws in
+        try request.content.encode(
+          User.Singular.Input.Insertion(
+            firstName: "Tracy",
+            lastName: "Tang",
+            username: "tracy@example.com",
+            password: "19342Top-Secret",
+            masterPassword: "Top--1-Secret"
+          )
+        )
+      },
+      afterResponse: { response async throws in
+        #expect(response.status == .created)
+      }
+    )
+
+    try await app.testing().test(
+      .HEAD,
+      "api/v1/user?username=tracy%40example.com",
+      afterResponse: { response async throws in
+        #expect(response.status == .ok)
+      }
+    )
+
+    try await app.testing().test(
+      .POST,
+      "api/v1/user",
+      beforeRequest: { request async throws in
+        try request.content.encode(
+          User.Singular.Input.Insertion(
+            firstName: "Tracy",
+            lastName: "Tang",
+            username: "tracy@example.com",
+            password: "19342Top-Secret",
+            masterPassword: "Top--1-Secret"
+          )
+        )
+      },
+      afterResponse: { response async throws in
+        #expect(response.status == .serviceUnavailable)
+      }
+    )
   }
 }

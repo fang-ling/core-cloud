@@ -111,6 +111,14 @@ extension User.Singular {
 }
 
 extension User.Singular.Input {
+  struct Insertion: Codable {
+    var firstName: String
+    var lastName: String
+    var username: String
+    var password: String
+    var masterPassword: String
+  }
+
   struct Peek: Codable {
     var username: String
   }
