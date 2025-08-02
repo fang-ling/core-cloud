@@ -1,8 +1,8 @@
 //
-//  Authenticator.swift
+//  UserToken.swift
 //  core-cloud-server
 //
-//  Created by Fang Ling on 2025/7/28.
+//  Created by Fang Ling on 2025/8/2.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,17 +17,33 @@
 //  limitations under the License.
 //
 
-import Vapor
+import JWT
 
-struct Authenticator {
-  static let SCRYPT_ROUNDS = 256 * 1024
-  static let SCRYPT_BLOCK_SIZE = 8
-  static let SCRYPT_PARALLELISM = 1
-  static let SCRYPT_OUTPUT_BYTE_COUNT = 256 / 8
+struct UserToken: JWTPayload {
+  enum CodingKeys: String, CodingKey {
+    case subject = "sub"
+    case expiration = "exp"
+  }
 
-  static func configure(_ app: Application) throws {
-    app.migrations.add(UserMigrationV1())
+  var subject: SubjectClaim
 
-    try app.routes.register(collection: UserController())
+  var expiration: ExpirationClaim
+
+  func verify(using algorithm: some JWTKit.JWTAlgorithm) async throws {
+    try self.expiration.verifyNotExpired()
+  }
+}
+
+extension UserToken {
+  enum Singular { }
+}
+
+extension UserToken.Singular {
+  enum Input { }
+}
+
+extension UserToken.Singular.Input {
+  struct Insertion: Codable {
+    var rememberMe: Bool
   }
 }

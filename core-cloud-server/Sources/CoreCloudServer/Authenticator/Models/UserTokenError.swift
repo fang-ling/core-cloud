@@ -1,8 +1,8 @@
 //
-//  Authenticator.swift
+//  UserTokenError.swift
 //  core-cloud-server
 //
-//  Created by Fang Ling on 2025/7/28.
+//  Created by Fang Ling on 2025/8/2.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,17 +17,7 @@
 //  limitations under the License.
 //
 
-import Vapor
-
-struct Authenticator {
-  static let SCRYPT_ROUNDS = 256 * 1024
-  static let SCRYPT_BLOCK_SIZE = 8
-  static let SCRYPT_PARALLELISM = 1
-  static let SCRYPT_OUTPUT_BYTE_COUNT = 256 / 8
-
-  static func configure(_ app: Application) throws {
-    app.migrations.add(UserMigrationV1())
-
-    try app.routes.register(collection: UserController())
-  }
+enum UserTokenError: Error {
+  case databaseError
+  case jwtError
 }

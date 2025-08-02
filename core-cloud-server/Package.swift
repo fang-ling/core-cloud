@@ -22,10 +22,11 @@
 import PackageDescription
 
 let dependencies: [(String, PackageDescription.Version)] = [
+  ("https://github.com/apple/swift-crypto.git", "3.13.2"),
   ("https://github.com/vapor/fluent.git", "4.12.0"),
   ("https://github.com/vapor/fluent-sqlite-driver.git", "4.8.1"),
-  ("https://github.com/vapor/vapor.git", "4.115.1"),
-  ("https://github.com/apple/swift-crypto.git", "3.13.2")
+  ("https://github.com/vapor/jwt.git", "5.1.2"),
+  ("https://github.com/vapor/vapor.git", "4.115.1")
 ]
 
 let package = Package(
@@ -40,6 +41,7 @@ let package = Package(
         .product(name: "_CryptoExtras", package: "swift-crypto"),
         .product(name: "Fluent", package: "fluent"),
         .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
+        .product(name: "JWT", package: "jwt"),
         .product(name: "Vapor", package: "vapor")
       ]
     ),

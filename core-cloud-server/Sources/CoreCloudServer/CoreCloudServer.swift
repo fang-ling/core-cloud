@@ -19,6 +19,7 @@
 
 import Fluent
 import FluentSQLiteDriver
+import JWT
 import Vapor
 
 @main
@@ -67,6 +68,16 @@ struct CoreCloudServer {
         )
       )
       app.middleware.use(corsMiddleware, at: .beginning)
+    }
+
+    /* JWT */
+    if app.environment == .testing {
+      await app.jwt.keys.add(hmac: "!!!TOP_SECRET!!!", digestAlgorithm: .sha512)
+    } else {
+      await app.jwt.keys.add(
+        hmac: .init(from: Environment.get("JWT_SECRET")!),
+        digestAlgorithm: .sha512
+      )
     }
 
     /* Components configuration */
