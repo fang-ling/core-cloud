@@ -1,0 +1,46 @@
+name: Build Production
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.1.2"
+
+      - name: Setup Swift static SDK
+        run: |
+          swift sdk install https://download.swift.org/swift-6.1.2-release/static-sdk/swift-6.1.2-RELEASE/swift-6.1.2-RELEASE_static-linux-0.0.1.artifactbundle.tar.gz \
+            --checksum df0b40b9b582598e7e3d70c82ab503fd6fbfdff71fd17e7f1ab37115a0665b3b
+ 
+      - name: Build debug
+        run: |
+          swift build -c debug \
+            --swift-sdk x86_64-swift-linux-musl
+            
+      - name: Build release
+        run: |
+          swift build -c release \
+            --swift-sdk x86_64-swift-linux-musl \
+            -Xswiftc -cross-module-optimization 
+            
+      - name: Create artifacts
+        run: |
+          mkdir result
+          mv .build/release/CoreCloudServer result/CoreCloudServer_release
+          mv .build/debug/CoreCloudServer result/CoreCloudServer_debug
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: CoreCloudServer
+          path: result
+          
