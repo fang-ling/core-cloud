@@ -23,11 +23,13 @@ jobs:
  
       - name: Build debug
         run: |
+          cd core-cloud-server \
           swift build -c debug \
             --swift-sdk x86_64-swift-linux-musl
             
       - name: Build release
         run: |
+          cd core-cloud-server \
           swift build -c release \
             --swift-sdk x86_64-swift-linux-musl \
             -Xswiftc -cross-module-optimization 
@@ -35,8 +37,8 @@ jobs:
       - name: Create artifacts
         run: |
           mkdir result
-          mv .build/release/CoreCloudServer result/CoreCloudServer_release
-          mv .build/debug/CoreCloudServer result/CoreCloudServer_debug
+          mv core-cloud-server/.build/release/CoreCloudServer result/CoreCloudServer_release
+          mv core-cloud-server/.build/debug/CoreCloudServer result/CoreCloudServer_debug
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
