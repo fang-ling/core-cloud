@@ -23,13 +23,13 @@ jobs:
  
       - name: Build debug
         run: |
-          cd core-cloud-server \
+          cd core-cloud-server
           swift build -c debug \
             --swift-sdk x86_64-swift-linux-musl
             
       - name: Build release
         run: |
-          cd core-cloud-server \
+          cd core-cloud-server
           swift build -c release \
             --swift-sdk x86_64-swift-linux-musl \
             -Xswiftc -cross-module-optimization 
