@@ -28,7 +28,9 @@
   --theme-color-backgroundPrimary: hsl(0, 0, 100);
   --theme-color-boxShadow: purple; /* TODO */
   --theme-color-fillSecondary: rgba(120, 120, 128, 0.16);
+  --theme-color-gray6: #f2f2f7;
   --theme-color-labelPrimary: rgba(0, 0, 0, 0.88);
+  --theme-color-labelSecondary: rgba(0, 0, 0, 0.56);
   --theme-color-systemBlack: rgb(0, 0, 0);
   --theme-color-systemBlue: rgb(0, 113, 227);
   --sk-body-link-color: #06c;
@@ -47,7 +49,9 @@
     --theme-color-backgroundPrimary: hsl(240, 3.4, 11.4);
     --theme-color-boxShadow: rgba(0, 0, 0, 0.65);
     --theme-color-fillSecondary: purple; /* TODO */
+    --theme-color-gray6: #2c2c2e;
     --theme-color-labelPrimary: hsla(0, 0, 100, 0.98);
+    --theme-color-labelSecondary: hsla(0, 0, 100, 0.66);
     --theme-color-systemBlack: rgb(255, 255, 255);
     --theme-color-systemBlue: rgb(0, 154, 255);
     --sk-body-link-color: #2997ff;
@@ -66,7 +70,9 @@
   --color-backgroundPrimary: var(--theme-color-backgroundPrimary);
   --color-boxShadow: var(--theme-color-boxShadow);
   --color-fillSecondary: var(--theme-color-fillSecondary);
+  --color-gray6: var(--theme-color-gray6);
   --color-labelPrimary: var(--theme-color-labelPrimary);
+  --color-labelSecondary: var(--theme-color-labelSecondary);
   --color-systemBlack: var(--theme-color-systemBlack);
   --color-systemBlue: var(--theme-color-systemBlue);
   --color-sk-body-link-color: var(--sk-body-link-color);

@@ -17,8 +17,7 @@
 //  limitations under the License.
 //
 
-import ImageView from '@/ui-elements/views/image-view'
-import SFSymbolView from '@/ui-elements/views/sf-symbol-view'
+import ToolbarIconView from "./toolbar-icon-view"
 
 export default function ToolbarView({
   source,
@@ -27,7 +26,7 @@ export default function ToolbarView({
   /*
    * When source is not 'app', we also need the overlay style class.
    */
-  source: 'login' | 'homepage' | 'app',
+  source: 'authenticator' | 'home' | 'app',
   children?: React.ReactNode
 }) {
   return (
@@ -35,7 +34,7 @@ export default function ToolbarView({
       className={
         'top-0 height-11 min-h-11 pl-4 pr-1.5 flex sticky items-center ' +
           'select-none ' + (
-            source === 'login'
+            source === 'authenticator'
               ? (
                 'before:absolute before:inset-0 before:backdrop-blur-[10px] ' +
                   'before:-z-1 z-3 border-b border-b-[rgba(251,251,253,.5)] ' +
@@ -48,19 +47,17 @@ export default function ToolbarView({
       }
     >
       {
-        process.env.NEXT_PUBLIC_PRIMARY_ICON_URLS
-          ? (
-            <ImageView
-              urls={process.env.NEXT_PUBLIC_PRIMARY_ICON_URLS.split(',')}
-              className="size-6 mr-0.5 rounded-md"
-            />
-          )
-          : (
-            <SFSymbolView
-              systemName="icloud.fill"
-              className="fill-systemBlack h-3.5 mr-0.5"
-            />
-          )
+        (() => {
+          switch (source) {
+            case 'authenticator': return (
+              <ToolbarIconView
+                urls={
+                  process.env.NEXT_PUBLIC_AUTHENTICATOR_ICON_URLS?.split(',')
+                }
+              />
+            )
+          }
+        })()
       }
       <div className="font-semibold text-[21px] text-systemBlack">
         <div

@@ -30,7 +30,7 @@ export default function LoginView() {
   const viewModel = useLoginViewModel()
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mb-48">
       <div
         className={
           'mt-11 w-160 shadow-[0_11px_34px_0_var(--color-fillSecondary)] ' +
@@ -284,7 +284,7 @@ export default function LoginView() {
                 )
                 : (
                   <SFSymbolView
-                    systemName="icloud.fill"
+                    systemName="icloud"
                     className={
                       'w-7.5 absolute top-1/2 left-1/2 -translate-1/2 ' +
                         'fill-systemBlack'
@@ -318,6 +318,59 @@ export default function LoginView() {
                 setIsFocused={viewModel.setIsUsernameFocused}
                 prompt="Email or Phone Number"
                 disabled={viewModel.isLoading}
+                onChange={() => viewModel.handleUsernameChange()}
+                borderClassName={
+                  !viewModel.isPasswordPresented
+                    ? 'rounded-xl'
+                    : 'rounded-t-xl'
+                }
+                required={viewModel.errorMessage.length > 0}
+                onEnter={
+                  (
+                    viewModel.username.length <= 0 ||
+                      viewModel.errorMessage.length > 0
+                  )
+                    ? undefined
+                    : () => viewModel.handleContinueButtonClick()
+                }
+              />
+              <TextFieldView
+                text={viewModel.password}
+                setText={viewModel.setPassword}
+                isFocused={viewModel.isPasswordFocused}
+                setIsFocused={viewModel.setIsPasswordFocused}
+                prompt="Password"
+                disabled={viewModel.isLoading}
+                required={viewModel.errorMessage.length > 0}
+                onChange={() => viewModel.handlePasswordChange()}
+                transitionClassName={
+                  'transition-[height] duration-200 delay-200 ease-[linear]'
+                }
+                heightClassName={
+                  viewModel.stage === 'username'
+                    ? 'h-0'
+                    : 'h-14'
+                }
+                containerHeightClassName={
+                  viewModel.stage === 'username'
+                    ? 'h-0'
+                    : 'h-14'
+                }
+                containerOverflowClassName={
+                  viewModel.isPasswordPresented
+                    ? ''
+                    : 'overflow-hidden'
+                }
+                borderClassName="rounded-b-xl"
+                onEnter={
+                  (
+                    viewModel.username.length <= 0 ||
+                      viewModel.errorMessage.length > 0
+                  )
+                    ? undefined
+                    : () => viewModel.handleContinueButtonClick()
+                }
+                type="secure"
               />
             </div>
             {
@@ -327,7 +380,10 @@ export default function LoginView() {
                     'absolute right-2.5 border border-transparent pr-0.25 ' +
                       'pl-0.5 z-100 animate-[fade-in_.5s_ease-in-out] ' +
                       'transition-all duration-125 ease-[ease-in] ' + (
-                        viewModel.username.length <= 0
+                        (
+                          viewModel.username.length <= 0 ||
+                            viewModel.errorMessage.length > 0
+                        )
                           ? 'pointer-events-none opacity-60 '
                           : 'cursor-pointer '
                       ) + (
@@ -357,7 +413,13 @@ export default function LoginView() {
               )
             }
             <div
-              className="absolute right-6.5 top-7.25 pointer-events-none z-10"
+              className={
+                'absolute right-6.5 pointer-events-none z-10 ' + (
+                  viewModel.stage === 'username'
+                    ? 'top-7.25'
+                    : 'top-21.25'
+                )
+              }
               style={{ visibility: viewModel.isLoading ? 'visible' : 'hidden' }}
             >
               <ProgressView
@@ -414,6 +476,35 @@ export default function LoginView() {
                 </p>
               </div>
             </div>
+
+            {
+              viewModel.errorMessage.length > 0 && (
+                <div
+                  className={
+                    'relative -top-20 max-w-76.25 w-full mx-auto ' +
+                      'animate-[fade-in_.2s_ease-in-out]'
+                  }
+                >
+                  <div
+                    className={
+                      'absolute -ml-[50%] left-1/2 w-full bg-[#fae9a3] ' +
+                        'rounded-[5px] border border-[rgba(185,149,1,.47)] ' +
+                        'shadow-[0_5px_10px_2px_rgba(0,0,0,.1)] mt-1.25 ' +
+                        'p-2.75 text-sm leading-5 text-[#503e30] ' +
+                        'font-semibold before:size-3.75 before:bg-[#fae9a3] ' +
+                        'before:absolute before:left-[47.2%] ' +
+                        'before:rotate-135 before:skew-5 before:-top-2 ' +
+                        'before:border-l before:border-[rgba(185,149,1,.47)] ' +
+                        'before:border-b ' +
+                      'before:shadow-[-1px_1px_2px_-1px_rgba(185,149,1,.47)] ' +
+                        'text-center'
+                    }
+                  >
+                    {viewModel.errorMessage}
+                  </div>
+                </div>
+              )
+            }
           </div>
         </div>
 

@@ -21,12 +21,14 @@ export default function useTextFieldViewModel({
   setText,
   setIsFocused,
   onBlur,
-  onChange
+  onChange,
+  onEnter
 }: {
   setText: React.Dispatch<React.SetStateAction<string>>,
   setIsFocused: React.Dispatch<React.SetStateAction<boolean>>,
   onBlur?: () => void,
-  onChange?: (newText: string) => void
+  onChange?: (newText: string) => void,
+  onEnter?: () => void
 }) {
   /* MARK: - Event handlers */
   function handleOnChange(newText: string) {
@@ -43,9 +45,14 @@ export default function useTextFieldViewModel({
     onBlur?.()
   }
 
+  function handleOnEnter() {
+    onEnter?.()
+  }
+
   return {
     handleOnChange,
     handleOnFocus,
-    handleOnBlur
+    handleOnBlur,
+    handleOnEnter
   }
 }

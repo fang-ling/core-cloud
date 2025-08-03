@@ -81,7 +81,7 @@ export default function RegisterView({
                         )
                         : (
                           <SFSymbolView
-                            systemName="icloud.fill"
+                            systemName="icloud"
                             className="w-6 fill-sk-body-text-color"
                           />
                         )

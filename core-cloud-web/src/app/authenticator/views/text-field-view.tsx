@@ -31,7 +31,13 @@ export default function TextFieldView({
   onBlur,
   type = 'plain',
   autoComplete = undefined,
-  onChange
+  onChange,
+  heightClassName = 'h-14',
+  transitionClassName = '',
+  borderClassName = 'rounded-xl',
+  containerOverflowClassName = '',
+  containerHeightClassName = '',
+  onEnter
 }: {
   text: string,
   setText: React.Dispatch<React.SetStateAction<string>>,
@@ -44,22 +50,34 @@ export default function TextFieldView({
   onBlur?: () => void,
   type?: 'plain' | 'secure',
   autoComplete?: 'username' | 'new-password',
-  onChange?: (newText: string) => void
+  onChange?: (newText: string) => void,
+  heightClassName?: string,
+  transitionClassName?: string,
+  borderClassName?: string,
+  containerOverflowClassName?: string,
+  containerHeightClassName?: string,
+  onEnter?: () => void
 }) {
   const viewModel = useTextFieldViewModel({
     setText: setText,
     setIsFocused: setIsFocused,
     onBlur: onBlur,
-    onChange: onChange
+    onChange: onChange,
+    onEnter: onEnter
   })
 
   return (
-    <div className="relative w-full">
+    <div
+      className={
+        `relative w-full ${containerOverflowClassName} ` +
+          `${containerHeightClassName}`
+      }
+    >
       <input
         className={
-          `pt-4.5 h-14 ${paddingRightClassName} ` +
-            'border rounded-xl text-base leading-9 w-full focus:border-2 ' +
-            'focus:outline-hidden ' +
+          `pt-4.5 ${heightClassName} ${paddingRightClassName} ` +
+            `text-base leading-9 w-full ${borderClassName} border ` +
+            `focus:outline-hidden ${transitionClassName} focus:border-2 ` +
             'focus:border-[#0071e3] pl-4 focus:pl-3.75 text-ellipsis ' + (
               disabled
                 ? (
@@ -94,6 +112,11 @@ export default function TextFieldView({
         onChange={event => viewModel.handleOnChange(event.target.value)}
         onFocus={() => viewModel.handleOnFocus()}
         onBlur={() => viewModel.handleOnBlur()}
+        onKeyDown={event => {
+          if (event.key === 'Enter') {
+            viewModel.handleOnEnter()
+          }
+        }}
       />
       <span
         className={

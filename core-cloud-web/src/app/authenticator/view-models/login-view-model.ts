@@ -20,6 +20,8 @@
 'use client'
 
 import { useState } from 'react'
+import UserTokenService from '../services/user-token-service'
+import { useRouter } from 'next/navigation'
 
 export default function useLoginViewModel() {
   const [username, setUsername] = useState('')
@@ -30,6 +32,9 @@ export default function useLoginViewModel() {
   const [stage, setStage] = useState<'username' | 'password'>('username')
   const [isRegisterFormPresented, setIsRegisterFormPresented] = useState(false)
   const [isRememberMe, setIsRememberMe] = useState(false)
+  const [isPasswordPresented, setIsPasswordPresented] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const router = useRouter()
 
   /* MARK: Event handlers */
   async function handleContinueButtonClick() {
@@ -37,9 +42,32 @@ export default function useLoginViewModel() {
       setIsLoading(true)
 
       /* Wait 1s unconditionally. */
-      await new Promise(reslove => setTimeout(reslove, 1000))
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
       setStage('password')
+      setIsPasswordPresented(true)
+      setIsLoading(false)
+    } else {
+      setIsLoading(true)
+
+      const isSuccess = await UserTokenService.insertUserToken(
+        username,
+        password,
+        { rememberMe: isRememberMe }
+      )
+      if (isSuccess) {
+        if (window.location.hash === '') {
+          router.push('/home')
+        } else {
+          router.push(window.location.hash.substring(1))
+        }
+      } else {
+        setErrorMessage(
+          'Check the account information you entered and try again.'
+        )
+        setPassword('')
+      }
+
       setIsLoading(false)
     }
   }
@@ -50,6 +78,20 @@ export default function useLoginViewModel() {
 
   function handleIsRememberMeChange(newValue: boolean) {
     setIsRememberMe(newValue)
+  }
+
+  async function handleUsernameChange() {
+    setStage('username')
+    setErrorMessage('')
+
+    /* Wait 400ms for transition. */
+    await new Promise(resolve => setTimeout(resolve, 400))
+    setIsPasswordPresented(false)
+    setPassword('')
+  }
+
+  function handlePasswordChange() {
+    setErrorMessage('')
   }
 
   return {
@@ -66,8 +108,12 @@ export default function useLoginViewModel() {
     isRegisterFormPresented,
     setIsRegisterFormPresented,
     isRememberMe,
+    isPasswordPresented,
+    errorMessage,
     handleContinueButtonClick,
     handleRegisterButtonClick,
-    handleIsRememberMeChange
+    handleIsRememberMeChange,
+    handleUsernameChange,
+    handlePasswordChange
   }
 }

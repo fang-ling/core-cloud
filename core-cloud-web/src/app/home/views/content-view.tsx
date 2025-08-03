@@ -22,7 +22,7 @@ import ToolbarView from '@/components/views/toolbar-view'
 export default function ContentView() {
   return (
     <div className="relative">
-      <ToolbarView source="login" />
+      <ToolbarView source="home" />
       Placeholder
     </div>
   )

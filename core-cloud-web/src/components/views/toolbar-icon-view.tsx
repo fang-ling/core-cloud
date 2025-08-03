@@ -1,5 +1,5 @@
 //
-//  content-view.tsx
+//  toolbar-icon-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/3.
@@ -17,16 +17,27 @@
 //  limitations under the License.
 //
 
-import ToolbarView from '@/components/views/toolbar-view'
-import LoginView from './login-view'
-import FooterView from '@/components/views/footer-view'
+import ImageView from '@/ui-elements/views/image-view'
+import SFSymbolView from '@/ui-elements/views/sf-symbol-view'
 
-export default function ContentView() {
-  return (
-    <div className="relative">
-      <ToolbarView source="authenticator" />
-      <LoginView />
-      <FooterView />
-    </div>
-  )
+export default function ToolbarIconView({
+  urls
+}: {
+  urls?: string[]
+}) {
+  if (urls && urls.filter(url => url !== '').length > 0) {
+    return (
+      <ImageView
+        urls={urls}
+        className="size-6 mr-0.5 rounded-md"
+      />
+    )
+  } else {
+    return (
+      <SFSymbolView
+        systemName="icloud"
+        className="fill-systemBlack h-3.5 mr-0.5"
+      />
+    )
+  }
 }

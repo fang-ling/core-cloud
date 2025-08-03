@@ -1,5 +1,5 @@
 //
-//  content-view.tsx
+//  footer-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/3.
@@ -17,16 +17,18 @@
 //  limitations under the License.
 //
 
-import ToolbarView from '@/components/views/toolbar-view'
-import LoginView from './login-view'
-import FooterView from '@/components/views/footer-view'
-
-export default function ContentView() {
+export default function FooterView() {
   return (
-    <div className="relative">
-      <ToolbarView source="authenticator" />
-      <LoginView />
-      <FooterView />
-    </div>
+    <footer className="w-full py-7.5 bg-gray6 flex justify-center">
+      <div
+        className={
+          'w-full text-[11px] text-labelSecondary leading-[2] ' +
+            'flex justify-between min-[1165px]:max-w-258.75'
+        }
+      >
+        <p>{'v0.0-beta'}</p>
+        <p>{'Copyright © 2025 CoreCloud. All rights reserved.'}</p>
+      </div>
+    </footer>
   )
 }
