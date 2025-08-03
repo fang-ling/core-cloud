@@ -26,7 +26,7 @@ export default function FooterView() {
             'flex justify-between min-[1165px]:max-w-258.75'
         }
       >
-        <p>{'v0.0-beta'}</p>
+        <p>{'0.0'}</p>
         <p>{'Copyright © 2025 CoreCloud. All rights reserved.'}</p>
       </div>
     </footer>
