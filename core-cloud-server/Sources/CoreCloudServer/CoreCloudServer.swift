@@ -20,6 +20,7 @@
 import Fluent
 import FluentSQLiteDriver
 import JWT
+import NIOSSL
 import Vapor
 
 @main
@@ -75,7 +76,7 @@ struct CoreCloudServer {
       await app.jwt.keys.add(hmac: "!!!TOP_SECRET!!!", digestAlgorithm: .sha512)
     } else {
       await app.jwt.keys.add(
-        hmac: .init(from: Environment.get("JWT_SECRET")!),
+        hmac: .init(from: Environment.get(Keys.jwtSecret)!),
         digestAlgorithm: .sha512
       )
     }
@@ -92,9 +93,33 @@ struct CoreCloudServer {
       )
     )
 
+    /* TLS */
+    if (Environment.get(Keys.tls) ?? "false") == "true" {
+      app.http.server.configuration.tlsConfiguration = .makeServerConfiguration(
+        certificateChain: try NIOSSLCertificate
+          .fromPEMFile(Environment.get(Keys.certificate) ?? "")
+          .map ({ .certificate($0) }),
+          privateKey: .privateKey(
+            try NIOSSLPrivateKey(
+              file: Environment.get(Keys.privateKey) ?? "",
+              format: .pem
+            )
+          )
+      )
+    }
+
     /* Components configuration */
     try Authenticator.configure(app)
 
     try await app.autoMigrate()
+  }
+}
+
+extension CoreCloudServer {
+  enum Keys {
+    static let jwtSecret = "JWT_SECRET"
+    static let tls = "TLS"
+    static let certificate = "CERTIFICATE"
+    static let privateKey = "PRIVATE_KEY"
   }
 }
