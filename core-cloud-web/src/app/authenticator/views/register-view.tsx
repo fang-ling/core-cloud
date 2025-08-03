@@ -131,7 +131,7 @@ export default function RegisterView({
                     <button
                       className={
                         'pr-[18.7px] text-sk-body-link-color cursor-pointer ' +
-                          'text-base relative'
+                          'text-base relative hover:underline'
                       }
                       onClick={() => viewModel.handleViewDisappear()}
                     >

@@ -366,9 +366,70 @@ export default function LoginView() {
                 translateX={6.25}
               />
             </div>
+
+            <div className="flex justify-center items-center -mt-1.75">
+              <div
+                className="relative flex items-center justify-center"
+                onClick={() => {
+                  viewModel.handleIsRememberMeChange(!viewModel.isRememberMe)
+                }}
+              >
+                <div className="relative flex items-center justify-center">
+                  <input
+                    className={
+                      'appearance-none size-4 checked:bg-[#0071e3] ' +
+                        'checked:border-[#0071e3] rounded-[3px] ' +
+                        'bg-[hsla(0,0%,100%,.8)] border-[#86868b] ' +
+                        'dark:bg-[hsla(0,0%,100%,.04)] dark:border-[#6e6e73] ' +
+                        'border-1'
+                    }
+                    checked={viewModel.isRememberMe}
+                    readOnly={true}
+                    type="checkbox"
+                  />
+                  {
+                    viewModel.isRememberMe && (
+                      <div
+                        className={
+                          'absolute left-[3.5px] top-[3.5px] ' +
+                            'pointer-events-none'
+                        }
+                      >
+                        <SFSymbolView
+                          className="size-2.25 fill-white"
+                          systemName="checkmark"
+                          variant="semibold"
+                        />
+                      </div>
+                    )
+                  }
+                </div>
+                <p
+                  className={
+                    'text-base leading-6.25 pl-2.5 text-[#494949] ' +
+                      'dark:text-white'
+                  }
+                >
+                  {'Keep me signed in'}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="flex flex-col items-center relative -top-46">
+
+        <div className="flex flex-col items-center relative -top-51.5">
+          <button
+            className={ /* TODO */
+              'text-systemBlue cursor-not-allowed mb-0.5 flex ' +
+                'text-sm leading-5 relative hover:underline items-baseline'
+            }
+          >
+            {'Forgot password?'}
+            <SFSymbolView
+              className="fill-systemBlue w-2 ml-[4.2px]"
+              systemName="arrow.up.right"
+            />
+          </button>
           <button
             className="cursor-pointer text-sm leading-4.5 text-systemBlue"
             onClick={() => viewModel.handleRegisterButtonClick()}
