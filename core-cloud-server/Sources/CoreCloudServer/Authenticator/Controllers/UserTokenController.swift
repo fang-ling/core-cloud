@@ -33,9 +33,6 @@ struct UserTokenController: RouteCollection {
   /**
    * - URL: POST /api/v1/user-token
    *
-   * - Query Parameters:
-   *   - rememberMe [Bool] (required): Remember me or not.
-   *
    * - Response Codes:
    *   - 201 Created: The request has been fulfilled, resulting in the creation
    *                  of a new user token.
@@ -49,15 +46,9 @@ struct UserTokenController: RouteCollection {
    *                              ready to handle the request.
    */
   func insertUserTokenHandler(request: Request) async -> Response {
-    var insertRequest: UserToken.Singular.Input.Insertion
-    do {
-      insertRequest = try request.query.decode(
+    guard let insertRequest = try? request.content.decode(
         UserToken.Singular.Input.Insertion.self
-      )
-    } catch {
-      return Response(status: .badRequest)
-    }
-    guard let rememberMe = insertRequest.rememberMe else {
+    ) else {
       return Response(status: .badRequest)
     }
 
@@ -81,7 +72,9 @@ struct UserTokenController: RouteCollection {
           "\(Authenticator.COOKIE_NAME)=\(token); " +
           "Path=/; " +
           "HttpOnly; " + (
-            rememberMe ? "Max-Age=\(Authenticator.COOKIE_MAX_AGE); " : ""
+            insertRequest.rememberMe
+              ? "Max-Age=\(Authenticator.COOKIE_MAX_AGE); "
+              : ""
           ) + (
             request.application.environment == .production
               ? "SameSite=Lax; Secure; "

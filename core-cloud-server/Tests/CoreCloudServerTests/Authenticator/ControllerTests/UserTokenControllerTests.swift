@@ -21,6 +21,8 @@
 import Testing
 import VaporTesting
 
+extension UserToken.Singular.Input.Insertion: Content { }
+
 @Test("UserTokenControllerTests")
 func testUserTokenController() async throws {
   try await withApp(configure: CoreCloudServer.configure) { app in
@@ -45,11 +47,14 @@ func testUserTokenController() async throws {
 
     try await app.testing().test(
       .POST,
-      "api/v1/user-token?rememberMe=true",
+      "api/v1/user-token",
       beforeRequest: { request async throws in
         request.headers.basicAuthorization = .init(
           username: "diana@example.com",
           password: "19348Top-Secret"
+        )
+        try request.content.encode(
+          UserToken.Singular.Input.Insertion(rememberMe: true)
         )
       },
       afterResponse: { response async throws in
@@ -65,11 +70,14 @@ func testUserTokenController() async throws {
 
     try await app.testing().test(
       .POST,
-      "api/v1/user-token?rememberMe=false",
+      "api/v1/user-token",
       beforeRequest: { request async throws in
         request.headers.basicAuthorization = .init(
           username: "diana@example.com",
           password: "19348Top-Secret"
+        )
+        try request.content.encode(
+          UserToken.Singular.Input.Insertion(rememberMe: false)
         )
       },
       afterResponse: { response async throws in
@@ -99,11 +107,14 @@ func testUserTokenController() async throws {
 
     try await app.testing().test(
       .POST,
-      "api/v1/user-token?rememberMe=true",
+      "api/v1/user-token",
       beforeRequest: { request async throws in
         request.headers.basicAuthorization = .init(
           username: "diana@example.com",
           password: "12345678"
+        )
+        try request.content.encode(
+          UserToken.Singular.Input.Insertion(rememberMe: true)
         )
       },
       afterResponse: { response async throws in
@@ -113,11 +124,14 @@ func testUserTokenController() async throws {
 
     try await app.testing().test(
       .POST,
-      "api/v1/user-token?rememberMe=true",
+      "api/v1/user-token",
       beforeRequest: { request async throws in
         request.headers.basicAuthorization = .init(
           username: "sue@example.com",
           password: "19348Top-Secret"
+        )
+        try request.content.encode(
+          UserToken.Singular.Input.Insertion(rememberMe: true)
         )
       },
       afterResponse: { response async throws in

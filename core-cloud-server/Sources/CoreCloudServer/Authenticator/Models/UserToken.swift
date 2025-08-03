@@ -44,6 +44,6 @@ extension UserToken.Singular {
 
 extension UserToken.Singular.Input {
   struct Insertion: Codable {
-    var rememberMe: Bool?
+    var rememberMe: Bool
   }
 }
