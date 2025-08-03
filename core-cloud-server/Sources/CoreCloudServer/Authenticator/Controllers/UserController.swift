@@ -53,15 +53,19 @@ struct UserController: RouteCollection {
    *                              ready to handle the request.
    */
   func peekUserHandler(request: Request) async -> HTTPStatus {
-    guard let peekRequest = try? request.query.decode(
-      User.Singular.Input.Peek.self
-    ) else {
+    var peekRequest: User.Singular.Input.Peek
+    do {
+      peekRequest = try request.query.decode(User.Singular.Input.Peek.self)
+    } catch {
+      return .badRequest
+    }
+    guard let username = peekRequest.username else {
       return .badRequest
     }
 
     do {
       let isExist = try await userService.peekUser(
-        by: peekRequest.username,
+        by: username,
         on: request.db
       )
 

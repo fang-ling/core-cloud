@@ -25,9 +25,13 @@ struct Authenticator {
   static let SCRYPT_PARALLELISM = 1
   static let SCRYPT_OUTPUT_BYTE_COUNT = 256 / 8
 
+  static let COOKIE_NAME = "CoreCloudServerJWT"
+  static let COOKIE_MAX_AGE = 86400
+
   static func configure(_ app: Application) throws {
     app.migrations.add(UserMigrationV1())
 
     try app.routes.register(collection: UserController())
+    try app.routes.register(collection: UserTokenController())
   }
 }

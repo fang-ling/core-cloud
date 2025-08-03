@@ -28,6 +28,14 @@ func testUserController() async throws {
   try await withApp(configure: CoreCloudServer.configure) { app in
     try await app.testing().test(
       .HEAD,
+      "api/v1/user",
+      afterResponse: { response async throws in
+        #expect(response.status == .badRequest)
+      }
+    )
+
+    try await app.testing().test(
+      .HEAD,
       "api/v1/user?username=tracy%40example.com",
       afterResponse: { response async throws in
         #expect(response.status == .noContent)

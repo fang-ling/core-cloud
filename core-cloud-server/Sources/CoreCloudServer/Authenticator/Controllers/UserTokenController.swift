@@ -49,9 +49,15 @@ struct UserTokenController: RouteCollection {
    *                              ready to handle the request.
    */
   func insertUserTokenHandler(request: Request) async -> Response {
-    guard let insertRequest = try? request.query.decode(
-      UserToken.Singular.Input.Insertion.self
-    ) else {
+    var insertRequest: UserToken.Singular.Input.Insertion
+    do {
+      insertRequest = try request.query.decode(
+        UserToken.Singular.Input.Insertion.self
+      )
+    } catch {
+      return Response(status: .badRequest)
+    }
+    guard let rememberMe = insertRequest.rememberMe else {
       return Response(status: .badRequest)
     }
 
@@ -72,11 +78,10 @@ struct UserTokenController: RouteCollection {
         status: .created,
         headers: .init([(
           "Set-Cookie",
-          "Token=\(token); " +
+          "\(Authenticator.COOKIE_NAME)=\(token); " +
+          "Path=/; " +
           "HttpOnly; " + (
-            insertRequest.rememberMe
-              ? "Max-Age=86400; "
-              : ""
+            rememberMe ? "Max-Age=\(Authenticator.COOKIE_MAX_AGE); " : ""
           ) + (
             request.application.environment == .production
               ? "SameSite=Lax; Secure; "

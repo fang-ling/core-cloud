@@ -120,6 +120,6 @@ extension User.Singular.Input {
   }
 
   struct Peek: Codable {
-    var username: String
+    var username: String?
   }
 }

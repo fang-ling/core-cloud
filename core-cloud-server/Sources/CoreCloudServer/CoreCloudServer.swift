@@ -80,6 +80,18 @@ struct CoreCloudServer {
       )
     }
 
+    /* Bodyguard middleware */
+    app.middleware.use(BodyguardMiddleware())
+
+    /* File middleware */
+    app.middleware.use(
+      FileMiddleware(
+        publicDirectory: app.directory.publicDirectory,
+        defaultFile: "index.html",
+        directoryAction: .redirect
+      )
+    )
+
     /* Components configuration */
     try Authenticator.configure(app)
 

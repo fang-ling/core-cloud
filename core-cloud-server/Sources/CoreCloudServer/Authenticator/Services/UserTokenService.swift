@@ -70,6 +70,10 @@ struct UserTokenService {
         subject: SubjectClaim(value: "\(user.requireID())"),
         expiration: ExpirationClaim(value: Date().addingTimeInterval(86_400))
       )
+    } catch UserError.noSuchUser {
+      throw UserError.noSuchUser
+    } catch UserError.invalidCredentials {
+      throw UserError.invalidCredentials
     } catch {
       throw UserTokenError.databaseError
     }
