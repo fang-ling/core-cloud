@@ -1,8 +1,8 @@
 //
-//  user.ts
+//  page.tsx
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/7/31.
+//  Created by Fang Ling on 2025/8/3.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,20 +17,8 @@
 //  limitations under the License.
 //
 
-export namespace User {
-  export namespace Singular {
-    export namespace Input {
-      export type Insertion = {
-        firstName: string
-        lastName: string
-        username: string
-        password: string
-        masterPassword: string
-      }
+import ContentView from './views/content-view'
 
-      export type Peek = {
-        username: string
-      }
-    }
-  }
+export default function Page() {
+  return <ContentView />
 }

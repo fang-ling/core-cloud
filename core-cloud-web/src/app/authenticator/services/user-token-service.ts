@@ -1,8 +1,8 @@
 //
-//  user-service.ts
+//  user-token-service.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/7/30.
+//  Created by Fang Ling on 2025/8/3.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,18 +17,23 @@
 //  limitations under the License.
 //
 
-import { User } from '../models/user'
+import { UserToken } from '../models/user-token'
 
-namespace UserService {
-  export async function insertUser(
-    request: User.Singular.Input.Insertion
+namespace UserTokenService {
+  export async function insertUserToken(
+    username: string,
+    password: string,
+    request: UserToken.Singular.Input.Insertion
   ) {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/user`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/user-token`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify(request)
         }
       )
@@ -41,29 +46,5 @@ namespace UserService {
       return false
     }
   }
-
-  export async function peekUser(
-    request: User.Singular.Input.Peek
-  ) {
-    try {
-      const queryString = new URLSearchParams(request).toString()
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/user?${queryString}`,
-        {
-          method: 'HEAD'
-        }
-      )
-      if (response.status === 200) {
-        return true
-      } else if (response.status === 204) {
-        return false
-      } else {
-        throw new Error()
-      }
-    } catch {
-      return 'error'
-    }
-  }
 }
-export default UserService
+export default UserTokenService

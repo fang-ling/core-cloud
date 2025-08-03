@@ -20,17 +20,64 @@
 export default function ProgressView({
   widthClassName = 'w-[6.8px]',
   heightClassName = 'h-0.5',
+  marginClassName = '',
+  transformClassName = '',
   translateX = 5.6,
   variant = '12'
 }: {
   widthClassName?: string,
   heightClassName?: string,
+  marginClassName?: string,
+  transformClassName?: string,
   translateX?: number,
-  variant?: '12'
+  variant?: '8' | '12'
 }) {
   switch (variant) {
+    case '8':
+      const animations8 = [
+        'animate-[0.833333s_linear_infinite_opacity-60-25-0-8]',
+        'animate-[0.833333s_linear_infinite_opacity-60-25-1-8]',
+        'animate-[0.833333s_linear_infinite_opacity-60-25-2-8]',
+        'animate-[0.833333s_linear_infinite_opacity-60-25-3-8]',
+        'animate-[0.833333s_linear_infinite_opacity-60-25-4-8]',
+        'animate-[0.833333s_linear_infinite_opacity-60-25-5-8]',
+        'animate-[0.833333s_linear_infinite_opacity-60-25-6-8]',
+        'animate-[0.833333s_linear_infinite_opacity-60-25-7-8]'
+      ]
+
+      return (
+        <div
+          className={
+            `relative ${marginClassName} ${transformClassName}`
+          }
+        >
+          {
+            animations8.map((animation, index) => (
+              <div
+                key={index}
+                className={
+                  `absolute ${animation} top-[-2px] opacity-25`
+                }
+            >
+              <div
+                className={
+                  'absolute w-[10.5px] h-1 origin-[left_center] ' +
+                    'rounded-full bg-[#737373] dark:bg-white ' +
+                    'shadow-[rgba(0,0,0,0.1)_0px_0px_1px]'
+                }
+                style={{
+                  //boxShadow: 'rgba(0, 0, 0, 0.1) 0px 0px 1px',
+                  transform: `rotate(${index * 45}deg) translate(6.25px, 0px)`
+                }}
+              />
+              </div>
+            ))
+          }
+        </div>
+      )
+
     default:
-      const animations = [
+      const animations12 = [
         'animate-[0.588235s_linear_infinite_opacity-60-25-0-12]',
         'animate-[0.588235s_linear_infinite_opacity-60-25-1-12]',
         'animate-[0.588235s_linear_infinite_opacity-60-25-2-12]',
@@ -48,7 +95,7 @@ export default function ProgressView({
       return (
         <div className="realtive">
           {
-            animations.map((animation, index) => (
+            animations12.map((animation, index) => (
               <div
                 key={index}
                 className={`absolute -top-0.25 opacity-25 ${animation}`}

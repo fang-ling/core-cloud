@@ -24,6 +24,7 @@ import SFSymbolView from '@/ui-elements/views/sf-symbol-view'
 import ReactDOM from 'react-dom'
 import TextFieldView from './text-field-view'
 import useRegisterViewModel from '../view-models/register-view-model'
+import ProgressView from '@/ui-elements/views/progress-view'
 
 export default function RegisterView({
   setIsPresented
@@ -88,7 +89,7 @@ export default function RegisterView({
                   </div>
                   <h1
                     className={
-                      'text-[28px] font-semibold text-body-text-color ' +
+                      'text-[28px] font-semibold text-sk-body-text-color ' +
                         'leading-8 mb-3.75'
                     }
                   >
@@ -100,7 +101,7 @@ export default function RegisterView({
                     />
                     {' Account'}
                   </h1>
-                  <p className="text-base leading-6.25 text-body-text-color">
+                  <p className="text-base leading-6.25 text-sk-body-text-color">
                     {'One '}
                     <span
                       dangerouslySetInnerHTML={{
@@ -117,7 +118,7 @@ export default function RegisterView({
                   </p>
                   <p
                     className={
-                      'text-base leading-6.25 text-body-text-color mb-2.5'
+                      'text-base leading-6.25 text-sk-body-text-color mb-2.5'
                     }
                   >
                     {'Already have a '}
@@ -202,6 +203,7 @@ export default function RegisterView({
                             !!!viewModel.firstName
                         }
                         onBlur={() => viewModel.handleFirstNameDeflower()}
+                        onChange={() => viewModel.handleFirstNameChange()}
                       />
                       {
                         (
@@ -238,6 +240,7 @@ export default function RegisterView({
                           !viewModel.isLastNameVirginal && !!!viewModel.lastName
                         }
                         onBlur={() => viewModel.handleLastNameDeflower()}
+                        onChange={() => viewModel.handleLastNameChange()}
                       />
                       {
                         (
@@ -295,6 +298,7 @@ export default function RegisterView({
                           !!viewModel.usernameMessage
                       }
                       onBlur={() => viewModel.handleUsernameBlur()}
+                      onChange={() => viewModel.handleUsernameChange()}
                     />
                     {
                       (
@@ -511,6 +515,7 @@ export default function RegisterView({
                           !!viewModel.confirmPasswordMessage
                       }
                       onBlur={() => viewModel.handleConfirmPasswordBlur()}
+                      onChange={() => viewModel.handleConfirmPasswordChange()}
                       type="secure"
                     />
                     {
@@ -568,6 +573,7 @@ export default function RegisterView({
                           !!viewModel.masterPasswordMessage
                       }
                       onBlur={() => viewModel.handleMasterPasswordBlur()}
+                      onChange={() => viewModel.handleMasterPasswordChange()}
                       type="secure"
                     />
                     <button
@@ -685,6 +691,9 @@ export default function RegisterView({
                           !!viewModel.confirmMasterPasswordMessage
                       }
                       onBlur={() => viewModel.handleConfirmMasterPasswordBlur()}
+                      onChange={() => {
+                        viewModel.handleConfirmMasterPasswordChange()
+                      }}
                       type="secure"
                     />
                     {
@@ -1256,6 +1265,19 @@ export default function RegisterView({
                         'a data breach in the cloud.'
                     }
                   </p>
+
+                  {
+                    viewModel.isError && (
+                      <p
+                        className={
+                          'text-sm leading-5 mt-2.5 text-[#e30000] ' +
+                            'dark:text-[#ff3037]'
+                        }
+                      >
+                        {'Your account cannot be created at this time.'}
+                      </p>
+                    )
+                  }
                 </div>
               </div>
 
@@ -1266,34 +1288,86 @@ export default function RegisterView({
                     'box-content rounded-b-[11px]'
                 }
               >
-                <div className="w-full h-full flex justify-between">
-                  <button
-                    className={
-                      'min-w-36 min-h-4.5 rounded-lg cursor-pointer text-sm ' +
-                        'bg-transparent border ' +
-                        'dark:hover:border-transparent active:text-white ' +
-                        'active:bg-sk-button-background-active box-content ' +
-                        'active:border-transparent py-2 px-3.75 ' +
-                        'border-sk-button-border-color text-sk-button-color ' +
-                        'hover:text-white hover:bg-sk-button-background-hover'
-                    }
-                    onClick={() => viewModel.handleViewDisappear()}
-                  >
-                    {'Cancel'}
-                  </button>
-                  <button
-                    className={
-                      'min-w-36 min-h-4.5 rounded-lg cursor-pointer text-sm ' +
-                        'box-content py-2 px-3.75 bg-sk-button-background ' +
-                        'text-white active:bg-sk-button-background-active ' +
-                        'hover:bg-sk-button-background-hover ' + (
-                          false ? 'opacity-42 dark:opacity-36' : ''
-                        )
-                    }
-                  >
-                    {'Continue'}
-                  </button>
-                </div>
+                {
+                  !viewModel.isLoading
+                    ? (
+                      <div className="w-full h-full flex justify-between">
+                        <button
+                          className={
+                            'min-w-36 min-h-4.5 rounded-lg cursor-pointer ' +
+                              'bg-transparent border text-sm ' +
+                              'dark:hover:border-transparent ' +
+                              'active:text-white box-content ' +
+                              'active:bg-sk-button-background-active ' +
+                              'active:border-transparent py-2 px-3.75 ' +
+                              'border-sk-button-border-color ' +
+                              'text-sk-button-color hover:text-white ' +
+                              'hover:bg-sk-button-background-hover'
+                          }
+                          onClick={() => viewModel.handleViewDisappear()}
+                        >
+                          {'Cancel'}
+                        </button>
+                        <button
+                          className={
+                            'min-w-36 min-h-4.5 rounded-lg text-sm px-3.75 ' +
+                              'py-2 text-white ' +
+                              'box-content bg-sk-button-background ' +
+                              'active:bg-sk-button-background-active ' +
+                              'hover:bg-sk-button-background-hover ' + (
+                                /* Just OR every 'required'. */
+                                (
+                                  !viewModel.isFirstNameVirginal &&
+                                    !!!viewModel.firstName
+                                ) || (
+                                  !viewModel.isLastNameVirginal &&
+                                    !!!viewModel.lastName
+                                ) || (
+                                  !viewModel.isUsernameVirginal &&
+                                    !!viewModel.usernameMessage
+                                ) || (
+                                  !viewModel.isPasswordVirginal &&
+                                    !!viewModel.passwordMessage
+                                ) || (
+                                  !viewModel.isConfirmPasswordVirginal &&
+                                    !!viewModel.confirmPasswordMessage
+                                ) || (
+                                  !viewModel.isMasterPasswordVirginal &&
+                                    !!viewModel.masterPasswordMessage
+                                ) || (
+                                  !viewModel.isConfirmMasterPasswordVirginal &&
+                                    !!viewModel.confirmMasterPasswordMessage
+                                ) || (
+                                  viewModel.isError
+                                )
+                                  ? 'opacity-42 dark:opacity-36 ' +
+                                    'pointer-events-none select-none'
+                                  : 'cursor-pointer'
+                              )
+                          }
+                          onClick={() => viewModel.handleContinueButtonClick()}
+                        >
+                          {'Continue'}
+                        </button>
+                      </div>
+                    )
+                    : (
+                      <div className="flex items-center justify-center h-full">
+                        <ProgressView
+                          marginClassName="mx-3 scale-50"
+                          variant="8"
+                        />
+                        <span
+                          className={
+                            'mx-1.25 text-sk-body-text-color text-[19px] ' +
+                              'font-semibold leading-5.75'
+                          }
+                        >
+                          {'Loading…'}
+                        </span>
+                      </div>
+                    )
+                }
               </div>
             </div>
           </div>

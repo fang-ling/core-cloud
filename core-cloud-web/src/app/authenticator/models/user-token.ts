@@ -1,8 +1,8 @@
 //
-//  content-view.tsx
+//  user-token.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/7/25.
+//  Created by Fang Ling on 2025/8/3.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,14 +17,13 @@
 //  limitations under the License.
 //
 
-import LoginView from '../authenticator/views/login-view'
-import ToolbarView from './toolbar-view'
 
-export default function ContentView() {
-  return (
-    <div className="relative">
-      <ToolbarView source="login" />
-      <LoginView />
-    </div>
-  )
+export namespace UserToken {
+  export namespace Singular {
+    export namespace Input {
+      export type Insertion = {
+        rememberMe: boolean
+      }
+    }
+  }
 }
