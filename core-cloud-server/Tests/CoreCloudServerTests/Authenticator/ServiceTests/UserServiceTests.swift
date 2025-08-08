@@ -111,10 +111,10 @@ struct UserServiceTests {
       let masterKeySealedBoxKey = try KDF.Scrypt.deriveKey(
         from: Data("Top-0-Secret".utf8),
         salt: user!.masterKeySealedBoxSalt,
-        outputByteCount: Authenticator.SCRYPT_OUTPUT_BYTE_COUNT,
-        rounds: Authenticator.SCRYPT_ROUNDS,
-        blockSize: Authenticator.SCRYPT_BLOCK_SIZE,
-        parallelism: Authenticator.SCRYPT_PARALLELISM
+        outputByteCount: CoreCloudServer.SCRYPT_OUTPUT_BYTE_COUNT,
+        rounds: CoreCloudServer.SCRYPT_ROUNDS,
+        blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
+        parallelism: CoreCloudServer.SCRYPT_PARALLELISM
       )
       #expect(masterKeySealedBoxKey.bitCount == 256)
       let masterKey = try AES.GCM.open(

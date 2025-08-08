@@ -60,10 +60,13 @@ func testUserTokenController() async throws {
       afterResponse: { response async throws in
         #expect(response.status == .created)
 
-        let cookie = response.headers.setCookie?.all[Authenticator.COOKIE_NAME]
+        let cookie = response
+          .headers
+          .setCookie?
+          .all[CoreCloudServer.COOKIE_NAME]
         #expect(cookie?.string != nil)
         #expect(cookie?.path == "/")
-        #expect(cookie?.maxAge == Authenticator.COOKIE_MAX_AGE)
+        #expect(cookie?.maxAge == CoreCloudServer.COOKIE_MAX_AGE)
         #expect(cookie?.isHTTPOnly == true)
       }
     )
@@ -83,7 +86,10 @@ func testUserTokenController() async throws {
       afterResponse: { response async throws in
         #expect(response.status == .created)
 
-        let cookie = response.headers.setCookie?.all[Authenticator.COOKIE_NAME]
+        let cookie = response
+          .headers
+          .setCookie?
+          .all[CoreCloudServer.COOKIE_NAME]
         #expect(cookie?.string != nil)
         #expect(cookie?.path == "/")
         #expect(cookie?.maxAge == nil)

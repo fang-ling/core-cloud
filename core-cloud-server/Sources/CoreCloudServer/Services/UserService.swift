@@ -83,10 +83,10 @@ struct UserService {
       key = try KDF.Scrypt.deriveKey(
         from: Data(password.utf8),
         salt: salt.withUnsafeBytes({ Data($0) }),
-        outputByteCount: Authenticator.SCRYPT_OUTPUT_BYTE_COUNT,
-        rounds: Authenticator.SCRYPT_ROUNDS,
-        blockSize: Authenticator.SCRYPT_BLOCK_SIZE,
-        parallelism: Authenticator.SCRYPT_PARALLELISM
+        outputByteCount: CoreCloudServer.SCRYPT_OUTPUT_BYTE_COUNT,
+        rounds: CoreCloudServer.SCRYPT_ROUNDS,
+        blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
+        parallelism: CoreCloudServer.SCRYPT_PARALLELISM
       )
     } catch {
       throw UserError.cryptoError
@@ -98,10 +98,10 @@ struct UserService {
       let masterKeySealedBoxKey = try KDF.Scrypt.deriveKey(
         from: Data(masterPassword.utf8),
         salt: masterKeySealedBoxSalt.withUnsafeBytes({ Data($0) }),
-        outputByteCount: Authenticator.SCRYPT_OUTPUT_BYTE_COUNT,
-        rounds: Authenticator.SCRYPT_ROUNDS,
-        blockSize: Authenticator.SCRYPT_BLOCK_SIZE,
-        parallelism: Authenticator.SCRYPT_PARALLELISM
+        outputByteCount: CoreCloudServer.SCRYPT_OUTPUT_BYTE_COUNT,
+        rounds: CoreCloudServer.SCRYPT_ROUNDS,
+        blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
+        parallelism: CoreCloudServer.SCRYPT_PARALLELISM
       )
 
       let masterKey = SymmetricKey(size: .bits256)

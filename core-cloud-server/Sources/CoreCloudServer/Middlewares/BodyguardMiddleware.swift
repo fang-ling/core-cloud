@@ -24,7 +24,7 @@ struct BodyguardMiddleware: AsyncMiddleware {
     to request: Request,
     chainingTo next: any AsyncResponder
   ) async throws -> Response {
-    let token = request.headers.cookie?.all[Authenticator.COOKIE_NAME]?.string
+    let token = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
 
     do {
       try await request.jwt.verify(token ?? "", as: UserToken.self)

@@ -108,11 +108,24 @@ struct CoreCloudServer {
       )
     }
 
-    /* Components configuration */
-    try Authenticator.configure(app)
-
+    /* Migrations */
+    app.migrations.add(UserMigrationV1())
     try await app.autoMigrate()
+
+    /* Routes */
+    try app.routes.register(collection: UserController())
+    try app.routes.register(collection: UserTokenController())
   }
+}
+
+extension CoreCloudServer {
+  static let SCRYPT_ROUNDS = 256 * 1024
+  static let SCRYPT_BLOCK_SIZE = 8
+  static let SCRYPT_PARALLELISM = 1
+  static let SCRYPT_OUTPUT_BYTE_COUNT = 256 / 8
+
+  static let COOKIE_NAME = "CoreCloudServerJWT"
+  static let COOKIE_MAX_AGE = 86400
 }
 
 extension CoreCloudServer {

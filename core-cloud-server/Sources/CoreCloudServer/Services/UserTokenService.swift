@@ -59,9 +59,9 @@ struct UserTokenService {
         from: Data(password.utf8),
         salt: user.salt,
         outputByteCount: 256 / 8,
-        rounds: Authenticator.SCRYPT_ROUNDS,
-        blockSize: Authenticator.SCRYPT_BLOCK_SIZE,
-        parallelism: Authenticator.SCRYPT_PARALLELISM
+        rounds: CoreCloudServer.SCRYPT_ROUNDS,
+        blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
+        parallelism: CoreCloudServer.SCRYPT_PARALLELISM
       )
       if user.key != derivedKey.withUnsafeBytes({ Data($0) }) {
         throw UserError.invalidCredentials
