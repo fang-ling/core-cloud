@@ -17,8 +17,8 @@
 //  limitations under the License.
 //
 
-import ContentView from './views/content-view'
+import HomeContentView from '@/views/home-content-view'
 
 export default function Page() {
-  return <ContentView />
+  return <HomeContentView />
 }

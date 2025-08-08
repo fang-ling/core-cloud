@@ -1,5 +1,5 @@
 //
-//  progress-view.tsx
+//  ui-progress-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/27.
@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-export default function ProgressView({
+export default function UIProgressView({
   widthClassName = 'w-[6.8px]',
   heightClassName = 'h-0.5',
   marginClassName = '',

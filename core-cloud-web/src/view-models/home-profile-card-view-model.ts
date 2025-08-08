@@ -1,8 +1,8 @@
 //
-//  content-view.tsx
+//  home-profile-card-view-model.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/7/25.
+//  Created by Fang Ling on 2025/8/5.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,13 +17,27 @@
 //  limitations under the License.
 //
 
-import ToolbarView from '@/components/views/toolbar-view'
+'use client'
 
-export default function ContentView() {
-  return (
-    <div className="relative">
-      <ToolbarView source="home" />
-      Placeholder
-    </div>
-  )
+import { useState } from 'react'
+
+export function useHomeProfileCardViewModel() {
+  const [isHover, setIsHover] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  /* MARK: - Event handlers */
+  function handleCardHover(isEnter: boolean){
+    setIsHover(isEnter)
+  }
+
+  function handleImageLoad() {console.log('qwq')
+    setIsLoaded(true)
+  }
+
+  return {
+    isHover,
+    isLoaded,
+    handleCardHover,
+    handleImageLoad
+  }
 }

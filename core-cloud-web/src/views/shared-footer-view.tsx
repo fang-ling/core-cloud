@@ -1,5 +1,5 @@
 //
-//  footer-view.tsx
+//  shared-footer-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/3.
@@ -17,16 +17,16 @@
 //  limitations under the License.
 //
 
-export default function FooterView() {
+export default function SharedFooterView() {
   return (
     <footer className="w-full py-7.5 bg-gray6 flex justify-center">
       <div
         className={
-          'w-full text-[11px] text-labelSecondary leading-[2] ' +
-            'flex justify-between min-[1165px]:max-w-258.75'
+          'w-full text-[11px] text-labelSecondary leading-[2] flex-wrap ' +
+            'flex justify-between max-w-86.25 md:max-w-172.5 lg:max-w-258.75'
         }
       >
-        <p>{'0.0'}</p>
+        <p>{'Version 1.0-beta'}</p>
         <p>{'Copyright © 2025 CoreCloud. All rights reserved.'}</p>
       </div>
     </footer>

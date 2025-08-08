@@ -1,5 +1,5 @@
 //
-//  user-token.ts
+//  authenticator-content-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/3.
@@ -17,13 +17,16 @@
 //  limitations under the License.
 //
 
+import AuthenticatorLoginView from './authenticator-login-view'
+import SharedFooterView from './shared-footer-view'
+import SharedToolbarView from './shared-toolbar-view'
 
-export namespace UserToken {
-  export namespace Singular {
-    export namespace Input {
-      export type Insertion = {
-        rememberMe: boolean
-      }
-    }
-  }
+export default function AuthenticatorContentView() {
+  return (
+    <div className="relative">
+      <SharedToolbarView source="authenticator" />
+      <AuthenticatorLoginView />
+      <SharedFooterView />
+    </div>
+  )
 }

@@ -1,5 +1,5 @@
 //
-//  register-view.tsx
+//  authenticator-register-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/27.
@@ -19,23 +19,25 @@
 
 'use client'
 
-import ImageView from '@/ui-elements/views/image-view'
-import SFSymbolView from '@/ui-elements/views/sf-symbol-view'
-import ReactDOM from 'react-dom'
-import TextFieldView from './text-field-view'
-import useRegisterViewModel from '../view-models/register-view-model'
-import ProgressView from '@/ui-elements/views/progress-view'
+import {
+  useAuthenticatorRegisterViewModel
+} from '@/view-models/authenticator-register-view-model'
+import { createPortal } from 'react-dom'
+import UIImageView from './ui-image-view'
+import UISFSymbolView from './ui-sf-symbol-view'
+import AuthenticatorTextFieldView from './authenticator-text-field-view'
+import UIProgressView from './ui-progress-view'
 
-export default function RegisterView({
+export default function AuthenticatorRegisterView({
   setIsPresented
 }: {
   setIsPresented: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-  const viewModel = useRegisterViewModel({
+  const viewModel = useAuthenticatorRegisterViewModel({
     setIsPresented: setIsPresented
   })
 
-  return ReactDOM.createPortal(
+  return createPortal(
     (
       <>
         <div
@@ -71,7 +73,7 @@ export default function RegisterView({
                     {
                       process.env.NEXT_PUBLIC_AUTHENTICATOR_ICON_URLS
                         ? (
-                          <ImageView
+                          <UIImageView
                             urls={
                               process.env.NEXT_PUBLIC_AUTHENTICATOR_ICON_URLS
                                 .split(',')
@@ -80,7 +82,7 @@ export default function RegisterView({
                           />
                         )
                         : (
-                          <SFSymbolView
+                          <UISFSymbolView
                             systemName="icloud"
                             className="w-6 fill-sk-body-text-color"
                           />
@@ -191,7 +193,7 @@ export default function RegisterView({
                     }
                   >
                     <div className="w-full">
-                      <TextFieldView
+                      <AuthenticatorTextFieldView
                         text={viewModel.firstName}
                         setText={viewModel.setFirstName}
                         isFocused={viewModel.isFirstNameFocused}
@@ -216,7 +218,7 @@ export default function RegisterView({
                                 'text-xs leading-4 flex'
                             }
                           >
-                            <SFSymbolView
+                            <UISFSymbolView
                               systemName="exclamationmark.circle"
                               className={
                                 'w-4 py-[1.5px] pr-0.75 fill-[#e30000] ' +
@@ -229,7 +231,7 @@ export default function RegisterView({
                       }
                     </div>
                     <div className="w-full">
-                      <TextFieldView
+                      <AuthenticatorTextFieldView
                         text={viewModel.lastName}
                         setText={viewModel.setLastName}
                         isFocused={viewModel.isLastNameFocused}
@@ -254,7 +256,7 @@ export default function RegisterView({
                                 'text-xs leading-4 flex'
                             }
                           >
-                            <SFSymbolView
+                            <UISFSymbolView
                               systemName="exclamationmark.circle"
                               className={
                                 'w-4 py-[1.5px] pr-0.75 fill-[#e30000] ' +
@@ -285,7 +287,7 @@ export default function RegisterView({
                       )
                     }
                   >
-                    <TextFieldView
+                    <AuthenticatorTextFieldView
                       text={viewModel.username}
                       setText={viewModel.setUsername}
                       isFocused={viewModel.isUsernameFocused}
@@ -311,7 +313,7 @@ export default function RegisterView({
                               'text-xs leading-4 flex'
                           }
                         >
-                          <SFSymbolView
+                          <UISFSymbolView
                             systemName="exclamationmark.circle"
                             className={
                               'w-4 py-[1.5px] pr-0.75 fill-[#e30000] ' +
@@ -350,7 +352,7 @@ export default function RegisterView({
                       )
                     }
                   >
-                    <TextFieldView
+                    <AuthenticatorTextFieldView
                       text={viewModel.password}
                       setText={viewModel.setPassword}
                       isFocused={viewModel.isPasswordFocused}
@@ -379,7 +381,7 @@ export default function RegisterView({
                               'text-xs leading-4 flex'
                           }
                         >
-                          <SFSymbolView
+                          <UISFSymbolView
                             systemName="exclamationmark.circle"
                             className={
                               'w-4 py-[1.5px] pr-0.75 fill-[#e30000] ' +
@@ -464,7 +466,7 @@ export default function RegisterView({
                                 >
                                   {
                                     ((viewModel.mask >> index) & 1) === 1 && (
-                                      <SFSymbolView
+                                      <UISFSymbolView
                                         className={
                                           'fill-[#008009] ' +
                                             'dark:fill-[#03a10e] w-2.75 mr-1.75'
@@ -503,7 +505,7 @@ export default function RegisterView({
                       )
                     }
                   >
-                    <TextFieldView
+                    <AuthenticatorTextFieldView
                       text={viewModel.confirmPassword}
                       setText={viewModel.setConfirmPassword}
                       isFocused={viewModel.isConfirmPasswordFocused}
@@ -529,7 +531,7 @@ export default function RegisterView({
                               'text-xs leading-4 flex'
                           }
                         >
-                          <SFSymbolView
+                          <UISFSymbolView
                             systemName="exclamationmark.circle"
                             className={
                               'w-4 py-[1.5px] pr-0.75 fill-[#e30000] ' +
@@ -561,7 +563,7 @@ export default function RegisterView({
                       )
                     }
                   >
-                    <TextFieldView
+                    <AuthenticatorTextFieldView
                       text={viewModel.masterPassword}
                       setText={viewModel.setMasterPassword}
                       isFocused={viewModel.isMasterPasswordFocused}
@@ -585,7 +587,7 @@ export default function RegisterView({
                         viewModel.handleMasterPasswordQuestionHover(false)
                       }}
                     >
-                      <SFSymbolView
+                      <UISFSymbolView
                         className="w-6.25 p-0.75 fill-[#6e6e73]"
                         systemName="questionmark.circle.fill"
                     />
@@ -637,7 +639,7 @@ export default function RegisterView({
                               'text-xs leading-4 flex'
                           }
                         >
-                          <SFSymbolView
+                          <UISFSymbolView
                             systemName="exclamationmark.circle"
                             className={
                               'w-4 py-[1.5px] pr-0.75 fill-[#e30000] ' +
@@ -679,7 +681,7 @@ export default function RegisterView({
                       )
                     }
                   >
-                    <TextFieldView
+                    <AuthenticatorTextFieldView
                       text={viewModel.confirmMasterPassword}
                       setText={viewModel.setConfirmMasterPassword}
                       isFocused={viewModel.isConfirmMasterPasswordFocused}
@@ -707,7 +709,7 @@ export default function RegisterView({
                               'text-xs leading-4 flex'
                           }
                         >
-                          <SFSymbolView
+                          <UISFSymbolView
                             systemName="exclamationmark.circle"
                             className={
                               'w-4 py-[1.5px] pr-0.75 fill-[#e30000] ' +
@@ -1353,7 +1355,7 @@ export default function RegisterView({
                     )
                     : (
                       <div className="flex items-center justify-center h-full">
-                        <ProgressView
+                        <UIProgressView
                           marginClassName="mx-3 scale-50"
                           variant="8"
                         />

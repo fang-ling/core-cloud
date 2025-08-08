@@ -1,5 +1,5 @@
 //
-//  image-view.tsx
+//  ui-image-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/26.
@@ -17,6 +17,11 @@
 //  limitations under the License.
 //
 
+'use client'
+
+import { useUIImageViewModel } from '@/view-models/ui-image-view-model'
+import { useEffect } from 'react'
+
 /**
  * A view that displays an image.
  *
@@ -28,13 +33,25 @@
  * @param className - An optional class name to apply to the `<img>` element for
  *                    custom styling.
  */
-export default function ImageView({
+export default function UIImageView({
   urls,
-  className
+  className,
+  onLoad
 }: {
   urls: string[],
-  className?: string
+  className?: string,
+  onLoad?: () => void
 }) {
+  const viewModel = useUIImageViewModel({
+    onLoad: onLoad
+  })
+
+  useEffect(() => {
+    if (viewModel.imageRef.current?.complete) {
+      viewModel.handleOnLoad()
+    }
+  }, [])
+
   return (
     <picture>
       {
@@ -47,6 +64,7 @@ export default function ImageView({
         ))
       }
       <img
+        ref={viewModel.imageRef}
         src={urls[urls.length - 1]}
         className={className}
       />

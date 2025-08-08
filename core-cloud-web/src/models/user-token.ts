@@ -1,5 +1,5 @@
 //
-//  toolbar-icon-view.tsx
+//  user-token.ts
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/3.
@@ -17,27 +17,12 @@
 //  limitations under the License.
 //
 
-import ImageView from '@/ui-elements/views/image-view'
-import SFSymbolView from '@/ui-elements/views/sf-symbol-view'
-
-export default function ToolbarIconView({
-  urls
-}: {
-  urls?: string[]
-}) {
-  if (urls && urls.filter(url => url !== '').length > 0) {
-    return (
-      <ImageView
-        urls={urls}
-        className="size-6 mr-0.5 rounded-md"
-      />
-    )
-  } else {
-    return (
-      <SFSymbolView
-        systemName="icloud"
-        className="fill-systemBlack h-3.5 mr-0.5"
-      />
-    )
+export namespace UserToken {
+  export namespace Singular {
+    export namespace Input {
+      export type Insertion = {
+        rememberMe: boolean
+      }
+    }
   }
 }

@@ -24,15 +24,26 @@
   color-scheme: light dark;
 
   /* COLORS */
+  --theme-color-appTint: hsl(210, 100, 44.5);
   --theme-color-backdrop: rgba(245, 245, 247, 0.85);
   --theme-color-backgroundPrimary: hsl(0, 0, 100);
-  --theme-color-boxShadow: purple; /* TODO */
+  --theme-color-boxShadow: rgba(0, 0, 0, 0.16);
+  --theme-color-fillPrimary: rgba(120, 120, 128, 0.2);
   --theme-color-fillSecondary: rgba(120, 120, 128, 0.16);
+  --theme-color-fillTertiary: rgba(118, 118, 128, 0.12);
   --theme-color-gray6: #f2f2f7;
   --theme-color-labelPrimary: rgba(0, 0, 0, 0.88);
   --theme-color-labelSecondary: rgba(0, 0, 0, 0.56);
+  --theme-color-labelTertiary: rgba(0, 0, 0, 0.48);
+  --theme-color-labelQuaternary: rgba(0, 0, 0, 0.32);
   --theme-color-systemBlack: rgb(0, 0, 0);
   --theme-color-systemBlue: rgb(0, 113, 227);
+  --theme-color-systemGreen: rgb(3, 161, 14);
+  --theme-color-systemOrange: rgb(255, 149, 0);
+  --theme-color-systemPurple: rgb(175, 82, 222);
+  --theme-color-systemRed: hsl(0, 100, 44.5);
+  --theme-color-systemWhite: hsl(0, 0, 100);
+  --theme-color-systemYellow: rgb(255, 205, 0);
   --sk-body-link-color: #06c;
   --sk-body-text-color: #1d1d1f;
   --sk-button-background: #0071e3;
@@ -45,15 +56,26 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* COLORS */
+    --theme-color-appTint: hsl(204, 100, 50);
     --theme-color-backdrop: rgba(10, 10, 10, 0.8);
     --theme-color-backgroundPrimary: hsl(240, 3.4, 11.4);
     --theme-color-boxShadow: rgba(0, 0, 0, 0.65);
-    --theme-color-fillSecondary: purple; /* TODO */
+    --theme-color-fillPrimary: hsla(0, 0, 71.4, 0.3);
+    --theme-color-fillSecondary: rgba(120, 120, 128, 0.36);
+    --theme-color-fillTertiary: rgba(118, 118, 128, 0.3);
     --theme-color-gray6: #2c2c2e;
     --theme-color-labelPrimary: hsla(0, 0, 100, 0.98);
     --theme-color-labelSecondary: hsla(0, 0, 100, 0.66);
+    --theme-color-labelTertiary: hsla(0, 0, 100, 0.5);
+    --theme-color-labelQuaternary: hsla(0, 0, 100, 0.42);
     --theme-color-systemBlack: rgb(255, 255, 255);
     --theme-color-systemBlue: rgb(0, 154, 255);
+    --theme-color-systemGreen: rgb(50, 209, 88);
+    --theme-color-systemOrange: rgb(255, 159, 10);
+    --theme-color-systemPurple: rgb(191, 90, 242);
+    --theme-color-systemRed: hsl(358, 100, 59.4);
+    --theme-color-systemWhite: hsl(0, 0, 100);
+    --theme-color-systemYellow: rgb(255, 214, 10);
     --sk-body-link-color: #2997ff;
     --sk-body-text-color: #f5f5f7;
     --sk-button-background: #0071e3;
@@ -65,16 +87,31 @@
 }
 
 @theme inline {
+  /* BREAKPOINTS */
+  --breakpoint-md: 760px;
+  --breakpoint-lg: 1165px;
+
   /* COLORS */
+  --color-appTint: var(--theme-color-appTint);
   --color-backdrop: var(--theme-color-backdrop);
   --color-backgroundPrimary: var(--theme-color-backgroundPrimary);
   --color-boxShadow: var(--theme-color-boxShadow);
+  --color-fillPrimary: var(--theme-color-fillPrimary);
   --color-fillSecondary: var(--theme-color-fillSecondary);
+  --color-fillTertiary: var(--theme-color-fillTertiary);
   --color-gray6: var(--theme-color-gray6);
   --color-labelPrimary: var(--theme-color-labelPrimary);
   --color-labelSecondary: var(--theme-color-labelSecondary);
+  --color-labelTertiary: var(--theme-color-labelTertiary);
+  --color-labelQuaternary: var(--theme-color-labelQuaternary);
   --color-systemBlack: var(--theme-color-systemBlack);
   --color-systemBlue: var(--theme-color-systemBlue);
+  --color-systemGreen: var(--theme-color-systemGreen);
+  --color-systemOrange: var(--theme-color-systemOrange);
+  --color-systemPurple: var(--theme-color-systemPurple);
+  --color-systemRed: var(--theme-color-systemRed);
+  --color-systemWhite: var(--theme-color-systemWhite);
+  --color-systemYellow: var(--theme-color-systemYellow);
   --color-sk-body-link-color: var(--sk-body-link-color);
   --color-sk-body-text-color: var(--sk-body-text-color);
   --color-sk-button-background: var(--sk-button-background);
@@ -254,7 +291,7 @@
 
   @keyframes fadeIn {
     0% { opacity: 0 }
-    to { opacity:1 }
+    to { opacity: 1 }
   }
 
   @keyframes fadeInAndBarelyScale {

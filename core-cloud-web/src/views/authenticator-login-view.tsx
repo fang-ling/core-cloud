@@ -1,5 +1,5 @@
 //
-//  login-view.tsx
+//  authenticator-login-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/26.
@@ -19,15 +19,17 @@
 
 'use client'
 
-import ImageView from '@/ui-elements/views/image-view'
-import SFSymbolView from '@/ui-elements/views/sf-symbol-view'
-import TextFieldView from './text-field-view'
-import useLoginViewModel from '../view-models/login-view-model'
-import ProgressView from '@/ui-elements/views/progress-view'
-import RegisterView from './register-view'
+import {
+  useAuthenticatorLoginViewModel
+} from '@/view-models/authenticator-login-view-model'
+import UIImageView from './ui-image-view'
+import UISFSymbolView from './ui-sf-symbol-view'
+import AuthenticatorTextFieldView from './authenticator-text-field-view'
+import UIProgressView from './ui-progress-view'
+import AuthenticatorRegisterView from './authenticator-register-view'
 
-export default function LoginView() {
-  const viewModel = useLoginViewModel()
+export default function AuthenticatorLoginView() {
+  const viewModel = useAuthenticatorLoginViewModel()
 
   return (
     <div className="flex flex-col items-center mb-48">
@@ -275,7 +277,7 @@ export default function LoginView() {
             {
               process.env.NEXT_PUBLIC_AUTHENTICATOR_ICON_URLS
                 ? (
-                  <ImageView
+                  <UIImageView
                     urls={
                       process.env.NEXT_PUBLIC_AUTHENTICATOR_ICON_URLS.split(',')
                     }
@@ -283,7 +285,7 @@ export default function LoginView() {
                   />
                 )
                 : (
-                  <SFSymbolView
+                  <UISFSymbolView
                     systemName="icloud"
                     className={
                       'w-7.5 absolute top-1/2 left-1/2 -translate-1/2 ' +
@@ -311,7 +313,7 @@ export default function LoginView() {
         <div className="w-144 h-120 mx-auto flex items-center relative -top-18">
           <div className="relative max-w-120 mx-auto h-67">
             <div className="min-h-45.5 max-w-120 w-120 relative">
-              <TextFieldView
+              <AuthenticatorTextFieldView
                 text={viewModel.username}
                 setText={viewModel.setUsername}
                 isFocused={viewModel.isUsernameFocused}
@@ -334,7 +336,7 @@ export default function LoginView() {
                     : () => viewModel.handleContinueButtonClick()
                 }
               />
-              <TextFieldView
+              <AuthenticatorTextFieldView
                 text={viewModel.password}
                 setText={viewModel.setPassword}
                 isFocused={viewModel.isPasswordFocused}
@@ -404,7 +406,7 @@ export default function LoginView() {
                   }
                   onClick={() => viewModel.handleContinueButtonClick()}
                 >
-                  <SFSymbolView
+                  <UISFSymbolView
                     className="fill-[#494949] dark:fill-[#666] size-7 p-0.25"
                     systemName="arrowshape.right.circle"
                     variant="thin"
@@ -422,7 +424,7 @@ export default function LoginView() {
               }
               style={{ visibility: viewModel.isLoading ? 'visible' : 'hidden' }}
             >
-              <ProgressView
+              <UIProgressView
                 widthClassName="w-[7.25px]"
                 heightClassName="h-[2.25px]"
                 translateX={6.25}
@@ -457,7 +459,7 @@ export default function LoginView() {
                             'pointer-events-none'
                         }
                       >
-                        <SFSymbolView
+                        <UISFSymbolView
                           className="size-2.25 fill-white"
                           systemName="checkmark"
                           variant="semibold"
@@ -516,7 +518,7 @@ export default function LoginView() {
             }
           >
             {'Forgot password?'}
-            <SFSymbolView
+            <UISFSymbolView
               className="fill-systemBlue w-2 ml-[4.2px]"
               systemName="arrow.up.right"
             />
@@ -538,7 +540,7 @@ export default function LoginView() {
         {
           /* We need conditional rendering to reset the state variables. */
           viewModel.isRegisterFormPresented && (
-            <RegisterView
+            <AuthenticatorRegisterView
               setIsPresented={viewModel.setIsRegisterFormPresented}
             />
           )

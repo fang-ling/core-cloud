@@ -1,5 +1,5 @@
 //
-//  page.tsx
+//  shared-toolbar-icon-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/3.
@@ -17,8 +17,27 @@
 //  limitations under the License.
 //
 
-import AuthenticatorContentView from '@/views/authenticator-content-view'
+import UIImageView from './ui-image-view'
+import UISFSymbolView from './ui-sf-symbol-view'
 
-export default function Page() {
-  return <AuthenticatorContentView />
+export default function SharedToolbarIconView({
+  urls
+}: {
+  urls?: string[]
+}) {
+  if (urls && urls.filter(url => url !== '').length > 0) {
+    return (
+      <UIImageView
+        urls={urls}
+        className="size-6 mr-0.5"
+      />
+    )
+  } else {
+    return (
+      <UISFSymbolView
+        systemName="icloud"
+        className="fill-systemBlack h-3.5 mr-0.5"
+      />
+    )
+  }
 }

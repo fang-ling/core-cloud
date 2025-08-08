@@ -1,5 +1,5 @@
 //
-//  toolbar-view.tsx
+//  shared-toolbar-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/25.
@@ -17,17 +17,15 @@
 //  limitations under the License.
 //
 
-import ToolbarIconView from "./toolbar-icon-view"
+import SharedToolbarIconView from './shared-toolbar-icon-view'
 
-export default function ToolbarView({
-  source,
-  children
+export default function SharedToolbarView({
+  source
 }: {
   /*
    * When source is not 'app', we also need the overlay style class.
    */
-  source: 'authenticator' | 'home' | 'app',
-  children?: React.ReactNode
+  source: 'authenticator' | 'home' | 'app'
 }) {
   return (
     <header
@@ -42,7 +40,12 @@ export default function ToolbarView({
                   'dark:border-b-[rgba(28,28,30,0.5)] ' +
                   'dark:bg-[rgba(28,28,30,0.5)]'
               )
-              : ''
+              : source === 'home'
+                ? (
+                  'z-3 dark:bg-[rgba(56,56,61,.6)] bg-[rgba(248,248,252,.4)] ' +
+                    'backdrop-blur-[14px]'
+                )
+                : ''
           )
       }
     >
@@ -50,10 +53,15 @@ export default function ToolbarView({
         (() => {
           switch (source) {
             case 'authenticator': return (
-              <ToolbarIconView
+              <SharedToolbarIconView
                 urls={
                   process.env.NEXT_PUBLIC_AUTHENTICATOR_ICON_URLS?.split(',')
                 }
+              />
+            )
+            case 'home': return (
+              <SharedToolbarIconView
+                urls={process.env.NEXT_PUBLIC_HOME_ICON_URLS?.split(',')}
               />
             )
           }
@@ -66,6 +74,13 @@ export default function ToolbarView({
           }}
         />
       </div>
+
+      {
+        source !== 'authenticator' && (
+          <div className="ml-auto">
+          </div>
+        )
+      }
     </header>
   )
 }

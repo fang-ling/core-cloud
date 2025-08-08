@@ -1,8 +1,8 @@
 //
-//  content-view.tsx
+//  ui-image-view-model.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/3.
+//  Created by Fang Ling on 2025/8/5.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,16 +17,24 @@
 //  limitations under the License.
 //
 
-import ToolbarView from '@/components/views/toolbar-view'
-import LoginView from './login-view'
-import FooterView from '@/components/views/footer-view'
+'use client'
 
-export default function ContentView() {
-  return (
-    <div className="relative">
-      <ToolbarView source="authenticator" />
-      <LoginView />
-      <FooterView />
-    </div>
-  )
+import { useRef } from 'react'
+
+export function useUIImageViewModel({
+  onLoad
+}: {
+  onLoad?: () => void
+}) {
+  const imageRef = useRef<HTMLImageElement>(null)
+
+  /* MARK: - Event handlers */
+  function handleOnLoad() {console.log('qaq')
+    onLoad?.()
+  }
+
+  return {
+    imageRef,
+    handleOnLoad
+  }
 }
