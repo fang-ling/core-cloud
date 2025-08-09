@@ -32,6 +32,7 @@
   --theme-color-fillSecondary: rgba(120, 120, 128, 0.16);
   --theme-color-fillTertiary: rgba(118, 118, 128, 0.12);
   --theme-color-fillQuaternary: rgba(120, 120, 128, 0.08);
+  --theme-color-gray5: hsl(240, 10.6, 90.8);
   --theme-color-gray6: #f2f2f7;
   --theme-color-labelPrimary: rgba(0, 0, 0, 0.88);
   --theme-color-labelSecondary: rgba(0, 0, 0, 0.56);
@@ -65,6 +66,7 @@
     --theme-color-fillSecondary: rgba(120, 120, 128, 0.36);
     --theme-color-fillTertiary: rgba(118, 118, 128, 0.3);
     --theme-color-fillQuaternary: rgba(116, 116, 128, 0.25);
+    --theme-color-gray5: hsl(240, 1.9, 20.8);
     --theme-color-gray6: #2c2c2e;
     --theme-color-labelPrimary: hsla(0, 0, 100, 0.98);
     --theme-color-labelSecondary: hsla(0, 0, 100, 0.66);
@@ -102,6 +104,7 @@
   --color-fillSecondary: var(--theme-color-fillSecondary);
   --color-fillTertiary: var(--theme-color-fillTertiary);
   --color-fillQuaternary: var(--theme-color-fillQuaternary);
+  --color-gray5: var(--theme-color-gray5);
   --color-gray6: var(--theme-color-gray6);
   --color-labelPrimary: var(--theme-color-labelPrimary);
   --color-labelSecondary: var(--theme-color-labelSecondary);
@@ -310,5 +313,15 @@
   @keyframes fadeOut {
     0% { opacity: 1 }
     to { opacity: 0 }
+  }
+
+  @keyframes slideIn {
+    0% { transform: translateY(100%); }
+    100% { transform: translateY(0px); }
+  }
+
+  @keyframes slideOut {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(100%); }
   }
 }

@@ -1,5 +1,5 @@
 //
-//  notice-popover.tsx
+//  popover.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/9.
@@ -17,10 +17,10 @@
 //  limitations under the License.
 //
 
-import useNoticePopover from '@/view-models/shared/toolbar/notice-popover'
+import usePopover from '@/view-models/shared/toolbar/popover'
 import { createPortal } from 'react-dom'
 
-export default function NoticePopover({
+export default function Popover({
   onClose,
   right,
   children
@@ -29,7 +29,7 @@ export default function NoticePopover({
   right: number,
   children?: React.ReactNode
 }) {
-  const viewModel = useNoticePopover({
+  const viewModel = usePopover({
     onClose: onClose
   })
 
@@ -44,26 +44,50 @@ export default function NoticePopover({
         {/* Popover - < md */}
         <div
           className={
-            'flex md:hidden w-4/5 fixed py-5 pl-1.25 pr-4 rounded-xl ' +
-              'border-[.2px] border-fillQuaternary origin-top-right left-1/2 ' +
-              'bg-[rgba(248,248,252,.85)] dark:bg-[rgba(56,56,61,.6)] ' +
-              'top-11 z-10 backdrop-blur-[15px] backdrop-saturate-86 ' +
-              'shadow-[0_11px_34px_rgba(0,0,0,.16)] -translate-x-1/2 ' + (
+            'md:hidden flex px-1.25 py-2.5 fixed h-full mt-6.5 inset-0 ' +
+              'bg-backgroundPrimary z-10 rounded-t-[10.5] ' +
+   'shadow-[0px_0px_15px_0px_rgba(0,0,0,.15),0px_0px_0px_1px_rgba(0,0,0,.1)] ' +
+              'backdrop-blur-[15px] backdrop-saturate-86 flex-col ' + (
                 viewModel.isClosing
-                  ? 'animate-[fadeOut_.2s_ease_forwards]'
-                  : 'animate-[fadeInAndScale_.2s_cubic-bezier(.25,.1,.25,1.3)]'
+                  ? 'animate-[slideOut_.35s_cubic-bezier(0,0,0,1)_forwards]'
+                  : 'animate-[slideIn_.35s_cubic-bezier(0,0,0,1)_forwards]'
               )
           }
         >
+          <button
+            className="rounded-lg px-1.5 size-7 ml-2.25 mt-1.25"
+            onClick={() => viewModel.handlePopoverClose()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 12.731 12.742"
+              aria-hidden="true"
+              className="size-3.5 fill-labelPrimary"
+            >
+              <path
+                d={
+                  'M.287 12.454c.39.383 1.054.375 1.422.008l4.657-4.657 ' +
+                    '4.652 4.654c.378.378 1.035.38 1.42-.007.385-.39.387-1.' +
+                    '037.01-1.417l-4.653-4.66 4.653-4.652c.377-.377.38-1.' +
+                    '03-.01-1.414-.39-.39-1.042-.393-1.42-.01L6.366 4.95 ' +
+                    '1.71.296C1.34-.074.672-.089.287.306-.095.696-.088 ' +
+                    '1.353.279 1.72l4.658 4.655L.279 11.04c-.367.365-.38 ' +
+                    '1.03.008 1.414z'
+                }
+              />
+            </svg>
+          </button>
+
           {children}
         </div>
+
         {/* Popover - >= md */}
         <div
           className={
-            'hidden md:flex md:w-160 fixed py-5 pl-1.25 pr-4 rounded-xl ' +
+            'hidden md:flex fixed rounded-xl ' +
               'border-[.2px] border-fillQuaternary origin-top-right ' +
-              'bg-[rgba(248,248,252,.85)] dark:bg-[rgba(56,56,61,.6)] ' +
-              'top-11 z-10 backdrop-blur-[15px] backdrop-saturate-86 ' +
+              'bg-backgroundPrimary dark:bg-[rgba(0,0,0,.8)] ' +
+              'top-11 z-10 backdrop-blur-[50px] ' +
               'shadow-[0_11px_34px_rgba(0,0,0,.16)] ' +
               'dark:shadow-[0_11px_34px_rgba(0,0,0,.65)] ' + (
                 viewModel.isClosing

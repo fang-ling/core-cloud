@@ -62,17 +62,20 @@ export default function AppCard({
                     'hover:scale-3d hover:scale-x-105 hover:scale-y-105 ' +
                     'hover:scale-z-105 flex transition-transform ' +
                     'drop-shadow-[0_2px_10px_var(--theme-color-boxShadow)] ' +
-                    'flex-col items-center'
+                    'flex-col items-center active:scale-100 group'
                 }
               >
                 <UIImage
                   urls={app.urls}
-                  className="w-12.5 lg:w-17.5 object-contain"
+                  className={
+                    'w-12.5 lg:w-17.5 object-contain group-active:opacity-60'
+                  }
                 />
                 <div
                   className={
                     'mt-3.75 lg:mt-3.75 text-xs lg:text-sm leading-3.5 ' +
-                      'lg:leading-4.5 text-labelPrimary'
+                      'lg:leading-4.5 text-labelPrimary ' +
+                      'group-active:text-labelQuaternary'
                   }
                 >
                   {app.name}

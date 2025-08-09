@@ -33,6 +33,7 @@ export default function useContentView({
     backgroundColor,
     setBackgroundColor
   ] = useState<string | undefined>(/*undefined*/'blue')
+  const apps: any[] /* TODO */ = []
 
   /* MARK: - Event handlers */
   function handleCustomizeButtonClick() {
@@ -46,6 +47,7 @@ export default function useContentView({
   return {
     isCustomizationPresented,
     backgroundColor,
+    apps,
     handleCustomizeButtonClick,
     handleCustomizeDoneButtonClick
   }

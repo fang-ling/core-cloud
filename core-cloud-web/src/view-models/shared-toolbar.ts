@@ -20,9 +20,9 @@
 import { useState } from 'react'
 
 export default function useSharedToolbar({
-
+  onCustomize
 }: {
-
+  onCustomize?: () => void
 }) {
   /*
    * 0: off
@@ -34,22 +34,38 @@ export default function useSharedToolbar({
   const [modalRight, setModalRight] = useState(0)
 
   /* MARK: - Event handlers */
-  function handleAdvancedDataProtectionButtonClick(
-    event: React.MouseEvent<HTMLButtonElement>
+  function handleModalOpen(
+    event: React.MouseEvent<HTMLButtonElement>,
+    newRadioMode: 1 | 2 | 3
   ) {
+    /* Disable body scrolling when modal is open. */
+    document.body.style.setProperty('overflow', 'hidden')
+
     const right = event.currentTarget.getBoundingClientRect().right
     setModalRight(window.innerWidth - right)
-    setRadioMode(1)
+    setRadioMode(newRadioMode)
   }
 
   function handleModalClose() {
+    /* Revert body scrolling disable */
+    document.body.style.removeProperty('overflow')
+
     setRadioMode(0)
+  }
+
+  function handleOnCustomize() {
+    /* Revert body scrolling disable */
+    document.body.style.removeProperty('overflow')
+
+    setRadioMode(0)
+    onCustomize?.()
   }
 
   return {
     radioMode,
     modalRight,
-    handleAdvancedDataProtectionButtonClick,
-    handleModalClose
+    handleModalOpen,
+    handleModalClose,
+    handleOnCustomize
   }
 }

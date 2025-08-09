@@ -22,13 +22,17 @@ import Icon from './shared/toolbar/icon'
 import Button from './shared/toolbar/button'
 import UIImage from './ui-image'
 import NoticePopover from './shared/toolbar/notice-popover'
+import Popover from './shared/toolbar/popover'
+import Link from 'next/link'
 
 export default function SharedToolbar({
   source,
   firstName,
   lastName,
   username,
-  urls
+  urls,
+  apps,
+  onCustomize
 }: {
   /*
    * When source is not 'app', we also need the overlay style class.
@@ -37,9 +41,17 @@ export default function SharedToolbar({
   firstName?: string,
   lastName?: string,
   username?: string,
-  urls?: string[]
+  urls?: string[],
+  apps?: {
+    urls: string[],
+    name: string,
+    href: string
+  }[],
+  onCustomize?: () => void
 }) {
-  const viewModel = useSharedToolbar({ })
+  const viewModel = useSharedToolbar({
+    onCustomize: onCustomize
+  })
 
   return (
     <>
@@ -95,7 +107,7 @@ export default function SharedToolbar({
             <div className="ml-auto flex items-center">
               <Button
                 onClick={(event) => {
-                  viewModel.handleAdvancedDataProtectionButtonClick(event)
+                  viewModel.handleModalOpen(event, 1)
                 }}
                 isOpen={viewModel.radioMode === 1}
               >
@@ -127,7 +139,12 @@ export default function SharedToolbar({
                   />
                 </svg>
               </Button>
-              <Button>
+              <Button
+                onClick={(event) => {
+                  viewModel.handleModalOpen(event, 2)
+                }}
+                isOpen={viewModel.radioMode === 2}
+              >
                 <svg
                   className="fill-current"
                   xmlns="http://www.w3.org/2000/svg"
@@ -378,6 +395,151 @@ export default function SharedToolbar({
             </p>
             </div>
           </NoticePopover>
+        )
+      }
+      {
+        viewModel.radioMode === 2 && (
+          <Popover
+            onClose={() => viewModel.handleModalClose()}
+            right={viewModel.modalRight}
+          >
+            <div className="p-1.25">
+              <p className="px-2.5 pt-2.5 md:pb-1.25 text-sm font-semibold">
+                {'Apps'}
+              </p>
+              <div className="w-full md:w-78 grid grid-cols-4">
+                {
+                  apps?.map((app, index) => (
+                    <Link
+                      key={index}
+                      href={app.href}
+                      className={
+                        'flex flex-col items-center w-19.5 h-26.25 p-3 ' +
+                          'hover:bg-fillTertiary rounded-[10px] ' +
+                          'dark:active:bg-[rgba(0,153,255,.16)] ' +
+                          'active:bg-[rgba(0,113,227,.16)] group'
+                      }
+                    >
+                      <UIImage
+                        className="size-13.5 mb-1.25 group-active:opacity-60"
+                        urls={app.urls}
+                      />
+                      <span
+                        className={
+                          'mt-1.5 text-labelSecondary text-xs leading-4 ' +
+                            'group-active:text-labelQuaternary'
+                        }
+                      >
+                        {app.name}
+                      </span>
+                    </Link>
+                  ))
+                }
+              </div>
+              <hr className="m-1.25 border-gray5" />
+              <button
+                className={
+                  'p-2.5 md:p-1.25 rounded-[10px] flex items-center ' +
+                    'w-full hover:bg-fillTertiary cursor-pointer ' +
+                    'dark:active:bg-[rgba(0,153,255,.16)] ' +
+                    'active:bg-[rgba(0,113,227,.16)] group'
+                }
+                onClick={() => viewModel.handleOnCustomize()}
+              >
+                <div className="pl-1.25">
+                  <svg
+                    viewBox="0 0 268.0201416015625 158.116943359375"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={
+                      'h-5.5 -mx-2.5 -my-[2.5px] fill-systemBlue ' +
+                        'group-active:opacity-60'
+                    }
+                    aria-hidden="true"
+                  >
+                    <g
+                      transform={
+                        'matrix(1 0 0 1 72.1201049804688 114.2884521484375)'
+                      }
+                    >
+                      <path
+                        d={
+                          'M49.3652-60.9863C49.9512-60.9863 50.2441-61.3281 ' +
+                            '50.3418-61.8652C52.002-69.6777 51.9043-69.9707 ' +
+                            '60.1074-71.6309C60.6445-71.7285 61.0352-72.0703 ' +
+                            '61.0352-72.6074C61.0352-73.1934 60.6445-73.5352 ' +
+                            '60.1074-73.6328C51.9043-75.293 52.002-75.5859 ' +
+                            '50.3418-83.3496C50.2441-83.8867 49.9512-84.2773 ' +
+                            '49.3652-84.2773C48.7793-84.2773 48.4863-83.8867 ' +
+                            '48.3887-83.3496C46.7285-75.5859 46.8262-75.293 ' +
+                            '38.623-73.6328C38.0859-73.5352 37.6953-73.1934 ' +
+                            '37.6953-72.6074C37.6953-72.0703 38.0859-71.7285 ' +
+                            '38.623-71.6309C46.8262-69.9707 46.7285-69.6777 ' +
+                            '48.3887-61.8652C48.4863-61.3281 48.7793-60.9863 ' +
+                            '49.3652-60.9863ZM89.6973-43.75C90.3809-43.75 ' +
+                            '90.7715-44.1895 90.918-44.8242C92.5781-54.1016 ' +
+                            '92.627-54.6875 102.441-56.3965C103.125-56.4941 ' +
+                            '103.564-56.9336 103.564-57.6172C103.564-58.3008 ' +
+                            '103.125-58.6914 102.441-58.8379C92.627-60.498 ' +
+                            '92.5781-61.084 90.918-70.3613C90.7715-70.9961 ' +
+                            '90.3809-71.4844 89.6973-71.4844C89.0137-71.4844 ' +
+                            '88.623-70.9961 88.4766-70.3613C86.8164-61.084 ' +
+                            '86.7676-60.498 76.9531-58.8379C76.3184-58.6914 ' +
+                            '75.8301-58.3008 75.8301-57.6172C75.8301-56.9336 ' +
+                            '76.3184-56.4941 76.9531-56.3965C86.7676-54.6875 ' +
+                            '86.8164-54.1016 88.4766-44.8242C88.623-44.1895 ' +
+                            '89.0137-43.75 ' +
+                            '89.6973-43.75ZM22.6074-29.7363C23.291-29.7363 ' +
+                            '23.6816-30.2246 23.8281-30.8594C25.4883-40.1367 ' +
+                            '25.5371-40.7227 35.3516-42.3828C35.9863-42.5293 ' +
+                            '36.4746-42.9199 36.4746-43.6035C36.4746-44.2871 ' +
+                            '35.9863-44.7266 35.3516-44.8242C25.5371-46.5332 ' +
+                            '25.4883-47.1191 23.8281-56.3965C23.6816-57.0312 ' +
+                            '23.291-57.4707 22.6074-57.4707C21.9238-57.4707 ' +
+                            '21.5332-57.0312 21.3867-56.3965C19.7266-47.1191 ' +
+                            '19.6777-46.5332 9.86328-44.8242C9.22852-44.7266 ' +
+                            '8.74023-44.2871 8.74023-43.6035C8.74023-42.9199 ' +
+                            '9.22852-42.5293 9.86328-42.3828C19.6777-40.7227 ' +
+                            '19.7266-40.1367 21.3867-30.8594C21.5332-30.2246 ' +
+                            '21.9238-29.7363 22.6074-29.7363ZM106.006 ' +
+                            '12.0117C108.057 14.1113 111.572 14.1113 113.525 ' +
+                            '12.0117C115.527 9.86328 115.527 6.54297 113.525 ' +
+                            '4.49219L67.0898-42.0898C65.0391-44.1406 ' +
+                            '61.5234-44.1406 59.5703-42.0898C57.5195-39.9414 ' +
+                            '57.5684-36.5723 ' +
+                            '59.5703-34.5215ZM77.5879-21.5332L63.2812-35.' +
+                            '8887C62.4023-36.7676 62.1094-37.7441 ' +
+                            '62.9883-38.5742C63.7207-39.3555 64.7461-39.1602 ' +
+                            '65.6738-38.2324L80.0293-23.877ZM45.8008 ' +
+                            '12.793C46.6797 12.793 47.3145 12.1582 47.4609 ' +
+                            '11.2305C49.0234-1.80664 49.6582-2.14844 ' +
+                            '62.9395-4.29688C63.9648-4.49219 64.5996-4.98047 ' +
+                            '64.5996-5.95703C64.5996-6.88477 63.9648-7.4707 ' +
+                            '63.1348-7.61719C49.7559-10.1562 49.0234-10.1074 ' +
+                            '47.4609-23.1445C47.3145-24.0723 46.6797-24.707 ' +
+                            '45.8008-24.707C44.873-24.707 44.2383-24.0723 ' +
+                            '44.1406-23.1934C42.4316-9.96094 41.9922-9.52148 ' +
+                            '28.4668-7.61719C27.6367-7.51953 27.002-6.88477 ' +
+                            '27.002-5.95703C27.002-5.0293 27.6367-4.49219 ' +
+                            '28.4668-4.29688C41.9922-1.70898 42.3828-1.70898 ' +
+                            '44.1406 11.3281C44.2383 12.1582 44.873 12.793 ' +
+                            '45.8008 12.793Z'
+                        }
+                      />
+                    </g>
+                  </svg>
+                </div>
+                <span
+                  className={
+                    'text-labelPrimary text-sm leading-5 mx-1.5 ' +
+                      'group-active:text-labelQuaternary'
+                  }
+                >
+                  {'Customize Home Page'}
+                </span>
+              </button>
+            </div>
+          </Popover>
         )
       }
     </>
