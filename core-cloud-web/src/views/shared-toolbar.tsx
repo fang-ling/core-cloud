@@ -17,6 +17,8 @@
 //  limitations under the License.
 //
 
+'use client'
+
 import useSharedToolbar from '@/view-models/shared-toolbar'
 import Icon from './shared/toolbar/icon'
 import Button from './shared/toolbar/button'
@@ -25,6 +27,7 @@ import NoticePopover from './shared/toolbar/notice-popover'
 import Popover from './shared/toolbar/popover'
 import Link from 'next/link'
 import MenuItem from './shared/toolbar/menu-item'
+import { Localizer } from '@/localizer'
 
 export default function SharedToolbar({
   source,
@@ -385,20 +388,27 @@ export default function SharedToolbar({
                   'text-base font-semibold leading-5.25 text-labelPrimary'
                 }
               >
-              {'Advanced Data Protection is On.'}
-            </p>
-            <p className="text-base leading-5.25">
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: process.env.NEXT_PUBLIC_TITLE ?? ''
-                }}
-              />
-              {
-                ' doesn\'t have access to display some of your data, ' +
-                  'including photos, videos, songs, and files. Select an app ' +
-                  'to allow access using your master password.'
-              }
-            </p>
+                {
+                  Localizer.default().localize(
+                    'Advanced Data Protection is On.'
+                  )
+                }
+              </p>
+              <p className="text-base leading-5.25">
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+                  }}
+                />
+                {' '}
+                {
+                  Localizer.default().localize(
+                    'doesn\'t have access to display some of your data, ' +
+                      'including photos, videos, songs and files. Select an ' +
+                      'app to allow access using your master password.'
+                  )
+                }
+              </p>
             </div>
           </NoticePopover>
         )
@@ -444,7 +454,7 @@ export default function SharedToolbar({
               </div>
               <hr className="m-1.25 border-gray5" />
               <MenuItem
-                text="Customize Home Page"
+                text={Localizer.default().localize('Customize Home Page')}
                 onClick={() => viewModel.handleOnCustomize()}
               >
                 <svg
@@ -568,7 +578,7 @@ export default function SharedToolbar({
                 className="m-1.25 md:-mx-1.25 md:my-0 md:mb-1.25 border-gray4"
               />
               <MenuItem
-                text="Settings"
+                text={Localizer.default().localize('Settings')}
               >
                 <svg
                   viewBox="0 0 268.0201416015625 158.116943359375"
@@ -701,7 +711,7 @@ export default function SharedToolbar({
               </MenuItem>
               <hr className="m-1.25 border-gray5" />
               <MenuItem
-                text="Sign Out"
+                text={Localizer.default().localize('Sign Out')}
                 role="destructive"
               >
                 <svg

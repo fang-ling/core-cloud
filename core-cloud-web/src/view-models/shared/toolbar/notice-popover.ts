@@ -17,6 +17,8 @@
 //  limitations under the License.
 //
 
+'use client'
+
 import { useState } from 'react'
 
 export default function useNoticePopover({

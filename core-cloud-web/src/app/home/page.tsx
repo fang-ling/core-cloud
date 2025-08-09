@@ -17,7 +17,14 @@
 //  limitations under the License.
 //
 
-import ContentView from '@/views/home/content-view'
+'use client'
+
+import dynamic from 'next/dynamic'
+
+const ContentView = dynamic(
+  () => import('@/views/home/content-view'),
+  { ssr: false }
+)
 
 export default function Page() {
   return <ContentView />
