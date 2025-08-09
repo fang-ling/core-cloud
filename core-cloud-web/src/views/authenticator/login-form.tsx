@@ -33,9 +33,10 @@ export default function LoginForm() {
     <div className="flex flex-col items-center mb-48">
       <div
         className={
-          'mt-11 w-160 shadow-[0_11px_34px_0_var(--color-fillSecondary)] ' +
-            'dark:shadow-[0_11px_34px_0_var(--color-boxShadow)] h-152.5 ' +
-            'rounded-[34px] bg-backgroundPrimary'
+          'md:mt-11 w-full md:w-160 ' +
+            'shadow-[0_11px_34px_0_var(--color-fillSecondary)] ' +
+            'dark:shadow-[0_11px_34px_0_var(--color-boxShadow)] md:h-152.5 ' +
+            'md:rounded-[34px] bg-backgroundPrimary'
         }
       >
         <div className="mx-20 mt-10 flex flex-col items-center">
@@ -296,7 +297,7 @@ export default function LoginForm() {
           <div
             className={
               'mt-5 text-3xl select-none text-labelPrimary font-semibold ' +
-                'leading-9'
+                'leading-9 text-center'
             }
           >
             {'Sign in with '}
@@ -308,9 +309,13 @@ export default function LoginForm() {
             {' Account'}
           </div>
         </div>
-        <div className="w-144 h-120 mx-auto flex items-center relative -top-18">
-          <div className="relative max-w-120 mx-auto h-67">
-            <div className="min-h-45.5 max-w-120 w-120 relative">
+        <div
+          className={
+            'w-full md:w-144 h-120 mx-auto flex items-center relative -top-18'
+          }
+        >
+          <div className="relative md:max-w-120 mx-auto h-67">
+            <div className="min-h-45.5 md:max-w-120 md:w-120 relative">
               <TextField
                 text={viewModel.username}
                 setText={viewModel.setUsername}

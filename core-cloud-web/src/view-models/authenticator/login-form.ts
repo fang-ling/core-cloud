@@ -73,6 +73,7 @@ export default function useLoginForm() {
   }
 
   function handleRegisterButtonClick() {
+    document.body.style.setProperty('overflow', 'hidden')
     setIsRegisterFormPresented(true)
   }
 

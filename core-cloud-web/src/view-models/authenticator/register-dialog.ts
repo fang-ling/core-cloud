@@ -346,6 +346,7 @@ export default function useRegisterDialog({
   async function handleViewDisappear() {
     setIsClosing(true)
     await new Promise(resolve => setTimeout(resolve, 200))
+    document.body.style.removeProperty('overflow')
     setIsPresented(false)
   }
 

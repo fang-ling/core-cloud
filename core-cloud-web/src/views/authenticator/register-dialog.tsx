@@ -50,7 +50,8 @@ export default function RegisterDialog({
         <div className="fixed inset-0 z-12 flex items-center justify-center">
           <div
             className={
-              'w-160 h-4/5 m-5 bg-backgroundPrimary rounded-[11px] ' +
+              'w-full h-full md:w-160 md:h-4/5 md:m-5 bg-backgroundPrimary ' +
+                'md:rounded-[11px] ' +
                 'dark:shadow-[0_11px_34px_rgba(0,0,0,.65)] ' +
                 'shadow-[0_11px_34px_rgba(0,0,0,.16)] ' + (
                   viewModel.isClosing
@@ -90,7 +91,7 @@ export default function RegisterDialog({
                   <h1
                     className={
                       'text-[28px] font-semibold text-sk-body-text-color ' +
-                        'leading-8 mb-3.75'
+                        'leading-8 mb-3.75 text-center'
                     }
                   >
                     {'Create Your '}
@@ -101,7 +102,12 @@ export default function RegisterDialog({
                     />
                     {' Account'}
                   </h1>
-                  <p className="text-base leading-6.25 text-sk-body-text-color">
+                  <p
+                    className={
+                      'text-base leading-6.25 text-sk-body-text-color ' +
+                        'text-center'
+                    }
+                  >
                     {'One '}
                     <span
                       dangerouslySetInnerHTML={{
@@ -1284,19 +1290,25 @@ export default function RegisterDialog({
               <div
                 className={
                   'px-7.5 py-5 text-center bg-[#fafafc] dark:bg-[#424245] ' +
-                    'border-t border-[#d2d2d7] dark:border-[#1d1d1f] h-9 ' +
-                    'box-content rounded-b-[11px]'
+                    'border-t border-[#d2d2d7] dark:border-[#1d1d1f] md:h-9 ' +
+                    'box-content md:rounded-b-[11px] h-auto'
                 }
               >
                 {
                   !viewModel.isLoading
                     ? (
-                      <div className="w-full h-full flex justify-between">
+                      <div
+                        className={
+                          'w-full h-full flex justify-between ' +
+                            'flex-col-reverse md:flex-row gap-2.5 md:gap-0 ' +
+                            'items-center'
+                        }
+                      >
                         <button
                           className={
                             'min-w-36 min-h-4.5 rounded-lg cursor-pointer ' +
-                              'bg-transparent border text-sm ' +
-                              'dark:hover:border-transparent ' +
+                              'bg-transparent border text-sm w-62.5 ' +
+                              'dark:hover:border-transparent md:w-auto ' +
                               'active:text-white box-content ' +
                               'active:bg-sk-button-background-active ' +
                               'active:border-transparent py-2 px-3.75 ' +
@@ -1311,7 +1323,7 @@ export default function RegisterDialog({
                         <button
                           className={
                             'min-w-36 min-h-4.5 rounded-lg text-sm px-3.75 ' +
-                              'py-2 text-white ' +
+                              'py-2 text-white w-62.5 md:w-auto ' +
                               'box-content bg-sk-button-background ' +
                               'active:bg-sk-button-background-active ' +
                               'hover:bg-sk-button-background-hover ' + (
