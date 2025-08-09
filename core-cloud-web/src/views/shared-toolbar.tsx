@@ -436,7 +436,7 @@ export default function SharedToolbar({
                   ))
                 }
               </div>
-              <hr className="m-1.25 border-gray5" />
+              {/*<hr className="m-1.25 border-gray5" />
               <button
                 className={
                   'p-2.5 md:p-1.25 rounded-[10px] flex items-center ' +
@@ -537,7 +537,7 @@ export default function SharedToolbar({
                 >
                   {'Customize Home Page'}
                 </span>
-              </button>
+                </button>*/}
             </div>
           </Popover>
         )
