@@ -38,12 +38,15 @@ export default function ContentView() {
               source="home"
               apps={viewModel.apps}
               onCustomize={() => viewModel.handleCustomizeButtonClick()}
+              username="j.appleseed@example.com"
+              firstName="John"
+              lastName="Appleseed"
             />
           )
         }
 
         {/* Customization header */}
-        {/*<div
+        <div
           className={
             'fixed h-20 w-full transition-[top] duration-250 ease-[ease-out] ' +
               'bg-[rgba(248,248,252,0.4)] dark:bg-[rgba(56,56,61,0.6)] ' +
@@ -102,7 +105,7 @@ export default function ContentView() {
               </div>
             </button>
           </div>
-          </div>*/}
+        </div>
 
         <Background color="blue" />
 

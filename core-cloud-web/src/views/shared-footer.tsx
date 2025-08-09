@@ -27,7 +27,16 @@ export default function SharedFooter() {
         }
       >
         <p>{'Version 1.0-beta'}</p>
-        <p>{'Copyright © 2025 CoreCloud. All rights reserved.'}</p>
+        <p>
+          {'Copyright © 2025 '}
+          <span
+            dangerouslySetInnerHTML={{
+              __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+            }}
+          />
+          {'. '}
+          {'All rights reserved.'}
+        </p>
       </div>
     </footer>
   )

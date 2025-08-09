@@ -84,8 +84,7 @@ export default function Popover({
         {/* Popover - >= md */}
         <div
           className={
-            'hidden md:flex fixed rounded-xl ' +
-              'border-[.2px] border-fillQuaternary origin-top-right ' +
+            'hidden md:flex fixed rounded-xl origin-top-right ' +
               'bg-backgroundPrimary dark:bg-[rgba(0,0,0,.8)] ' +
               'top-11 z-10 backdrop-blur-[50px] ' +
               'shadow-[0_11px_34px_rgba(0,0,0,.16)] ' +
