@@ -1,5 +1,5 @@
 //
-//  home-profile-card-view.tsx
+//  profile-card.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/5.
@@ -19,12 +19,10 @@
 
 'use client'
 
-import {
-  useHomeProfileCardViewModel
-} from '@/view-models/home-profile-card-view-model'
-import UIImageView from './ui-image-view'
+import useProfileCard from '@/view-models/home/profile-card'
+import UIImage from '../ui-image'
 
-export default function HomeProfileCardView({
+export default function ProfileCard({
   urls = [],
   firstName,
   lastName,
@@ -35,7 +33,7 @@ export default function HomeProfileCardView({
   lastName: string,
   username: string
 }) {
-  const viewModel = useHomeProfileCardViewModel()
+  const viewModel = useProfileCard()
 
   return (
     <div className="size-78.75 m-3.75 min-w-78.75 min-h-78.75">
@@ -246,7 +244,7 @@ export default function HomeProfileCardView({
             {
               urls.length > 0
                 ? (
-                  <UIImageView
+                  <UIImage
                     urls={urls}
                     className={
                       'size-28.5 transition-opacity duration-200 ease-[ease] ' +

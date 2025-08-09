@@ -1,8 +1,8 @@
 //
-//  home-content-view-model.ts
+//  shared-toolbar.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/7.
+//  Created by Fang Ling on 2025/8/9.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,36 +17,39 @@
 //  limitations under the License.
 //
 
-'use client'
-
 import { useState } from 'react'
 
-export function useHomeContentViewModel({
+export default function useSharedToolbar({
 
 }: {
 
 }) {
-  const [isCustomizationPresented, setIsCustomizationPresented] = useState(
-    false
-  )
-  const [
-    backgroundColor,
-    setBackgroundColor
-  ] = useState<string | undefined>(/*undefined*/'blue')
+  /*
+   * 0: off
+   * 1: advanced data protection
+   * 2: quick access
+   * 3: profile
+   */
+  const [radioMode, setRadioMode] = useState(0)
+  const [modalRight, setModalRight] = useState(0)
 
   /* MARK: - Event handlers */
-  function handleCustomizeButtonClick() {
-    setIsCustomizationPresented(true)
+  function handleAdvancedDataProtectionButtonClick(
+    event: React.MouseEvent<HTMLButtonElement>
+  ) {
+    const right = event.currentTarget.getBoundingClientRect().right
+    setModalRight(window.innerWidth - right)
+    setRadioMode(1)
   }
 
-  function handleCustomizeDoneButtonClick() {
-    setIsCustomizationPresented(false)
+  function handleModalClose() {
+    setRadioMode(0)
   }
 
   return {
-    isCustomizationPresented,
-    backgroundColor,
-    handleCustomizeButtonClick,
-    handleCustomizeDoneButtonClick
+    radioMode,
+    modalRight,
+    handleAdvancedDataProtectionButtonClick,
+    handleModalClose
   }
 }

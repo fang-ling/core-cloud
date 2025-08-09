@@ -1,5 +1,5 @@
 //
-//  authenticator-text-field-view.tsx
+//  text-field.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/26.
@@ -17,11 +17,9 @@
 //  limitations under the License.
 //
 
-import {
-  useAuthenticatorTextFieldViewModel
-} from '@/view-models/authenticator-text-field-view-model'
+import useTextField from '@/view-models/authenticator/text-field'
 
-export default function AuthenticatorTextFieldView({
+export default function TextField({
   text,
   setText,
   isFocused,
@@ -60,7 +58,7 @@ export default function AuthenticatorTextFieldView({
   containerHeightClassName?: string,
   onEnter?: () => void
 }) {
-  const viewModel = useAuthenticatorTextFieldViewModel({
+  const viewModel = useTextField({
     setText: setText,
     setIsFocused: setIsFocused,
     onBlur: onBlur,

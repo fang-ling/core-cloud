@@ -1,8 +1,8 @@
 //
-//  shared-footer-view.tsx
+//  notice-popover.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/3.
+//  Created by Fang Ling on 2025/8/9.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,18 +17,24 @@
 //  limitations under the License.
 //
 
-export default function SharedFooterView() {
-  return (
-    <footer className="w-full py-7.5 bg-gray6 flex justify-center">
-      <div
-        className={
-          'w-full text-[11px] text-labelSecondary leading-[2] flex-wrap ' +
-            'flex justify-between max-w-86.25 md:max-w-172.5 lg:max-w-258.75'
-        }
-      >
-        <p>{'Version 1.0-beta'}</p>
-        <p>{'Copyright © 2025 CoreCloud. All rights reserved.'}</p>
-      </div>
-    </footer>
-  )
+import { useState } from 'react'
+
+export default function useNoticePopover({
+  onClose
+}: {
+  onClose: () => void
+}) {
+  const [isClosing, setIsClosing] = useState(false)
+
+  /* MARK: Event handlers */
+  async function handlePopoverClose() {
+    setIsClosing(true)
+    await new Promise(resolve => setTimeout(resolve, 200))
+    onClose()
+  }
+
+  return {
+    isClosing,
+    handlePopoverClose
+  }
 }

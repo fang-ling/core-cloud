@@ -1,5 +1,5 @@
 //
-//  home-content-view.tsx
+//  content-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/25.
@@ -19,21 +19,21 @@
 
 'use client'
 
-import { useHomeContentViewModel } from '@/view-models/home-content-view-model'
-import HomeAppCardView from './home-app-card-view'
-import HomeBackgroundView from './home-background-view'
-import HomeProfileCardView from './home-profile-card-view'
-import SharedFooterView from './shared-footer-view'
-import SharedToolbarView from './shared-toolbar-view'
+import useContentView from '@/view-models/home/content-view'
+import SharedToolbar from '../shared-toolbar'
+import Background from './background'
+import ProfileCard from './profile-card'
+import AppCard from './app-card'
+import SharedFooter from '../shared-footer'
 
-export default function HomeContentView() {
-  const viewModel = useHomeContentViewModel({ })
+export default function ContentView() {
+  const viewModel = useContentView({ })
 
   return (
     <div className="relative h-screen">
       {
         !viewModel.isCustomizationPresented && (
-          <SharedToolbarView source="home" />
+          <SharedToolbar source="home" />
         )
       }
 
@@ -93,7 +93,7 @@ export default function HomeContentView() {
         </div>
         </div>*/}
 
-      <HomeBackgroundView color="blue" />
+      <Background color="blue" />
 
       <main
         className={
@@ -108,12 +108,12 @@ export default function HomeContentView() {
                 'transition-[width] duration-250 ease-[ease-in-out] md:flex-row'
             }
           >
-            <HomeProfileCardView
+            <ProfileCard
               username="j.appleseed@example.com"
               firstName="John"
               lastName="Appleseed"
             />
-            <HomeAppCardView
+            <AppCard
               apps={[]}
             />
           </div>
@@ -218,7 +218,7 @@ export default function HomeContentView() {
               </div>*/}
         </div>
         <div className="mt-auto">
-          <SharedFooterView />
+          <SharedFooter />
         </div>
       </main>
     </div>

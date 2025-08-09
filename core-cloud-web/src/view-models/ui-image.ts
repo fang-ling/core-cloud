@@ -1,8 +1,8 @@
 //
-//  page.tsx
+//  ui-image.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/7/25.
+//  Created by Fang Ling on 2025/8/5.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,8 +17,24 @@
 //  limitations under the License.
 //
 
-import ContentView from '@/views/home/content-view'
+'use client'
 
-export default function Page() {
-  return <ContentView />
+import { useRef } from 'react'
+
+export default function useUIImage({
+  onLoad
+}: {
+  onLoad?: () => void
+}) {
+  const imageRef = useRef<HTMLImageElement>(null)
+
+  /* MARK: - Event handlers */
+  function handleOnLoad() {
+    onLoad?.()
+  }
+
+  return {
+    imageRef,
+    handleOnLoad
+  }
 }

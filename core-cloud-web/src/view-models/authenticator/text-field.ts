@@ -1,5 +1,5 @@
 //
-//  authenticator-text-field-view-model.ts
+//  text-field.ts
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/26.
@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-export function useAuthenticatorTextFieldViewModel({
+export default function useTextField({
   setText,
   setIsFocused,
   onBlur,

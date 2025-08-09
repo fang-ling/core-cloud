@@ -1,8 +1,8 @@
 //
-//  page.tsx
+//  icon.tsx
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/7/25.
+//  Created by Fang Ling on 2025/8/3.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,8 +17,27 @@
 //  limitations under the License.
 //
 
-import ContentView from '@/views/home/content-view'
+import UIImage from '@/views/ui-image'
+import UISFSymbol from '@/views/ui-sf-symbol'
 
-export default function Page() {
-  return <ContentView />
+export default function Icon({
+  urls
+}: {
+  urls?: string[]
+}) {
+  if (urls && urls.filter(url => url !== '').length > 0) {
+    return (
+      <UIImage
+        urls={urls}
+        className="size-6 mr-0.5"
+      />
+    )
+  } else {
+    return (
+      <UISFSymbol
+        systemName="icloud"
+        className="fill-systemBlack h-3.5 mr-0.5"
+      />
+    )
+  }
 }

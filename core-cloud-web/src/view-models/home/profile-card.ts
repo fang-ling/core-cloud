@@ -1,5 +1,5 @@
 //
-//  home-profile-card-view-model.ts
+//  profile-card.ts
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/5.
@@ -21,7 +21,7 @@
 
 import { useState } from 'react'
 
-export function useHomeProfileCardViewModel() {
+export default function useProfileCard() {
   const [isHover, setIsHover] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
 

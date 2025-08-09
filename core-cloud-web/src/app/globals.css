@@ -31,6 +31,7 @@
   --theme-color-fillPrimary: rgba(120, 120, 128, 0.2);
   --theme-color-fillSecondary: rgba(120, 120, 128, 0.16);
   --theme-color-fillTertiary: rgba(118, 118, 128, 0.12);
+  --theme-color-fillQuaternary: rgba(120, 120, 128, 0.08);
   --theme-color-gray6: #f2f2f7;
   --theme-color-labelPrimary: rgba(0, 0, 0, 0.88);
   --theme-color-labelSecondary: rgba(0, 0, 0, 0.56);
@@ -63,6 +64,7 @@
     --theme-color-fillPrimary: hsla(0, 0, 71.4, 0.3);
     --theme-color-fillSecondary: rgba(120, 120, 128, 0.36);
     --theme-color-fillTertiary: rgba(118, 118, 128, 0.3);
+    --theme-color-fillQuaternary: rgba(116, 116, 128, 0.25);
     --theme-color-gray6: #2c2c2e;
     --theme-color-labelPrimary: hsla(0, 0, 100, 0.98);
     --theme-color-labelSecondary: hsla(0, 0, 100, 0.66);
@@ -99,6 +101,7 @@
   --color-fillPrimary: var(--theme-color-fillPrimary);
   --color-fillSecondary: var(--theme-color-fillSecondary);
   --color-fillTertiary: var(--theme-color-fillTertiary);
+  --color-fillQuaternary: var(--theme-color-fillQuaternary);
   --color-gray6: var(--theme-color-gray6);
   --color-labelPrimary: var(--theme-color-labelPrimary);
   --color-labelSecondary: var(--theme-color-labelSecondary);
@@ -297,6 +300,11 @@
   @keyframes fadeInAndBarelyScale {
     0% { opacity: 0; transform: scale(.9) }
     to { transform: scale(1); opacity: 1 }
+  }
+
+  @keyframes fadeInAndScale {
+    0% { opacity: 0; transform: scale(.5) }
+    to { transform: scale(1); opacity:1 }
   }
 
   @keyframes fadeOut {

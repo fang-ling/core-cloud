@@ -1,5 +1,5 @@
 //
-//  home-app-card-view.tsx
+//  app-card.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/6.
@@ -18,9 +18,9 @@
 //
 
 import Link from 'next/link'
-import UIImageView from './ui-image-view'
+import UIImage from '../ui-image'
 
-export default function HomeAppCardView({
+export default function AppCard({
   apps
 }: {
   apps: {
@@ -65,7 +65,7 @@ export default function HomeAppCardView({
                     'flex-col items-center'
                 }
               >
-                <UIImageView
+                <UIImage
                   urls={app.urls}
                   className="w-12.5 lg:w-17.5 object-contain"
                 />

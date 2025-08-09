@@ -1,5 +1,5 @@
 //
-//  authenticator-register-view-model.ts
+//  register-dialog.ts
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/27.
@@ -18,11 +18,11 @@
 //
 
 import { useRef, useState } from 'react'
-import UserService from '../services/user-service'
-import UserTokenService from '../services/user-token-service'
+import UserService from '../../services/user-service'
+import UserTokenService from '../../services/user-token-service'
 import { useRouter } from 'next/navigation'
 
-export function useAuthenticatorRegisterViewModel({
+export default function useRegisterDialog({
   setIsPresented
 }: {
   setIsPresented: React.Dispatch<React.SetStateAction<boolean>>

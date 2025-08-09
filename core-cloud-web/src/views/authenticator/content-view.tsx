@@ -1,5 +1,5 @@
 //
-//  authenticator-content-view.tsx
+//  content-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/3.
@@ -17,16 +17,16 @@
 //  limitations under the License.
 //
 
-import AuthenticatorLoginView from './authenticator-login-view'
-import SharedFooterView from './shared-footer-view'
-import SharedToolbarView from './shared-toolbar-view'
+import SharedFooter from '../shared-footer'
+import SharedToolbar from '../shared-toolbar'
+import LoginForm from './login-form'
 
-export default function AuthenticatorContentView() {
+export default function ContentView() {
   return (
     <div className="relative">
-      <SharedToolbarView source="authenticator" />
-      <AuthenticatorLoginView />
-      <SharedFooterView />
+      <SharedToolbar source="authenticator" />
+      <LoginForm />
+      <SharedFooter />
     </div>
   )
 }

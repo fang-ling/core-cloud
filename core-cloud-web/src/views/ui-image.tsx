@@ -1,5 +1,5 @@
 //
-//  ui-image-view.tsx
+//  ui-image.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/26.
@@ -19,7 +19,7 @@
 
 'use client'
 
-import { useUIImageViewModel } from '@/view-models/ui-image-view-model'
+import useUIImage from '@/view-models/ui-image'
 import { useEffect } from 'react'
 
 /**
@@ -33,7 +33,7 @@ import { useEffect } from 'react'
  * @param className - An optional class name to apply to the `<img>` element for
  *                    custom styling.
  */
-export default function UIImageView({
+export default function UIImage({
   urls,
   className,
   onLoad
@@ -42,7 +42,7 @@ export default function UIImageView({
   className?: string,
   onLoad?: () => void
 }) {
-  const viewModel = useUIImageViewModel({
+  const viewModel = useUIImage({
     onLoad: onLoad
   })
 

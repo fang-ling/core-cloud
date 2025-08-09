@@ -1,8 +1,8 @@
 //
-//  ui-image-view-model.ts
+//  content-view.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/5.
+//  Created by Fang Ling on 2025/8/7.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,22 +19,34 @@
 
 'use client'
 
-import { useRef } from 'react'
+import { useState } from 'react'
 
-export function useUIImageViewModel({
-  onLoad
+export default function useContentView({
+
 }: {
-  onLoad?: () => void
+
 }) {
-  const imageRef = useRef<HTMLImageElement>(null)
+  const [isCustomizationPresented, setIsCustomizationPresented] = useState(
+    false
+  )
+  const [
+    backgroundColor,
+    setBackgroundColor
+  ] = useState<string | undefined>(/*undefined*/'blue')
 
   /* MARK: - Event handlers */
-  function handleOnLoad() {console.log('qaq')
-    onLoad?.()
+  function handleCustomizeButtonClick() {
+    setIsCustomizationPresented(true)
+  }
+
+  function handleCustomizeDoneButtonClick() {
+    setIsCustomizationPresented(false)
   }
 
   return {
-    imageRef,
-    handleOnLoad
+    isCustomizationPresented,
+    backgroundColor,
+    handleCustomizeButtonClick,
+    handleCustomizeDoneButtonClick
   }
 }

@@ -1,5 +1,5 @@
 //
-//  ui-sf-symbol-view.tsx
+//  ui-sf-symbol.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/26.
@@ -27,7 +27,7 @@ type SystemName = (
   'questionmark.circle.fill'
 )
 
-export default function UISFSymbolView({
+export default function UISFSymbol({
   systemName,
   variant = 'regular',
   className

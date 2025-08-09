@@ -1,5 +1,5 @@
 //
-//  authenticator-login-view-model.ts
+//  login-form.ts
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/7/26.
@@ -20,10 +20,10 @@
 'use client'
 
 import { useState } from 'react'
-import UserTokenService from '../services/user-token-service'
+import UserTokenService from '../../services/user-token-service'
 import { useRouter } from 'next/navigation'
 
-export function useAuthenticatorLoginViewModel() {
+export default function useLoginForm() {
   const [username, setUsername] = useState('')
   const [isUsernameFocused, setIsUsernameFocused] = useState(false)
   const [password, setPassword] = useState('')

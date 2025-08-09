@@ -1,5 +1,5 @@
 //
-//  home-background-view.tsx
+//  background.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/4.
@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-export default function HomeBackgroundView({
+export default function Background({
   color
 }: {
   color?: string
@@ -72,7 +72,7 @@ export default function HomeBackgroundView({
     <>
       <div
         className={
-          'fixed dark:hidden inset-0 bg-cover w-full h-full bg-center ' +
+          'fixed dark:hidden inset-0 bg-cover w-full h-screen bg-center ' +
             'after:fixed after:mix-blend-hard-light after:inset-0 ' +
             'animate-[fadeIn_.25s_ease-in] ' + (
               lightColor

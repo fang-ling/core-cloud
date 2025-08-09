@@ -17,8 +17,8 @@
 //  limitations under the License.
 //
 
-import AuthenticatorContentView from '@/views/authenticator-content-view'
+import ContentView from '@/views/authenticator/content-view'
 
 export default function Page() {
-  return <AuthenticatorContentView />
+  return <ContentView />
 }

@@ -1,8 +1,8 @@
 //
-//  shared-toolbar-icon-view.tsx
+//  button.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/3.
+//  Created by Fang Ling on 2025/8/9.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,27 +17,17 @@
 //  limitations under the License.
 //
 
-import UIImageView from './ui-image-view'
-import UISFSymbolView from './ui-sf-symbol-view'
-
-export default function SharedToolbarIconView({
-  urls
+export default function useButton({
+  onClick
 }: {
-  urls?: string[]
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
 }) {
-  if (urls && urls.filter(url => url !== '').length > 0) {
-    return (
-      <UIImageView
-        urls={urls}
-        className="size-6 mr-0.5"
-      />
-    )
-  } else {
-    return (
-      <UISFSymbolView
-        systemName="icloud"
-        className="fill-systemBlack h-3.5 mr-0.5"
-      />
-    )
+  /* MARK: - Event handlers */
+  function handleOnClick(event: React.MouseEvent<HTMLButtonElement>) {
+    onClick?.(event)
+  }
+
+  return {
+    handleOnClick
   }
 }
