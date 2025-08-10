@@ -25,6 +25,7 @@ import UISFSymbol from '../ui-sf-symbol'
 import TextField from './text-field'
 import UIProgress from '../ui-progress'
 import RegisterDialog from './register-dialog'
+import Localizer from '@/localizer'
 
 export default function LoginForm() {
   const viewModel = useLoginForm()
@@ -300,13 +301,14 @@ export default function LoginForm() {
                 'leading-9 text-center'
             }
           >
-            {'Sign in with '}
             <span
               dangerouslySetInnerHTML={{
-                __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+                __html: Localizer
+                  .default()
+                  .localize('Sign in with *X* Account')
+                  .replace('*X*', process.env.NEXT_PUBLIC_TITLE ?? '')
               }}
             />
-            {' Account'}
           </div>
         </div>
         <div
@@ -321,7 +323,7 @@ export default function LoginForm() {
                 setText={viewModel.setUsername}
                 isFocused={viewModel.isUsernameFocused}
                 setIsFocused={viewModel.setIsUsernameFocused}
-                prompt="Email or Phone Number"
+                prompt={Localizer.default().localize('Email or Phone Number')}
                 disabled={viewModel.isLoading}
                 onChange={() => viewModel.handleUsernameChange()}
                 borderClassName={
@@ -344,7 +346,7 @@ export default function LoginForm() {
                 setText={viewModel.setPassword}
                 isFocused={viewModel.isPasswordFocused}
                 setIsFocused={viewModel.setIsPasswordFocused}
-                prompt="Password"
+                prompt={Localizer.default().localize('Password')}
                 disabled={viewModel.isLoading}
                 required={viewModel.errorMessage.length > 0}
                 onChange={() => viewModel.handlePasswordChange()}
@@ -477,7 +479,7 @@ export default function LoginForm() {
                       'dark:text-white'
                   }
                 >
-                  {'Keep me signed in'}
+                  {Localizer.default().localize('Keep me signed in')}
                 </p>
               </div>
             </div>
@@ -520,7 +522,7 @@ export default function LoginForm() {
                 'text-sm leading-5 relative hover:underline items-baseline'
             }
           >
-            {'Forgot password?'}
+            {Localizer.default().localize('Forgot password?')}
             <UISFSymbol
               className="fill-systemBlue w-2 ml-[4.2px]"
               systemName="arrow.up.right"
@@ -530,13 +532,15 @@ export default function LoginForm() {
             className="cursor-pointer text-sm leading-4.5 text-systemBlue"
             onClick={() => viewModel.handleRegisterButtonClick()}
           >
-            {'Create '}
             <span
               dangerouslySetInnerHTML={{
-                __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+                __html: Localizer
+                  .default()
+                  .localize('Create *X* Account')
+                  .replace('*X*', process.env.NEXT_PUBLIC_TITLE ?? '')
+
               }}
             />
-            {' Account'}
           </button>
         </div>
 

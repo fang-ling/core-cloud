@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-import { Localizer } from '@/localizer'
+import Localizer from '@/localizer'
 
 export default function SharedFooter() {
   return (

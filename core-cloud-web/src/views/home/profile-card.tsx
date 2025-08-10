@@ -21,6 +21,7 @@
 
 import useProfileCard from '@/view-models/home/profile-card'
 import UIImage from '../ui-image'
+import Localizer from '@/localizer'
 
 export default function ProfileCard({
   urls = [],
@@ -306,7 +307,11 @@ export default function ProfileCard({
                 'whitespace-nowrap text-labelPrimary'
             }
           >
-            {`${firstName} ${lastName}`}
+            {
+              Localizer.default().nameOrder() === 'firstNameLastName'
+                ? `${firstName} ${lastName}`
+                : `${lastName} ${firstName}`
+            }
           </h2>
           <p
             className={

@@ -25,6 +25,7 @@ import UIImage from '../ui-image'
 import UISFSymbol from '../ui-sf-symbol'
 import TextField from './text-field'
 import UIProgress from '../ui-progress'
+import Localizer from '@/localizer'
 
 export default function RegisterDialog({
   setIsPresented
@@ -94,13 +95,14 @@ export default function RegisterDialog({
                         'leading-8 mb-3.75 text-center'
                     }
                   >
-                    {'Create Your '}
                     <span
                       dangerouslySetInnerHTML={{
-                        __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+                        __html: Localizer
+                          .default()
+                          .localize('Create Your *X* Account')
+                          .replace('*X*', process.env.NEXT_PUBLIC_TITLE ?? '')
                       }}
                     />
-                    {' Account'}
                   </h1>
                   <p
                     className={
@@ -108,40 +110,42 @@ export default function RegisterDialog({
                         'text-center'
                     }
                   >
-                    {'One '}
                     <span
                       dangerouslySetInnerHTML={{
-                        __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+                        __html: Localizer
+                          .default()
+                          .localize(
+                            'One *X* Account is all you need to access all ' +
+                              '*X* services.'
+                          )
+                          .replaceAll(
+                            '*X*',
+                            process.env.NEXT_PUBLIC_TITLE ?? ''
+                          )
                       }}
                     />
-                    {' Account is all you need to access all '}
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: process.env.NEXT_PUBLIC_TITLE ?? ''
-                      }}
-                    />
-                    {' services.'}
                   </p>
                   <p
                     className={
                       'text-base leading-6.25 text-sk-body-text-color mb-2.5'
                     }
                   >
-                    {'Already have a '}
                     <span
                       dangerouslySetInnerHTML={{
-                        __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+                        __html: Localizer
+                          .default()
+                          .localize('Already have a *X* Account?')
+                          .replace('*X*', process.env.NEXT_PUBLIC_TITLE ?? '')
                       }}
                     />
-                    {' Account? '}
                     <button
                       className={
                         'pr-[18.7px] text-sk-body-link-color cursor-pointer ' +
-                          'text-base relative hover:underline'
+                          'text-base relative hover:underline ml-1.25'
                       }
                       onClick={() => viewModel.handleViewDisappear()}
                     >
-                      {'Sign In'}
+                      {Localizer.default().localize('Sign In')}
                       <svg
                         viewBox="0 0 268.0201416015625 158.116943359375"
                         version="1.1"
@@ -196,51 +200,61 @@ export default function RegisterDialog({
                       )
                     }
                   >
-                    <div className="w-full">
-                      <TextField
-                        text={viewModel.firstName}
-                        setText={viewModel.setFirstName}
-                        isFocused={viewModel.isFirstNameFocused}
-                        setIsFocused={viewModel.setIsFirstNameFocused}
-                        prompt="First Name"
-                        paddingRightClassName="pr-4 focus:pr-3.75"
-                        required={
-                          !viewModel.isFirstNameVirginal &&
-                            !!!viewModel.firstName
-                        }
-                        onBlur={() => viewModel.handleFirstNameDeflower()}
-                        onChange={() => viewModel.handleFirstNameChange()}
-                      />
-                      {
-                        (
-                          !viewModel.isFirstNameVirginal &&
-                            !!!viewModel.firstName
-                        ) && (
-                          <div
-                            className={
-                              'mt-2 text-[#e30000] dark:text-[#ff3037] ' +
-                                'text-xs leading-4 flex'
+                    {
+                      (
+                        Localizer.default().nameOrder() === 'firstNameLastName'
+                      ) && (
+                        <div className="w-full">
+                          <TextField
+                            text={viewModel.firstName}
+                            setText={viewModel.setFirstName}
+                            isFocused={viewModel.isFirstNameFocused}
+                            setIsFocused={viewModel.setIsFirstNameFocused}
+                            prompt={Localizer.default().localize('First Name')}
+                            paddingRightClassName="pr-4 focus:pr-3.75"
+                            required={
+                              !viewModel.isFirstNameVirginal &&
+                                !!!viewModel.firstName
                             }
-                          >
-                            <UISFSymbol
-                              systemName="exclamationmark.circle"
-                              className={
-                                'w-4 py-[1.5px] pr-0.75 fill-[#e30000] ' +
-                                  'dark:fill-[#ff3037]'
-                              }
-                            />
-                            {'Enter your first name.'}
-                          </div>
-                        )
-                      }
-                    </div>
+                            onBlur={() => viewModel.handleFirstNameDeflower()}
+                            onChange={() => viewModel.handleFirstNameChange()}
+                          />
+                          {
+                            (
+                              !viewModel.isFirstNameVirginal &&
+                                !!!viewModel.firstName
+                            ) && (
+                              <div
+                                className={
+                                  'mt-2 text-[#e30000] dark:text-[#ff3037] ' +
+                                    'text-xs leading-4 flex'
+                                }
+                              >
+                                <UISFSymbol
+                                  systemName="exclamationmark.circle"
+                                  className={
+                                    'w-4 py-[1.5px] pr-0.75 fill-[#e30000] ' +
+                                      'dark:fill-[#ff3037]'
+                                  }
+                                />
+                                {
+                                  Localizer
+                                    .default()
+                                    .localize('Enter your first name.')
+                                }
+                              </div>
+                            )
+                          }
+                        </div>
+                      )
+                    }
                     <div className="w-full">
                       <TextField
                         text={viewModel.lastName}
                         setText={viewModel.setLastName}
                         isFocused={viewModel.isLastNameFocused}
                         setIsFocused={viewModel.setIsLastNameFocused}
-                        prompt="Last Name"
+                        prompt={Localizer.default().localize('Last Name')}
                         paddingRightClassName="pr-4 focus:pr-3.75"
                         required={
                           !viewModel.isLastNameVirginal && !!!viewModel.lastName
@@ -267,11 +281,63 @@ export default function RegisterDialog({
                                   'dark:fill-[#ff3037]'
                               }
                             />
-                            {'Enter your last name.'}
+                            {
+                              Localizer
+                                .default()
+                                .localize('Enter your last name.')
+                            }
                           </div>
                         )
                       }
                     </div>
+                    {
+                      (
+                        Localizer.default().nameOrder() !== 'firstNameLastName'
+                      ) && (
+                        <div className="w-full">
+                          <TextField
+                            text={viewModel.firstName}
+                            setText={viewModel.setFirstName}
+                            isFocused={viewModel.isFirstNameFocused}
+                            setIsFocused={viewModel.setIsFirstNameFocused}
+                            prompt={Localizer.default().localize('First Name')}
+                            paddingRightClassName="pr-4 focus:pr-3.75"
+                            required={
+                              !viewModel.isFirstNameVirginal &&
+                                !!!viewModel.firstName
+                            }
+                            onBlur={() => viewModel.handleFirstNameDeflower()}
+                            onChange={() => viewModel.handleFirstNameChange()}
+                          />
+                          {
+                            (
+                              !viewModel.isFirstNameVirginal &&
+                                !!!viewModel.firstName
+                            ) && (
+                              <div
+                                className={
+                                  'mt-2 text-[#e30000] dark:text-[#ff3037] ' +
+                                    'text-xs leading-4 flex'
+                                }
+                              >
+                                <UISFSymbol
+                                  systemName="exclamationmark.circle"
+                                  className={
+                                    'w-4 py-[1.5px] pr-0.75 fill-[#e30000] ' +
+                                      'dark:fill-[#ff3037]'
+                                  }
+                                />
+                                {
+                                  Localizer
+                                    .default()
+                                    .localize('Enter your first name.')
+                                }
+                              </div>
+                            )
+                          }
+                        </div>
+                      )
+                    }
                   </div>
                   <hr
                     className={
@@ -335,13 +401,14 @@ export default function RegisterDialog({
                         'dark:text-[#d2d2d7] w-full'
                     }
                   >
-                    {'This will be your new '}
                     <span
                       dangerouslySetInnerHTML={{
-                        __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+                        __html: Localizer
+                          .default()
+                          .localize('This will be your new *X* Account.')
+                          .replace('*X*', process.env.NEXT_PUBLIC_TITLE ?? '')
                       }}
                     />
-                    {' Account.'}
                   </p>
 
                   <div
@@ -361,7 +428,7 @@ export default function RegisterDialog({
                       setText={viewModel.setPassword}
                       isFocused={viewModel.isPasswordFocused}
                       setIsFocused={viewModel.setIsPasswordFocused}
-                      prompt="Password"
+                      prompt={Localizer.default().localize('Password')}
                       autoComplete="new-password"
                       paddingRightClassName="pr-4 focus:pr-3.75"
                       required={
@@ -417,7 +484,8 @@ export default function RegisterDialog({
                           }
                         >
                           <p className="mt-[11.19px]">
-                            {`Strength: ${viewModel.passwordStrength}%`}
+                            {Localizer.default().localize('Strength: ')}
+                            {`${viewModel.passwordStrength}%`}
                           </p>
                           {/* Progress */}
                           <div
@@ -442,7 +510,11 @@ export default function RegisterDialog({
                             />
                           </div>
                           <p className="mt-[11.19px] leading-4.5">
-                            {'Password Requirements'}
+                            {
+                              Localizer
+                                .default()
+                                .localize('Password Requirements')
+                            }
                           </p>
                           <ul
                             className={
@@ -452,11 +524,21 @@ export default function RegisterDialog({
                           >
                             {
                               [
-                                'At least 8 characters.',
-                                'At least 1 number.',
-                                'At least 1 uppercase letter.',
-                                'At least 1 lowercase letter.',
-                                'At least one special character.'
+                                Localizer
+                                  .default()
+                                  .localize('At least 8 characters'),
+                                Localizer
+                                  .default()
+                                  .localize('At least 1 number'),
+                                Localizer
+                                  .default()
+                                  .localize('At least 1 uppercase letter'),
+                                Localizer
+                                  .default()
+                                  .localize('At least 1 lowercase letter'),
+                                Localizer
+                                  .default()
+                                  .localize('At least one special character')
                               ].map((text, index) => (
                                 <li
                                   key={index}
@@ -487,9 +569,11 @@ export default function RegisterDialog({
                           </ul>
                           <p className="mt-[11.19px] leading-5">
                             {
-                              'Avoid using a password that you use with ' +
-                                'other websites or that might be easy for ' +
-                                'someone else to guess.'
+                              Localizer.default().localize(
+                                'Avoid using a password that you use with ' +
+                                  'other websites or that might be easy for ' +
+                                  'someone else to guess.'
+                              )
                             }
                           </p>
                         </div>
@@ -514,7 +598,7 @@ export default function RegisterDialog({
                       setText={viewModel.setConfirmPassword}
                       isFocused={viewModel.isConfirmPasswordFocused}
                       setIsFocused={viewModel.setIsConfirmPasswordFocused}
-                      prompt="Confirm Password"
+                      prompt={Localizer.default().localize('Confirm Password')}
                       paddingRightClassName="pr-4 focus:pr-3.75"
                       required={
                         !viewModel.isConfirmPasswordVirginal &&
@@ -572,7 +656,7 @@ export default function RegisterDialog({
                       setText={viewModel.setMasterPassword}
                       isFocused={viewModel.isMasterPasswordFocused}
                       setIsFocused={viewModel.setIsMasterPasswordFocused}
-                      prompt="Master Password"
+                      prompt={Localizer.default().localize('Master Password')}
                       paddingRightClassName="pr-12.25 focus:pr-12"
                       required={
                         !viewModel.isMasterPasswordVirginal &&
@@ -616,19 +700,22 @@ export default function RegisterDialog({
                               )
                           }
                         >
-                          {
-                            'This password will be used to derive the ' +
-                              'encryption keys for the majority of your '
-                          }
                           <span
                             dangerouslySetInnerHTML={{
-                              __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+                              __html: Localizer
+                                .default()
+                                .localize(
+                                  'This password will be used to derive the ' +
+                                    'encryption keys for the majority of ' +
+                                    'your *X* data, thereby protecting it ' +
+                                    'using end-to-end encryption.'
+                                )
+                                .replace(
+                                  '*X*',
+                                  process.env.NEXT_PUBLIC_TITLE ?? ''
+                                )
                             }}
                           />
-                          {
-                            ' data, thereby protecting it using end-to-end ' +
-                              'encryption.'
-                          }
                         </div>
                       )
                     }
@@ -653,18 +740,20 @@ export default function RegisterDialog({
                           {
                             viewModel.masterPasswordMessage === '___'
                               ? (
-                                <p>
-                                  {'The master password cannot be the same ' +
-                                    'as the '}
-                                  <span
-                                    dangerouslySetInnerHTML={{
-                                      __html: process.env.NEXT_PUBLIC_TITLE
-                                        ? process.env.NEXT_PUBLIC_TITLE
-                                        : ''
-                                    }}
-                                  />
-                                  {' Account password.'}
-                                </p>
+                                <p
+                                  dangerouslySetInnerHTML={{
+                                    __html: Localizer
+                                      .default()
+                                      .localize(
+                                        'The master password cannot be the ' +
+                                          'same as the *X* Account password.'
+                                      )
+                                      .replace(
+                                        '*X*',
+                                        process.env.NEXT_PUBLIC_TITLE ?? ''
+                                      )
+                                  }}
+                                />
                               )
                               : viewModel.masterPasswordMessage
                           }
@@ -690,7 +779,9 @@ export default function RegisterDialog({
                       setText={viewModel.setConfirmMasterPassword}
                       isFocused={viewModel.isConfirmMasterPasswordFocused}
                       setIsFocused={viewModel.setIsConfirmMasterPasswordFocused}
-                      prompt="Confirm Master Password"
+                      prompt={
+                        Localizer.default().localize('Confirm Master Password')
+                      }
                       paddingRightClassName="pr-4 focus:pr-3.75"
                       required={
                         !viewModel.isConfirmMasterPasswordVirginal &&
@@ -1231,47 +1322,27 @@ export default function RegisterDialog({
                       'text-xs leading-4 text-[#6e6e73] dark:text-[#86868b] ' +
                         'text-center'
                     }
-                  >
-                    {'Your '}
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: process.env.NEXT_PUBLIC_TITLE ?? ''
-                      }}
-                    />
-                    {
-                      ' Account information is used to allow you to sign in ' +
-                        'securely and access your data. '
-                    }
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: process.env.NEXT_PUBLIC_TITLE ?? ''
-                      }}
-                    />
-                    {
-                      ' records certain data for security, support and ' +
-                        'reporting purposes. The majority of your '
-                    }
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: process.env.NEXT_PUBLIC_TITLE ?? ''
-                      }}
-                    />
-                    {
-                      ' data is protected using end-to-end encryption. No ' +
-                        'one else can access your end-to-end encrypted data, ' +
-                        'not even '
-                    }
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: process.env.NEXT_PUBLIC_TITLE ?? ''
-                      }}
-                    />
-                    {
-                      ', and this data remains secure even in the case of ' +
-                        'a data breach in the cloud.'
-                    }
-                  </p>
-
+                    dangerouslySetInnerHTML={{
+                      __html: Localizer
+                        .default()
+                        .localize(
+                          'Your *X* Account information is used to allow you ' +
+                            'to sign in securely and access your data. *X* ' +
+                            'records certain data for security, support and ' +
+                            'reporting purposes. The majority of your *X* ' +
+                            'data — including photos, videos, files and ' +
+                            'more — is protected using end-to-end ' +
+                            'encryption. No one else can access your ' +
+                            'end-to-end encrypted data, not even *X*, and ' +
+                            'this data remains secure even in the case of a ' +
+                            'data breach in the cloud.'
+                        )
+                        .replaceAll(
+                          '*X*',
+                          process.env.NEXT_PUBLIC_TITLE ?? ''
+                        )
+                    }}
+                  />
                   {
                     viewModel.isError && (
                       <p
@@ -1280,7 +1351,11 @@ export default function RegisterDialog({
                             'dark:text-[#ff3037]'
                         }
                       >
-                        {'Your account cannot be created at this time.'}
+                        {
+                          Localizer.default().localize(
+                            'Your account cannot be created at this time.'
+                          )
+                        }
                       </p>
                     )
                   }
@@ -1318,7 +1393,7 @@ export default function RegisterDialog({
                           }
                           onClick={() => viewModel.handleViewDisappear()}
                         >
-                          {'Cancel'}
+                          {Localizer.default().localize('Cancel')}
                         </button>
                         <button
                           className={
@@ -1359,7 +1434,7 @@ export default function RegisterDialog({
                           }
                           onClick={() => viewModel.handleContinueButtonClick()}
                         >
-                          {'Continue'}
+                          {Localizer.default().localize('Continue')}
                         </button>
                       </div>
                     )
@@ -1375,7 +1450,7 @@ export default function RegisterDialog({
                               'font-semibold leading-5.75'
                           }
                         >
-                          {'Loading…'}
+                          {Localizer.default().localize('Loading…')}
                         </span>
                       </div>
                     )

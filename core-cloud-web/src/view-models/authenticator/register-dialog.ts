@@ -21,6 +21,7 @@ import { useRef, useState } from 'react'
 import UserService from '../../services/user-service'
 import UserTokenService from '../../services/user-token-service'
 import { useRouter } from 'next/navigation'
+import Localizer from '@/localizer'
 
 export default function useRegisterDialog({
   setIsPresented
@@ -55,7 +56,7 @@ export default function useRegisterDialog({
   const [isConfirmPasswordVirginal, setIsConfirmPasswordVirginal] = useState(
     true
   )
-  const [confirmPasswordMessage, setConfimPasswordMessage] = useState('')
+  const [confirmPasswordMessage, setConfirmPasswordMessage] = useState('')
   const [masterPassword, setMasterPassword] = useState('')
   const [isMasterPasswordFocused, setIsMasterPasswordFocused] = useState(false)
   const [isMasterPasswordVirginal, setIsMasterPasswordVirginal] = useState(true)
@@ -120,7 +121,9 @@ export default function useRegisterDialog({
     let isValid = true
     if (username.length <= 0 || !emailRegex.test(username)) {
       setUsernameMessage(
-        'Enter a valid email address to use as your primary email address.'
+        Localizer.default().localize(
+          'Enter a valid email address to use as your primary email address.'
+        )
       )
       isValid = false
     } else {
@@ -129,15 +132,18 @@ export default function useRegisterDialog({
       })
       if (exists === true) {
         setUsernameMessage(
-          'This email address is not available. ' +
-            'Choose a different address.'
+          Localizer.default().localize(
+            'This email address is not available. Choose a different address.'
+          )
         )
         isValid = false
       } else if (exists === false) {
         setUsernameMessage('')
         isValid = true
       } else {
-        setUsernameMessage('Cannot verify this email address.')
+        setUsernameMessage(
+          Localizer.default().localize('Cannot verify this email address.')
+        )
         isValid = false
       }
     }
@@ -158,16 +164,20 @@ export default function useRegisterDialog({
 
     let isValid = true
     if ((mask & 1) === 0) {
-      setPasswordMessage('8 or more characters')
+      setPasswordMessage(Localizer.default().localize('8 or more characters'))
       isValid = false
     } else if (((mask >> 1) & 1) === 0) {
-      setPasswordMessage('At least one number')
+      setPasswordMessage(Localizer.default().localize('At least one number'))
       isValid = false
     } else if (((mask >> 2) & 1) === 0 || ((mask >> 3) & 1) === 0) {
-      setPasswordMessage('Upper & lowercase letters')
+      setPasswordMessage(
+        Localizer.default().localize('Upper & lowercase letters')
+      )
       isValid = false
     } else if (((mask >> 4) & 1) === 0) {
-      setPasswordMessage('At least one special character')
+      setPasswordMessage(
+        Localizer.default().localize('At least one special character')
+      )
       isValid = false
     } else {
       setPasswordMessage('')
@@ -223,22 +233,32 @@ export default function useRegisterDialog({
 
     let isValid = true
     if (confirmPassword.length < 8) {
-      setConfimPasswordMessage('8 or more characters')
+      setConfirmPasswordMessage(
+        Localizer.default().localize('8 or more characters')
+      )
       isValid = false
     } else if (!hasDigit) {
-      setConfimPasswordMessage('At least one number')
+      setConfirmPasswordMessage(
+        Localizer.default().localize('At least one number')
+      )
       isValid = false
     } else if (!hasUppercaseLetter || !hasLowercaseLetter) {
-      setConfimPasswordMessage('Upper & lowercase letters')
+      setConfirmPasswordMessage(
+        Localizer.default().localize('Upper & lowercase letters')
+      )
       isValid = false
     } else if (!hasSpecialCharacter) {
-      setConfimPasswordMessage('At least one special character')
+      setConfirmPasswordMessage(
+        Localizer.default().localize('At least one special character')
+      )
       isValid = false
     } else if (confirmPassword !== password) {
-      setConfimPasswordMessage('The passwords you entered do not match.')
+      setConfirmPasswordMessage(
+        Localizer.default().localize('The passwords you entered do not match.')
+      )
       isValid = false
     } else {
-      setConfimPasswordMessage('')
+      setConfirmPasswordMessage('')
       isValid = true
     }
 
@@ -263,16 +283,24 @@ export default function useRegisterDialog({
 
     let isValid = true
     if (masterPassword.length < 8) {
-      setMasterPasswordMessage('8 or more characters')
+      setMasterPasswordMessage(
+        Localizer.default().localize('8 or more characters')
+      )
       isValid = false
     } else if (!hasDigit) {
-      setMasterPasswordMessage('At least one number')
+      setMasterPasswordMessage(
+        Localizer.default().localize('At least one number')
+      )
       isValid = false
     } else if (!hasUppercaseLetter || !hasLowercaseLetter) {
-      setMasterPasswordMessage('Upper & lowercase letters')
+      setMasterPasswordMessage(
+        Localizer.default().localize('Upper & lowercase letters')
+      )
       isValid = false
     } else if (!hasSpecialCharacter) {
-      setMasterPasswordMessage('At least one special character')
+      setMasterPasswordMessage(
+        Localizer.default().localize('At least one special character')
+      )
       isValid = false
     } else if (masterPassword === password) {
       setMasterPasswordMessage('___')
@@ -313,19 +341,29 @@ export default function useRegisterDialog({
 
     let isValid = true
     if (confirmMasterPassword.length < 8) {
-      setConfirmMasterPasswordMessage('8 or more characters')
+      setConfirmMasterPasswordMessage(
+        Localizer.default().localize('8 or more characters')
+      )
       isValid = false
     } else if (!hasDigit) {
-      setConfirmMasterPasswordMessage('At least one number')
+      setConfirmMasterPasswordMessage(
+        Localizer.default().localize('At least one number')
+      )
       isValid = false
     } else if (!hasUppercaseLetter || !hasLowercaseLetter) {
-      setConfirmMasterPasswordMessage('Upper & lowercase letters')
+      setConfirmMasterPasswordMessage(
+        Localizer.default().localize('Upper & lowercase letters')
+      )
       isValid = false
     } else if (!hasSpecialCharacter) {
-      setConfirmMasterPasswordMessage('At least one special character')
+      setConfirmMasterPasswordMessage(
+        Localizer.default().localize('At least one special character')
+      )
       isValid = false
     } else if (confirmMasterPassword !== masterPassword) {
-      setConfirmMasterPasswordMessage('The passwords you entered do not match.')
+      setConfirmMasterPasswordMessage(
+        Localizer.default().localize('The passwords you entered do not match.')
+      )
       isValid = false
     } else {
       setConfirmMasterPasswordMessage('')
@@ -417,7 +455,6 @@ export default function useRegisterDialog({
     isConfirmPasswordVirginal,
     setIsConfirmPasswordVirginal,
     confirmPasswordMessage,
-    setConfimPasswordMessage,
     masterPassword,
     setMasterPassword,
     isMasterPasswordFocused,

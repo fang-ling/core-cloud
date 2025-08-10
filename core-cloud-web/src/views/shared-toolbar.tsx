@@ -27,7 +27,7 @@ import NoticePopover from './shared/toolbar/notice-popover'
 import Popover from './shared/toolbar/popover'
 import Link from 'next/link'
 import MenuItem from './shared/toolbar/menu-item'
-import { Localizer } from '@/localizer'
+import Localizer from '@/localizer'
 
 export default function SharedToolbar({
   source,
@@ -397,17 +397,17 @@ export default function SharedToolbar({
               <p className="text-base leading-5.25">
                 <span
                   dangerouslySetInnerHTML={{
-                    __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+                    __html: Localizer
+                      .default()
+                      .localize(
+                        '*X* doesn\'t have access to display some of your ' +
+                          'data, including photos, videos, songs and files. ' +
+                          'Select an app to allow access using your master ' +
+                          'password.'
+                      )
+                      .replace('*X*', process.env.NEXT_PUBLIC_TITLE ?? '')
                   }}
                 />
-                {' '}
-                {
-                  Localizer.default().localize(
-                    'doesn\'t have access to display some of your data, ' +
-                      'including photos, videos, songs and files. Select an ' +
-                      'app to allow access using your master password.'
-                  )
-                }
               </p>
             </div>
           </NoticePopover>
@@ -563,7 +563,11 @@ export default function SharedToolbar({
                       'mx-2.75 md:mx-1.5'
                   }
                 >
-                  {`${firstName} ${lastName}`}
+                  {
+                    Localizer.default().nameOrder() === 'firstNameLastName'
+                      ? `${firstName} ${lastName}`
+                      : `${lastName} ${firstName}`
+                  }
                 </p>
                 <p
                   className={

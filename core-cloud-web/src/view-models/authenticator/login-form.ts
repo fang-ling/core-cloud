@@ -22,6 +22,7 @@
 import { useState } from 'react'
 import UserTokenService from '../../services/user-token-service'
 import { useRouter } from 'next/navigation'
+import Localizer from '@/localizer'
 
 export default function useLoginForm() {
   const [username, setUsername] = useState('')
@@ -63,7 +64,11 @@ export default function useLoginForm() {
         }
       } else {
         setErrorMessage(
-          'Check the account information you entered and try again.'
+          Localizer
+            .default()
+            .localize(
+              'Check the account information you entered and try again.'
+            )
         )
         setPassword('')
       }
