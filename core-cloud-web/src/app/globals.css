@@ -32,6 +32,8 @@
   --theme-color-fillSecondary: rgba(120, 120, 128, 0.16);
   --theme-color-fillTertiary: rgba(118, 118, 128, 0.12);
   --theme-color-fillQuaternary: rgba(120, 120, 128, 0.08);
+  --theme-color-gray1: hsl(240, 2.3, 56.7);
+  --theme-color-gray3: hsl(240, 4.7, 79);
   --theme-color-gray4: hsl(240, 5.7, 82.9);
   --theme-color-gray5: hsl(240, 10.6, 90.8);
   --theme-color-gray6: #f2f2f7;
@@ -67,6 +69,8 @@
     --theme-color-fillSecondary: rgba(120, 120, 128, 0.36);
     --theme-color-fillTertiary: rgba(118, 118, 128, 0.3);
     --theme-color-fillQuaternary: rgba(116, 116, 128, 0.25);
+    --theme-color-gray1: hsl(240, 2.3, 56.7);
+    --theme-color-gray3: hsl(240, 1.4, 29);
     --theme-color-gray4: hsl(240, 1.6, 23.9);
     --theme-color-gray5: hsl(240, 1.9, 20.8);
     --theme-color-gray6: #2c2c2e;
@@ -106,6 +110,8 @@
   --color-fillSecondary: var(--theme-color-fillSecondary);
   --color-fillTertiary: var(--theme-color-fillTertiary);
   --color-fillQuaternary: var(--theme-color-fillQuaternary);
+  --color-gray1: var(--theme-color-gray1);
+  --color-gray3: var(--theme-color-gray3);
   --color-gray4: var(--theme-color-gray4);
   --color-gray5: var(--theme-color-gray5);
   --color-gray6: var(--theme-color-gray6);

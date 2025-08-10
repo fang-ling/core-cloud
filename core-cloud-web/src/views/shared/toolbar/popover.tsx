@@ -55,7 +55,12 @@ export default function Popover({
           }
         >
           <button
-            className="rounded-lg px-1.5 size-7 ml-2.25 mt-1.25"
+            className={
+              'rounded-lg px-1.5 size-7 ml-2.25 mt-1.25 ' +
+                'hover:bg-fillTertiary flex items-center justify-center ' +
+                'active:dark:bg-[rgba(0,153,255,.16)] ' +
+                'active:bg-[rgba(0,113,227,.3)]'
+            }
             onClick={() => viewModel.handlePopoverClose()}
           >
             <svg

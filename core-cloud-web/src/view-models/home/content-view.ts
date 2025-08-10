@@ -34,6 +34,12 @@ export default function useContentView({
     setBackgroundColor
   ] = useState<string | undefined>(/*undefined*/'blue')
   const apps: any[] /* TODO */ = []
+  /*
+   * 0: off
+   * 1: select background color
+   */
+  const [radioMode, setRadioMode] = useState(0)
+  const [modalRight, setModalRight] = useState(0)
 
   /* MARK: - Event handlers */
   function handleCustomizeButtonClick() {
@@ -44,11 +50,35 @@ export default function useContentView({
     setIsCustomizationPresented(false)
   }
 
+  function handleModalOpen(
+    event: React.MouseEvent<HTMLButtonElement>,
+    newRadioMode: 0 | 1
+  ) {
+    document.body.style.setProperty('overflow', 'hidden')
+    const right = event.currentTarget.getBoundingClientRect().right
+    setModalRight(window.innerWidth - right)
+    setRadioMode(newRadioMode)
+  }
+
+  function handleModalClose() {
+    document.body.style.removeProperty('overflow')
+    setRadioMode(0)
+  }
+
+  function handleBackgroundColorChange(newBackgroundColor: string) {
+    setBackgroundColor(newBackgroundColor)
+  }
+
   return {
     isCustomizationPresented,
     backgroundColor,
     apps,
+    radioMode,
+    modalRight,
     handleCustomizeButtonClick,
-    handleCustomizeDoneButtonClick
+    handleCustomizeDoneButtonClick,
+    handleModalOpen,
+    handleModalClose,
+    handleBackgroundColorChange
   }
 }

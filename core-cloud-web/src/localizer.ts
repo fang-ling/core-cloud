@@ -111,6 +111,9 @@ export default class Localizer {
     'Customize Home Page': {
       'zh-TW': '自訂首頁'
     },
+    'Done': {
+      'zh-TW': '完成'
+    },
     'Enter a valid email address to use as your primary email address.': {
       'zh-TW': '請輸入有效的電子郵件地址，來作為你的主要電子郵件地址。'
     },
@@ -149,6 +152,9 @@ export default class Localizer {
     },
     'Password Requirements': {
       'zh-TW': '密碼要求'
+    },
+    'Select Background Color': {
+      'zh-TW': '選取背景顏色'
     },
     'Settings': {
       'zh-TW': '設定'

@@ -25,6 +25,8 @@ import Background from './background'
 import ProfileCard from './profile-card'
 import AppCard from './app-card'
 import SharedFooter from '../shared-footer'
+import Popover from './popover'
+import Localizer from '@/localizer'
 
 export default function ContentView() {
   const viewModel = useContentView({ })
@@ -73,19 +75,25 @@ export default function ContentView() {
               }
               onClick={() => viewModel.handleCustomizeDoneButtonClick()}
             >
-              {'Done'}
+              {Localizer.default().localize('Done')}
             </button>
 
             <button
               className={
-                'ml-auto rounded-[18px] px-2.5 py-1.75 text-labelPrimary ' +
+                'ml-auto rounded-[18px] px-2.5 py-1.75 ' +
                   'text-base h-10 leading-5.25 cursor-pointer ' +
                   'hover:bg-fillSecondary active:bg-fillPrimary ' +
-                  'active:text-labelQuaternary flex gap-1.25 items-center'
+                  'active:text-labelQuaternary flex gap-1.25 items-center ' + (
+                    viewModel.radioMode === 1
+                      ? 'bg-[rgba(199,199,204,.5)] dark:bg-gray3 ' +
+                        'text-backgroundPrimary'
+                      : 'text-labelPrimary'
+                  )
               }
+              onClick={(event) => viewModel.handleModalOpen(event, 1)}
             >
               <p className="hidden md:block">
-                {'Select Background Color'}
+                {Localizer.default().localize('Select Background Color')}
               </p>
               <div
                 className={
@@ -94,20 +102,22 @@ export default function ContentView() {
                 }
               >
                 <div
-                  className={
-                    'size-5 rounded-full ' + (
-                      viewModel.backgroundColor === 'blue'
-                        ? 'bg-systemBlue'
-                        : 'TODO'
+                  className="size-5 rounded-full"
+                  style={{
+                    backgroundColor: (
+                      'var(--theme-color-system' +
+                        viewModel.backgroundColor?.charAt(0).toUpperCase() +
+                        viewModel.backgroundColor?.slice(1) +
+                        ')'
                     )
-                  }
+                  }}
                 />
               </div>
             </button>
           </div>
         </div>
 
-        <Background color="blue" />
+        <Background color={viewModel.backgroundColor} />
 
         <main
           className={
@@ -136,6 +146,53 @@ export default function ContentView() {
           </div>
         </main>
       </div>
+
+      {
+        viewModel.radioMode === 1 && (
+          <Popover
+            onClose={() => viewModel.handleModalClose()}
+            right={viewModel.modalRight}
+          >
+            <div className="flex gap-2 md:gap-0.5">
+              {
+                ['Blue', 'Purple', 'Green', 'Red', 'Orange', 'Yellow']
+                  .map(color => (
+                    <button
+                      key={color}
+                      className={
+                        'size-8 p-0.25 flex items-center justify-center ' +
+                          'hover:bg-fillSecondary rounded-full group ' +
+                          'cursor-pointer active:bg-transparent ' + (
+                            (
+                              viewModel.backgroundColor ===
+                                color.toLocaleLowerCase()
+                            )
+                              ? 'border-[1.5px] border-gray1'
+                              : ''
+                          )
+                      }
+                      onClick={() => {
+                        viewModel.handleBackgroundColorChange(
+                          color.toLocaleLowerCase()
+                        )
+                      }}
+                    >
+                      <div
+                        className={
+                          'size-6 bg-systemBlue rounded-full ' +
+                            'group-active:opacity-30'
+                        }
+                        style={{
+                          backgroundColor: `var(--theme-color-system${color})`
+                        }}
+                      />
+                    </button>
+                  ))
+              }
+            </div>
+          </Popover>
+        )
+      }
     </>
   )
 }
