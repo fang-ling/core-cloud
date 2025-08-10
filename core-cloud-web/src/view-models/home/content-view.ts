@@ -35,7 +35,6 @@ export default function useContentView({
     backgroundColor,
     setBackgroundColor
   ] = useState<string | undefined>(undefined)
-  const apps: any[] /* TODO */ = []
   /*
    * 0: off
    * 1: select background color
@@ -125,7 +124,6 @@ export default function useContentView({
   return {
     isCustomizationPresented,
     backgroundColor,
-    apps,
     radioMode,
     modalRight,
     firstName,

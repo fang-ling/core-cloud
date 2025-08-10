@@ -28,6 +28,7 @@ import SharedFooter from '../shared-footer'
 import Popover from './popover'
 import Localizer from '@/localizer'
 import { useEffect } from 'react'
+import CoreCloudWeb from '@/core-cloud-web'
 
 export default function ContentView() {
   const viewModel = useContentView({ })
@@ -44,7 +45,7 @@ export default function ContentView() {
           !viewModel.isCustomizationPresented && (
             <SharedToolbar
               source="home"
-              apps={viewModel.apps}
+              apps={CoreCloudWeb.APPS}
               onCustomize={() => viewModel.handleCustomizeButtonClick()}
               username={viewModel.username}
               firstName={viewModel.firstName}
@@ -150,7 +151,7 @@ export default function ContentView() {
                 lastName={viewModel.lastName}
                 urls={viewModel.avatarURLs}
               />
-              <AppCard apps={viewModel.apps} />
+              <AppCard apps={CoreCloudWeb.APPS} />
             </div>
           </div>
           <div className="mt-auto">

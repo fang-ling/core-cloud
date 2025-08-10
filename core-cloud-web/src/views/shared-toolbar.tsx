@@ -41,7 +41,7 @@ export default function SharedToolbar({
   /*
    * When source is not 'app', we also need the overlay style class.
    */
-  source: 'authenticator' | 'home' | 'app',
+  source: 'authenticator' | 'home' | 'drive' | 'app',
   firstName?: string,
   lastName?: string,
   username?: string,
@@ -76,35 +76,55 @@ export default function SharedToolbar({
                     'dark:bg-[rgba(56,56,61,.6)] bg-[rgba(248,248,252,.4)] ' +
                       'z-3 backdrop-blur-[14px]'
                   )
-                  : ''
+                  : 'bg-backgroundLayer1 border-b border-gray5'
             )
         }
       >
+        <Link
+          href="/home"
+          className="flex items-center mr-0.5"
+        >
+          {
+            (() => {
+              switch (source) {
+                case 'authenticator': return (
+                  <Icon
+                    urls={
+                      process
+                        .env
+                        .NEXT_PUBLIC_AUTHENTICATOR_ICON_URLS
+                        ?.split(',')
+                    }
+                  />
+                )
+                case 'home': return (
+                  <Icon
+                    urls={process.env.NEXT_PUBLIC_HOME_ICON_URLS?.split(',')}
+                  />
+                )
+                case 'drive': return (
+                  <Icon
+                    urls={process.env.NEXT_PUBLIC_DRIVE_ICON_URLS?.split(',')}
+                  />
+                )
+              }
+            })()
+          }
+          <div className="font-semibold text-[21px] text-systemBlack">
+            <div
+              dangerouslySetInnerHTML={{
+                __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+              }}
+            />
+          </div>
+        </Link>
         {
-          (() => {
-            switch (source) {
-              case 'authenticator': return (
-                <Icon
-                  urls={
-                    process.env.NEXT_PUBLIC_AUTHENTICATOR_ICON_URLS?.split(',')
-                  }
-                />
-              )
-              case 'home': return (
-                <Icon
-                  urls={process.env.NEXT_PUBLIC_HOME_ICON_URLS?.split(',')}
-                />
-              )
-            }
-          })()
+          source === 'drive' && (
+            <div className="font-semibold text-[21px] text-systemBlue">
+              {Localizer.default().localize('Drive')}
+            </div>
+          )
         }
-        <div className="font-semibold text-[21px] text-systemBlack">
-          <div
-            dangerouslySetInnerHTML={{
-              __html: process.env.NEXT_PUBLIC_TITLE ?? ''
-            }}
-          />
-        </div>
 
         {
           source !== 'authenticator' && (

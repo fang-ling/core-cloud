@@ -114,6 +114,9 @@ export default class Localizer {
     'Done': {
       'zh-TW': '完成'
     },
+    'Drive': {
+      'zh-TW': '雲碟'
+    },
     'Enter a valid email address to use as your primary email address.': {
       'zh-TW': '請輸入有效的電子郵件地址，來作為你的主要電子郵件地址。'
     },

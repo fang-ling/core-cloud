@@ -68,7 +68,8 @@ export default function AppCard({
                 <UIImage
                   urls={app.urls}
                   className={
-                    'w-12.5 lg:w-17.5 object-contain group-active:opacity-60'
+                    'size-12.5 lg:size-17.5 object-contain ' +
+                      'group-active:opacity-60'
                   }
                 />
                 <div
