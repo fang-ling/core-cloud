@@ -63,12 +63,15 @@ struct UserService {
    *   - masterPassword: The master password of the user.
    *   - database: The database to insert for the user.
    *
+   * - Returns: Returns the newly created user.
+   *
    * - Throws:
    *   - ``UserError/cryptoError``: if there is an error during key derivation
    *                                or encryption.
    *   - ``UserError/databaseError``: if there is an issue accessing the
    *                                  database.
    */
+  @discardableResult
   func insertUser(
     firstName: String,
     lastName: String,
@@ -76,7 +79,7 @@ struct UserService {
     password: String,
     masterPassword: String,
     on database: Database
-  ) async throws {
+  ) async throws -> User {
     var key: SymmetricKey
     let salt = SymmetricKey(size: .bits256)
     do {
@@ -129,6 +132,8 @@ struct UserService {
         avatarURLs: ""
       )
       try await user.save(on: database)
+
+      return user
     } catch {
       throw UserError.databaseError
     }

@@ -110,11 +110,13 @@ struct CoreCloudServer {
 
     /* Migrations */
     app.migrations.add(UserMigrationV1())
+    app.migrations.add(SettingMigrationV1())
     try await app.autoMigrate()
 
     /* Routes */
     try app.routes.register(collection: UserController())
     try app.routes.register(collection: UserTokenController())
+    try app.routes.register(collection: SettingController())
   }
 }
 

@@ -21,6 +21,7 @@ import Vapor
 
 struct UserController: RouteCollection {
   var userService = UserService()
+  var settingService = SettingService()
 
   func boot(routes: RoutesBuilder) throws {
     routes
@@ -104,12 +105,19 @@ struct UserController: RouteCollection {
     }
 
     do {
-      try await userService.insertUser(
+      let user = try await userService.insertUser(
         firstName: insertRequest.firstName,
         lastName: insertRequest.lastName,
         username: insertRequest.username,
         password: insertRequest.password,
         masterPassword: insertRequest.masterPassword,
+        on: request.db
+      )
+
+      /* Also create the setting for newly created user. */
+      try await settingService.insertSetting(
+        homeBackgroundColor: 0,
+        for: user.requireID(),
         on: request.db
       )
 
@@ -136,7 +144,7 @@ struct UserController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchUserHandler(request: Request) async -> Response {
-    let id: Int64
+    let id: User.IDValue
     do {
       let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
       let userToken = try await request.jwt.verify(
