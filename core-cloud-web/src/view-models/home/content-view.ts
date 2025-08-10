@@ -19,6 +19,7 @@
 
 'use client'
 
+import UserService from '@/services/user-service'
 import { useState } from 'react'
 
 export default function useContentView({
@@ -40,6 +41,10 @@ export default function useContentView({
    */
   const [radioMode, setRadioMode] = useState(0)
   const [modalRight, setModalRight] = useState(0)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [username, setUsername] = useState('')
+  const [avatarURLs, setAvatarURLs] = useState<string[]>([])
 
   /* MARK: - Event handlers */
   function handleCustomizeButtonClick() {
@@ -69,16 +74,31 @@ export default function useContentView({
     setBackgroundColor(newBackgroundColor)
   }
 
+  async function handleViewAppear1() {
+    const user = await UserService.fetchUser()
+    if (user) {
+      setFirstName(user.firstName)
+      setLastName(user.lastName)
+      setUsername(user.username)
+      setAvatarURLs(user.avatarURLs)
+    }
+  }
+
   return {
     isCustomizationPresented,
     backgroundColor,
     apps,
     radioMode,
     modalRight,
+    firstName,
+    lastName,
+    username,
+    avatarURLs,
     handleCustomizeButtonClick,
     handleCustomizeDoneButtonClick,
     handleModalOpen,
     handleModalClose,
-    handleBackgroundColorChange
+    handleBackgroundColorChange,
+    handleViewAppear1
   }
 }

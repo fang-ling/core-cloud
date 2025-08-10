@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-import { UserToken } from '../models/user-token'
+import UserToken from '../models/user-token'
 
 namespace UserTokenService {
   export async function insertUserToken(

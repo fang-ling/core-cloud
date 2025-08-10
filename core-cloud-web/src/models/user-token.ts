@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-export namespace UserToken {
+namespace UserToken {
   export namespace Singular {
     export namespace Input {
       export type Insertion = {
@@ -26,3 +26,4 @@ export namespace UserToken {
     }
   }
 }
+export default UserToken

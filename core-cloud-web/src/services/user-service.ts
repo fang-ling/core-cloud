@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-import { User } from '../models/user'
+import User from '../models/user'
 
 namespace UserService {
   export async function insertUser(
@@ -63,6 +63,24 @@ namespace UserService {
       }
     } catch {
       return 'error'
+    }
+  }
+
+  export async function fetchUser() {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/user`,
+        {
+          method: 'GET'
+        }
+      )
+      if (response.status === 200) {
+        return (await response.json()) as User.Singular.Output.Retrieval
+      } else {
+        throw new Error()
+      }
+    } catch {
+      return undefined
     }
   }
 }

@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-export namespace User {
+namespace User {
   export namespace Singular {
     export namespace Input {
       export type Insertion = {
@@ -32,5 +32,15 @@ export namespace User {
         username: string
       }
     }
+
+    export namespace Output {
+      export type Retrieval = {
+        firstName: string
+        lastName: string
+        username: string
+        avatarURLs: string[]
+      }
+    }
   }
 }
+export default User

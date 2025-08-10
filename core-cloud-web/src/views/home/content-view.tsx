@@ -27,9 +27,14 @@ import AppCard from './app-card'
 import SharedFooter from '../shared-footer'
 import Popover from './popover'
 import Localizer from '@/localizer'
+import { useEffect } from 'react'
 
 export default function ContentView() {
   const viewModel = useContentView({ })
+
+  useEffect(() => {
+    viewModel.handleViewAppear1()
+  }, [])
 
   return (
     <>
@@ -40,9 +45,10 @@ export default function ContentView() {
               source="home"
               apps={viewModel.apps}
               onCustomize={() => viewModel.handleCustomizeButtonClick()}
-              username="j.appleseed@example.com"
-              firstName="John"
-              lastName="Appleseed"
+              username={viewModel.username}
+              firstName={viewModel.firstName}
+              lastName={viewModel.lastName}
+              urls={viewModel.avatarURLs}
             />
           )
         }
@@ -134,9 +140,10 @@ export default function ContentView() {
               }
             >
               <ProfileCard
-                username="j.appleseed@example.com"
-                firstName="John"
-                lastName="Appleseed"
+                username={viewModel.username}
+                firstName={viewModel.firstName}
+                lastName={viewModel.lastName}
+                urls={viewModel.avatarURLs}
               />
               <AppCard apps={viewModel.apps} />
             </div>
