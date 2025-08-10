@@ -108,6 +108,7 @@ extension User {
 
 extension User.Singular {
   enum Input { }
+  enum Output { }
 }
 
 extension User.Singular.Input {
@@ -121,5 +122,14 @@ extension User.Singular.Input {
 
   struct Peek: Codable {
     var username: String?
+  }
+}
+
+extension User.Singular.Output {
+  struct Retrieval: Codable {
+    var username: String
+    var firstName: String
+    var lastName: String
+    var avatarURLs: [String]
   }
 }

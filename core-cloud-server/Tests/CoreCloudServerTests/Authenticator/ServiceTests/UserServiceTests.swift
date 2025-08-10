@@ -124,4 +124,34 @@ struct UserServiceTests {
       #expect(masterKey.count == 256 / 8)
     }
   }
+
+  @Test
+  func testFetchUser() async throws {
+    let userService = UserService()
+
+    try await withApp(configure: CoreCloudServer.configure) { app in
+      await #expect(throws: UserError.noSuchUser) {
+        try await userService.fetchUser(id: 1, on: app.db)
+      }
+
+      try await userService.insertUser(
+        firstName: "Lorna",
+        lastName: "Chu",
+        username: "lorna@example.com",
+        password: "Top-1-Secret",
+        masterPassword: "Top-0-Secret",
+        on: app.db
+      )
+
+      let lorna = try await userService.fetchUser(id: 1, on: app.db)
+      #expect(lorna.username == "lorna@example.com")
+      #expect(lorna.firstName == "Lorna")
+      #expect(lorna.lastName == "Chu")
+      #expect(lorna.avatarURLs == [])
+
+      await #expect(throws: UserError.noSuchUser) {
+        try await userService.fetchUser(id: 2, on: app.db)
+      }
+    }
+  }
 }

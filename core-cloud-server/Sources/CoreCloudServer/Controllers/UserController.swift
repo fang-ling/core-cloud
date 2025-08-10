@@ -34,6 +34,12 @@ struct UserController: RouteCollection {
       .grouped("v1")
       .grouped("user")
       .post(use: insertUserHandler)
+
+    routes
+      .grouped("api")
+      .grouped("v1")
+      .grouped("user")
+      .get(use: fetchUserHandler)
   }
 
   /**
@@ -114,6 +120,57 @@ struct UserController: RouteCollection {
       return .serviceUnavailable
     } catch {
       return .internalServerError
+    }
+  }
+
+  /**
+   * - URL: GET /api/v1/user
+   *
+   * - Response Codes:
+   *   - 200 OK: The user detail is returned.
+   *   - 204 No Content: The user does not exist.
+   *   - 401 Unauthorized: The authentication is required and has failed.
+   *   - 500 Internal Server Error: A response indicating an error occurred on
+   *                                the server.
+   *   - 503 Service Unavailable: A response indicating that the server is not
+   *                              ready to handle the request.
+   */
+  func fetchUserHandler(request: Request) async -> Response {
+    let id: Int64
+    do {
+      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let userToken = try await request.jwt.verify(
+        jwt ?? "",
+        as: UserToken.self
+      )
+      id = Int64(userToken.subject.value) ?? -1
+    } catch {
+      return Response(status: .unauthorized)
+    }
+
+    do {
+      let detail = try await userService.fetchUser(id: id, on: request.db)
+
+      return try Response(
+        status: .ok,
+        headers: .init([("Content-Type", "application/json")]),
+        body: .init(
+          data: CoreCloudServer.encoder.encode(
+            User.Singular.Output.Retrieval(
+              username: detail.username,
+              firstName: detail.firstName,
+              lastName: detail.lastName,
+              avatarURLs: detail.avatarURLs
+            )
+          )
+        )
+      )
+    } catch UserError.noSuchUser {
+      return Response(status: .noContent)
+    } catch UserError.databaseError {
+      return Response(status: .serviceUnavailable)
+    } catch {
+      return Response(status: .internalServerError)
     }
   }
 }

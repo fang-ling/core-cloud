@@ -136,3 +136,7 @@ extension CoreCloudServer {
     static let privateKey = "PRIVATE_KEY"
   }
 }
+
+extension CoreCloudServer {
+  static let encoder = JSONEncoder()
+}

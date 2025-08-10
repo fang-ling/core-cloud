@@ -133,4 +133,51 @@ struct UserService {
       throw UserError.databaseError
     }
   }
+
+  /**
+   * Returns user information based on the given id.
+   *
+   * - Parameters:
+   *   - id: The id for the user.
+   *   - database: The database to query for the user.
+   *
+   * - Returns: A tuple containing the user's details:
+   *   - username: The username for the user.
+   *   - firstName: The first name of the user.
+   *   - lastName: The last name of the user.
+   *   - avatarURLs: The avatar urls of the user.
+   *
+   * - Throws:
+   *   - ``UserError/noSuchUser``: if the user is not found.
+   *   - ``UserError/databaseError``: if there is an issue accessing the
+   *                                  database.
+   */
+  func fetchUser(id: Int64, on database: Database) async throws -> (
+    username: String,
+    firstName: String,
+    lastName: String,
+    avatarURLs: [String]
+  ) {
+    do {
+      guard let user = try await User.query(on: database)
+        .filter(\.$id == id)
+        .first()
+      else {
+        throw UserError.noSuchUser
+      }
+
+      return (
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatarURLs: user.avatarURLs
+          .components(separatedBy: ",")
+          .filter({ !$0.isEmpty })
+      )
+    } catch UserError.noSuchUser {
+      throw UserError.noSuchUser
+    } catch {
+      throw UserError.databaseError
+    }
+  }
 }
