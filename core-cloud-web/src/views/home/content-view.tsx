@@ -34,6 +34,7 @@ export default function ContentView() {
 
   useEffect(() => {
     viewModel.handleViewAppear1()
+    viewModel.handleViewAppear2()
   }, [])
 
   return (
@@ -123,7 +124,11 @@ export default function ContentView() {
           </div>
         </div>
 
-        <Background color={viewModel.backgroundColor} />
+        {
+          viewModel.backgroundColor && (
+            <Background color={viewModel.backgroundColor} />
+          )
+        }
 
         <main
           className={

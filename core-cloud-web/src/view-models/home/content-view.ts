@@ -19,6 +19,7 @@
 
 'use client'
 
+import SettingService from '@/services/setting-service'
 import UserService from '@/services/user-service'
 import { useState } from 'react'
 
@@ -33,7 +34,7 @@ export default function useContentView({
   const [
     backgroundColor,
     setBackgroundColor
-  ] = useState<string | undefined>(/*undefined*/'blue')
+  ] = useState<string | undefined>(undefined)
   const apps: any[] /* TODO */ = []
   /*
    * 0: off
@@ -70,8 +71,31 @@ export default function useContentView({
     setRadioMode(0)
   }
 
-  function handleBackgroundColorChange(newBackgroundColor: string) {
+  async function handleBackgroundColorChange(newBackgroundColor: string) {
+    const oldBackgroundColor = backgroundColor
+    if (oldBackgroundColor === newBackgroundColor) {
+      return
+    }
+
     setBackgroundColor(newBackgroundColor)
+
+    let newValue = -1
+    switch (newBackgroundColor) {
+      case 'blue': newValue = 0; break;
+      case 'purple': newValue = 1; break;
+      case 'green': newValue = 2; break;
+      case 'red': newValue = 3; break;
+      case 'orange': newValue = 4; break;
+      case 'yellow': newValue = 5; break;
+    }
+
+    const result = await SettingService.modifySetting({
+      key: 'homeBackgroundColor',
+      value: newValue + ''
+    })
+    if (!result) {
+      setBackgroundColor(oldBackgroundColor)
+    }
   }
 
   async function handleViewAppear1() {
@@ -81,6 +105,20 @@ export default function useContentView({
       setLastName(user.lastName)
       setUsername(user.username)
       setAvatarURLs(user.avatarURLs)
+    }
+  }
+
+  async function handleViewAppear2() {
+    const homeBackgroundColor = await SettingService.fetchSetting({
+      key: 'homeBackgroundColor'
+    })
+    switch (homeBackgroundColor?.homeBackgroundColor) {
+      case 0: setBackgroundColor('blue'); break;
+      case 1: setBackgroundColor('purple'); break;
+      case 2: setBackgroundColor('green'); break;
+      case 3: setBackgroundColor('red'); break;
+      case 4: setBackgroundColor('orange'); break;
+      case 5: setBackgroundColor('yellow'); break;
     }
   }
 
@@ -99,6 +137,7 @@ export default function useContentView({
     handleModalOpen,
     handleModalClose,
     handleBackgroundColorChange,
-    handleViewAppear1
+    handleViewAppear1,
+    handleViewAppear2
   }
 }
