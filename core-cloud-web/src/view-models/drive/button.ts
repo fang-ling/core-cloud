@@ -1,8 +1,8 @@
 //
-//  content-view.tsx
+//  button.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/3.
+//  Created by Fang Ling on 2025/8/12.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,19 +17,17 @@
 //  limitations under the License.
 //
 
-import SharedFooter from '../shared-footer'
-import SharedToolbar from '../shared-toolbar'
-import LoginForm from './login-form'
+export default function useButton({
+  onClick
+}: {
+  onClick?: () => void
+}) {
+  /* MARK: - Event handlers */
+  function handleButtonClick() {
+    onClick?.()
+  }
 
-export default function ContentView() {
-  return (
-    <div className="relative">
-      <SharedToolbar
-        source="authenticator"
-        variant="thinMaterial"
-      />
-      <LoginForm />
-      <SharedFooter />
-    </div>
-  )
+  return {
+    handleButtonClick
+  }
 }

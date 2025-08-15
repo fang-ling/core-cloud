@@ -1,8 +1,8 @@
 //
-//  content-view.tsx
+//  shared-bodyguard.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/3.
+//  Created by Fang Ling on 2025/8/11.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,19 +17,28 @@
 //  limitations under the License.
 //
 
-import SharedFooter from '../shared-footer'
-import SharedToolbar from '../shared-toolbar'
-import LoginForm from './login-form'
+import { useState } from 'react'
 
-export default function ContentView() {
-  return (
-    <div className="relative">
-      <SharedToolbar
-        source="authenticator"
-        variant="thinMaterial"
-      />
-      <LoginForm />
-      <SharedFooter />
-    </div>
-  )
+export default function useSharedBodyguard({
+  onPass
+}: {
+  onPass: () => void
+}) {
+  const [isLoading, setIsLoading] = useState(false)
+  const [isWrongPassword, setIsWrongPassword] = useState(false)
+
+  async function handleInputSubmit() {
+    setIsLoading(true)
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    setIsLoading(false)
+    setIsWrongPassword(false)
+
+    onPass()
+  }
+
+  return {
+    isLoading,
+    isWrongPassword,
+    handleInputSubmit
+  }
 }

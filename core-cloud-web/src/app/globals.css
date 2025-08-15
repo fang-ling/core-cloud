@@ -29,6 +29,7 @@
   --theme-color-backgroundLayer1: rgb(242, 242, 247);
   --theme-color-backgroundPrimary: hsl(0, 0, 100);
   --theme-color-boxShadow: rgba(0, 0, 0, 0.16);
+  --theme-color-divider: rgb(209, 209, 214);
   --theme-color-fillPrimary: rgba(120, 120, 128, 0.2);
   --theme-color-fillSecondary: rgba(120, 120, 128, 0.16);
   --theme-color-fillTertiary: rgba(118, 118, 128, 0.12);
@@ -42,6 +43,8 @@
   --theme-color-labelSecondary: rgba(0, 0, 0, 0.56);
   --theme-color-labelTertiary: rgba(0, 0, 0, 0.48);
   --theme-color-labelQuaternary: rgba(0, 0, 0, 0.32);
+  --theme-color-separator: rgb(209, 209, 214);
+  --theme-color-sidebar: rgb(251, 251, 253);
   --theme-color-systemBlack: rgb(0, 0, 0);
   --theme-color-systemBlue: rgb(0, 113, 227);
   --theme-color-systemGreen: rgb(3, 161, 14);
@@ -67,6 +70,7 @@
     --theme-color-backgroundLayer1: rgb(50, 50, 54);
     --theme-color-backgroundPrimary: hsl(240, 3.4, 11.4);
     --theme-color-boxShadow: rgba(0, 0, 0, 0.65);
+    --theme-color-divider: rgb(0, 0, 0);
     --theme-color-fillPrimary: hsla(0, 0, 71.4, 0.3);
     --theme-color-fillSecondary: rgba(120, 120, 128, 0.36);
     --theme-color-fillTertiary: rgba(118, 118, 128, 0.3);
@@ -80,6 +84,8 @@
     --theme-color-labelSecondary: hsla(0, 0, 100, 0.66);
     --theme-color-labelTertiary: hsla(0, 0, 100, 0.5);
     --theme-color-labelQuaternary: hsla(0, 0, 100, 0.42);
+    --theme-color-separator: #343436;
+    --theme-color-sidebar: rgb(32, 32, 35);
     --theme-color-systemBlack: rgb(255, 255, 255);
     --theme-color-systemBlue: rgb(0, 154, 255);
     --theme-color-systemGreen: rgb(50, 209, 88);
@@ -109,6 +115,7 @@
   --color-backgroundLayer1: var(--theme-color-backgroundLayer1);
   --color-backgroundPrimary: var(--theme-color-backgroundPrimary);
   --color-boxShadow: var(--theme-color-boxShadow);
+  --color-divider: var(--theme-color-divider);
   --color-fillPrimary: var(--theme-color-fillPrimary);
   --color-fillSecondary: var(--theme-color-fillSecondary);
   --color-fillTertiary: var(--theme-color-fillTertiary);
@@ -122,6 +129,8 @@
   --color-labelSecondary: var(--theme-color-labelSecondary);
   --color-labelTertiary: var(--theme-color-labelTertiary);
   --color-labelQuaternary: var(--theme-color-labelQuaternary);
+  --color-separator: var(--theme-color-separator);
+  --color-sidebar: var(--theme-color-sidebar);
   --color-systemBlack: var(--theme-color-systemBlack);
   --color-systemBlue: var(--theme-color-systemBlue);
   --color-systemGreen: var(--theme-color-systemGreen);
@@ -176,7 +185,7 @@
   }
    @keyframes opacity-60-25-4-8 {
      0% { opacity: 0.37512499999999993 }
-     50.01%: { opacity: 0.25 }
+     50.01% { opacity: 0.25 }
      50.019999999999996% { opacity: 1 }
      10.009999999999991% { opacity: 0.25 }
      100% { opacity: 0.37512499999999993 }

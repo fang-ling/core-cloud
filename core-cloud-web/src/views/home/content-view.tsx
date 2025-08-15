@@ -45,7 +45,7 @@ export default function ContentView() {
           !viewModel.isCustomizationPresented && (
             <SharedToolbar
               source="home"
-              apps={CoreCloudWeb.APPS}
+              variant="regularMaterial"
               onCustomize={() => viewModel.handleCustomizeButtonClick()}
               username={viewModel.username}
               firstName={viewModel.firstName}

@@ -28,29 +28,23 @@ import Popover from './shared/toolbar/popover'
 import Link from 'next/link'
 import MenuItem from './shared/toolbar/menu-item'
 import Localizer from '@/localizer'
+import CoreCloudWeb from '@/core-cloud-web'
 
 export default function SharedToolbar({
   source,
+  variant,
   firstName,
   lastName,
   username,
   urls,
-  apps,
   onCustomize
 }: {
-  /*
-   * When source is not 'app', we also need the overlay style class.
-   */
-  source: 'authenticator' | 'home' | 'drive' | 'app',
+  source: 'authenticator' | 'home' | 'drive',
+  variant:  'thinMaterial' | 'regularMaterial' | 'app',
   firstName?: string,
   lastName?: string,
   username?: string,
   urls?: string[],
-  apps?: {
-    urls: string[],
-    name: string,
-    href: string
-  }[],
   onCustomize?: () => void
 }) {
   const viewModel = useSharedToolbar({
@@ -59,11 +53,28 @@ export default function SharedToolbar({
 
   return (
     <>
+      {
+        /* --theme-color-backgroundLayer1 */
+        variant === 'app' && (
+          <>
+            <meta
+              name="theme-color"
+              content="rgb(242,242,247)"
+              media="(prefers-color-scheme: light)"
+            />
+            <meta
+              name="theme-color"
+              content="rgb(50,50,54)"
+              media="(prefers-color-scheme: dark)"
+            />
+          </>
+        )
+      }
       <header
         className={
           'top-0 height-11 min-h-11 pl-4 pr-1.5 flex sticky items-center ' +
             'select-none ' + (
-              source === 'authenticator'
+              variant === 'thinMaterial'
                 ? (
                   'before:absolute before:backdrop-blur-[10px] z-3 ' +
                     'before:-z-1 border-b border-b-[rgba(251,251,253,.5)] ' +
@@ -71,7 +82,7 @@ export default function SharedToolbar({
                     'dark:border-b-[rgba(28,28,30,0.5)] ' +
                     'dark:bg-[rgba(28,28,30,0.5)]'
                 )
-                : source === 'home'
+                : variant === 'regularMaterial'
                   ? (
                     'dark:bg-[rgba(56,56,61,.6)] bg-[rgba(248,248,252,.4)] ' +
                       'z-3 backdrop-blur-[14px]'
@@ -445,7 +456,7 @@ export default function SharedToolbar({
               </p>
               <div className="w-full md:w-78 grid grid-cols-4">
                 {
-                  apps?.map((app, index) => (
+                  CoreCloudWeb.APPS.map((app, index) => (
                     <Link
                       key={index}
                       href={app.href}

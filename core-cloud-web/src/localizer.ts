@@ -93,6 +93,9 @@ export default class Localizer {
     'Check the account information you entered and try again.': {
       'zh-TW': '請檢查輸入的帳號資訊，然後再試一次。'
     },
+    'Choose a Disk': {
+      'zh-TW': '選擇磁碟'
+    },
     'Confirm Master Password': {
       'zh-TW': '確認主密碼'
     },
@@ -101,6 +104,9 @@ export default class Localizer {
     },
     'Continue': {
       'zh-TW': '繼續'
+    },
+    'Create': {
+      'zh-TW': '建立'
     },
     'Create Your *X* Account': {
       'zh-TW': '建立你的 *X* 帳號'
@@ -120,11 +126,17 @@ export default class Localizer {
     'Enter a valid email address to use as your primary email address.': {
       'zh-TW': '請輸入有效的電子郵件地址，來作為你的主要電子郵件地址。'
     },
+    'Enter Master Password': {
+      'zh-TW': '輸入主密碼'
+    },
     'Enter your first name.': {
       'zh-TW': '輸入你的名字。'
     },
     'Enter your last name.': {
       'zh-TW': '輸入你的姓氏。'
+    },
+    'Enter your master password': {
+      'zh-TW': '輸入你的主密碼'
     },
     'Email or Phone Number': {
       'zh-TW': '電子郵件地址或電話號碼'
@@ -144,8 +156,17 @@ export default class Localizer {
     'Loading…': {
       'zh-TW': '載入中'
     },
+    'Locations': {
+      'zh-TW': '位置'
+    },
+    'Location Name': {
+      'zh-TW': '位置名稱'
+    },
     'Master Password': {
       'zh-TW': '主密碼'
+    },
+    'New Location': {
+      'zh-TW': '新位置'
     },
     'One *X* Account is all you need to access all *X* services.': {
       'zh-TW': '只要有 *X* 帳號，就能取得 *X* 所有服務。'
@@ -153,14 +174,26 @@ export default class Localizer {
     'Password': {
       'zh-TW': '密碼'
     },
+    'Password incorrect.': {
+      'zh-TW': '密碼不正確。'
+    },
     'Password Requirements': {
       'zh-TW': '密碼要求'
+    },
+    'Recently Deleted': {
+      'zh-TW': '最近刪除'
+    },
+    'Recents': {
+      'zh-TW': '最近項目'
     },
     'Select Background Color': {
       'zh-TW': '選取背景顏色'
     },
     'Settings': {
       'zh-TW': '設定'
+    },
+    'Shared': {
+      'zh-TW': '已共享'
     },
     'Sign In': {
       'zh-TW': '登入'
@@ -189,8 +222,17 @@ export default class Localizer {
     'This will be your new *X* Account.': {
       'zh-TW': '這將是你的新 *X* 帳號。'
     },
+    'To allow *X* to access and display your data, you\'ll need to enter your master password.': {
+      'zh-TW': '若要允許 *X* 存取並顯示你的資料，請輸入你的主密碼。'
+    },
+    'Try entering it again.': {
+      'zh-TW': '請嘗試再輸入一次。'
+    },
     'Upper & lowercase letters': {
       'zh-TW': '必須包含大寫字母和小寫字母'
+    },
+    'Unable to create location. Try again later.': {
+      'zh-TW': '無法建立位置。請稍後再試。'
     },
     'Version': {
       'zh-TW': '版本'

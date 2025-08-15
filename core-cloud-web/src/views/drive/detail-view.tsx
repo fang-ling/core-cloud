@@ -1,8 +1,8 @@
 //
-//  content-view.tsx
+//  detail-view.tsx
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/3.
+//  Created by Fang Ling on 2025/8/12.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,19 +17,20 @@
 //  limitations under the License.
 //
 
-import SharedFooter from '../shared-footer'
-import SharedToolbar from '../shared-toolbar'
-import LoginForm from './login-form'
-
-export default function ContentView() {
+export default function DetailView({
+  leftClassName
+}: {
+  leftClassName?: string
+}) {
   return (
-    <div className="relative">
-      <SharedToolbar
-        source="authenticator"
-        variant="thinMaterial"
-      />
-      <LoginForm />
-      <SharedFooter />
-    </div>
+    <main
+      className={
+        'absolute top-0 right-0 bottom-0 border-l border-divider ' +
+          'bg-backgroundPrimary transition-[left,right] duration-250 md:z-6 ' +
+          leftClassName
+      }
+    >
+      {'placeholder'}
+    </main>
   )
 }

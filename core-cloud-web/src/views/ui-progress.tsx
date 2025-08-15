@@ -66,7 +66,6 @@ export default function UIProgress({
                     'shadow-[rgba(0,0,0,0.1)_0px_0px_1px]'
                 }
                 style={{
-                  //boxShadow: 'rgba(0, 0, 0, 0.1) 0px 0px 1px',
                   transform: `rotate(${index * 45}deg) translate(6.25px, 0px)`
                 }}
               />

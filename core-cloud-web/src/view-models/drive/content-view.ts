@@ -17,6 +17,7 @@
 //  limitations under the License.
 //
 
+import Localizer from '@/localizer'
 import UserService from '@/services/user-service'
 import { useState } from 'react'
 
@@ -29,7 +30,35 @@ export default function useContentView({
   const [lastName, setLastName] = useState('')
   const [username, setUsername] = useState('')
   const [avatarURLs, setAvatarURLs] = useState<string[]>([])
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isPassed, setIsPassed] = useState(false)
+  const [isSidebarOn, setIsSidebarOn] = useState(true)
+  const [sections, setSections] = useState([
+    {
+      header: Localizer.default().localize('Drive'),
+      items: [
+        {
+          key: 'recents',
+          symbolName: 'clock',
+          title: Localizer.default().localize('Recents')
+        },
+        {
+          key: 'shared',
+          symbolName: 'shared',
+          title: Localizer.default().localize('Shared')
+        },
+        {
+          key: 'recently-deleted',
+          symbolName: 'trash',
+          title: Localizer.default().localize('Recently Deleted')
+        }
+      ]
+    }
+  ])
+  const [isLocationDialogPresented, setIsLocationDialogPresented] = useState(
+    false
+  )
+  const [selectedSidebarItemKey, setSelectedSidebarItemKey] = useState('')
 
   /* MARK: - Event handlers */
   async function handleViewAppear1() {
@@ -44,8 +73,51 @@ export default function useContentView({
 
   async function handleViewAppear2() {
     setIsLoading(true)
+
     await new Promise(resolve => setTimeout(resolve, 2000))
+    const newSections = sections.slice()
+    newSections.push(
+      {
+        header: Localizer.default().localize('Locations'),
+        items: [
+          {
+            key: 'placeholder',
+            symbolName: 'folder',
+            title: 'Placeholder'
+          }
+        ]
+      }
+    )
+    setSections(newSections)
+    setSelectedSidebarItemKey(newSections[0].items[0].key)
+
     setIsLoading(false)
+  }
+
+  function handleSidebarToggle() {
+    setIsSidebarOn(!isSidebarOn)
+  }
+
+  function handleNewLocationButtonClick() {
+    document.body.style.setProperty('overflow', 'hidden')
+    setIsLocationDialogPresented(true)
+  }
+
+  /* TODO: use DTO */
+  function handleNewLocationAdd(
+    newLocation: { key: string, title: string },
+  ) {
+    const newSections = sections.slice()
+    newSections[1].items.push({
+      key: newLocation.key,
+      title: newLocation.title,
+      symbolName: 'folder'
+    })
+    setSections(newSections)
+  }
+
+  function handleSelectedSidebarItemChange(key: string) {
+    setSelectedSidebarItemKey(key)
   }
 
   return {
@@ -54,7 +126,20 @@ export default function useContentView({
     username,
     avatarURLs,
     isLoading,
+    isPassed,
+    setIsPassed, /* Temporary */
+    isSidebarOn,
+    setIsSidebarOn,
+    sections,
+    setSections,
+    isLocationDialogPresented,
+    setIsLocationDialogPresented,
+    selectedSidebarItemKey,
     handleViewAppear1,
-    handleViewAppear2
+    handleViewAppear2,
+    handleSidebarToggle,
+    handleNewLocationButtonClick,
+    handleNewLocationAdd,
+    handleSelectedSidebarItemChange
   }
 }
