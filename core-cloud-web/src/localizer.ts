@@ -141,6 +141,9 @@ export default class Localizer {
     'Email or Phone Number': {
       'zh-TW': '電子郵件地址或電話號碼'
     },
+    'Files which you\'ve opened recently will appear here.': {
+      'zh-TW': '最近開啟的檔案會顯示於此處。'
+    },
     'First Name': {
       'zh-TW': '名字'
     },
@@ -171,6 +174,9 @@ export default class Localizer {
     'New Location': {
       'zh-TW': '新位置'
     },
+    'No items': {
+      'zh-TW': '沒有項目'
+    },
     'One *X* Account is all you need to access all *X* services.': {
       'zh-TW': '只要有 *X* 帳號，就能取得 *X* 所有服務。'
     },
@@ -198,6 +204,9 @@ export default class Localizer {
     'Shared': {
       'zh-TW': '已共享'
     },
+    'Shared files will appear here.': {
+      'zh-TW': '共享的檔案會顯示於此處。'
+    },
     'Sign In': {
       'zh-TW': '登入'
     },
@@ -212,6 +221,9 @@ export default class Localizer {
     },
     'The master password cannot be the same as the *X* Account password.': {
       'zh-TW': '主密碼不能與 *X* 帳號密碼相同。'
+    },
+    'This folder is empty.': {
+      'zh-TW': '此檔案夾是空的'
     },
     'This password will be used to derive the encryption keys for the majority of your *X* data, thereby protecting it using end-to-end encryption.': {
       'zh-TW': '這個密碼用於衍生出大部分 *X* 資料的加密密鑰，藉此採取端對端加密方式保護資料。'

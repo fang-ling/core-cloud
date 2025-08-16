@@ -21,13 +21,18 @@ import Localizer from '@/localizer'
 import useDetailView from '@/view-models/drive/detail-view'
 import { useEffect } from 'react'
 import NavigationBarSymbol from './navigation-bar-symbol'
+import UIProgress from '../ui-progress'
 
 export default function DetailView({
   title,
-  symbolName
+  symbolName,
+  emptyMessage,
+  emptyDescription
 }: {
   title?: string,
-  symbolName?: string
+  symbolName?: string,
+  emptyMessage?: string,
+  emptyDescription?: string
 }) {
   const viewModel = useDetailView({ })
 
@@ -36,7 +41,7 @@ export default function DetailView({
   }, [])
 
   return (
-    <div>
+    <div className="grow flex flex-col">
       {/* Navigation bar */}
       <div className="flex pl-2.5 pr-3.75 py-1.25 flex-col select-none">
         <div className="flex">
@@ -76,6 +81,39 @@ export default function DetailView({
                   )
           }
         </h2>
+      </div>
+      <div className="grow w-full flex items-center justify-center">
+        {
+          viewModel.isLoading
+            ? <UIProgress variant="8" />
+            : viewModel.files.length > 0
+              ? null
+              : (
+                /* Empty */
+                <div className="flex flex-col items-center px-5">
+                  <h2
+                    className={
+                      'text-[31px] text-labelTertiary leading-[1.2] ' +
+                        'font-bold text-center'
+                    }
+                  >
+                    {emptyMessage}
+                  </h2>
+                  {
+                    emptyDescription && (
+                      <p
+                        className={
+                          'text-base font-light text-labelTertiary leading-5 ' +
+                            'mt-5.5 text-center'
+                        }
+                      >
+                        {emptyDescription}
+                      </p>
+                    )
+                  }
+                </div>
+              )
+        }
       </div>
     </div>
   )

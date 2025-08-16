@@ -211,7 +211,7 @@ export default function ContentView() {
                   <main
                     className={
                       'absolute top-0 right-0 bottom-0 border-l ' +
-                        'border-divider bg-backgroundPrimary ' +
+                        'border-divider bg-backgroundPrimary flex flex-col ' +
                         'transition-[left,right] duration-250 md:z-6 ' + (
                           viewModel.isSidebarOn
                             ? 'md:left-62.25 left-0'
@@ -446,6 +446,30 @@ export default function ContentView() {
                             return i.key === viewModel.selectedSidebarItemKey
                           })
                           ?.symbolName
+                      }
+                      emptyMessage={
+                        (
+                          viewModel.selectedSidebarItemKey === 'recents' ||
+                            viewModel.selectedSidebarItemKey === 'shared' ||
+                            viewModel.selectedSidebarItemKey ===
+                              'recently-deleted'
+                        )
+                          ? Localizer.default().localize('No items')
+                          : Localizer.default().localize(
+                            'This folder is empty.'
+                          )
+                      }
+                      emptyDescription={
+                        viewModel.selectedSidebarItemKey === 'recents'
+                          ? Localizer.default().localize(
+                            'Files which you\'ve opened recently will ' +
+                              'appear here.'
+                          )
+                          : viewModel.selectedSidebarItemKey === 'shared'
+                            ? Localizer.default().localize(
+                              'Shared files will appear here.'
+                            )
+                            : undefined
                       }
                     />
                   </main>
