@@ -18,19 +18,13 @@
 //
 
 export default function DetailView({
-  leftClassName
+
 }: {
-  leftClassName?: string
+
 }) {
   return (
-    <main
-      className={
-        'absolute top-0 right-0 bottom-0 border-l border-divider ' +
-          'bg-backgroundPrimary transition-[left,right] duration-250 md:z-6 ' +
-          leftClassName
-      }
-    >
+    <div>
       {'placeholder'}
-    </main>
+    </div>
   )
 }

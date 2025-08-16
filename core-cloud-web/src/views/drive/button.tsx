@@ -22,12 +22,12 @@ import useButton from '@/view-models/drive/button'
 export default function Button({
   children,
   className,
-  disable,
+  disabled,
   onClick
 }: {
   children: React.ReactNode,
   className?: string,
-  disable?: boolean,
+  disabled?: boolean,
   onClick?: () => void
 }) {
   const viewModel = useButton({
@@ -41,8 +41,8 @@ export default function Button({
           'justify-center hover:bg-fillTertiary active:fill-appTint/30 ' +
           'active:bg-appTint/16 ' +
           `${className} ` + (
-            disable
-              ? 'opacity-30 pointer-events-none cursor-default'
+            disabled
+              ? 'opacity-30 dark:opacity-40 pointer-events-none cursor-default'
               : 'cursor-pointer'
           )
       }
