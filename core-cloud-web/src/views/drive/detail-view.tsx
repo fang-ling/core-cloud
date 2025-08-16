@@ -17,14 +17,66 @@
 //  limitations under the License.
 //
 
+import Localizer from '@/localizer'
+import useDetailView from '@/view-models/drive/detail-view'
+import { useEffect } from 'react'
+import NavigationBarSymbol from './navigation-bar-symbol'
+
 export default function DetailView({
-
+  title,
+  symbolName
 }: {
-
+  title?: string,
+  symbolName?: string
 }) {
+  const viewModel = useDetailView({ })
+
+  useEffect(() => {
+    viewModel.handleOnAppear()
+  }, [])
+
   return (
     <div>
-      {'placeholder'}
+      {/* Navigation bar */}
+      <div className="flex pl-2.5 pr-3.75 py-1.25 flex-col select-none">
+        <div className="flex">
+          <div
+            className={
+              'min-h-8.5 pt-0.5 px-2.25 font-medium text-2xl leading-7.5 ' +
+                'text-labelPrimary flex items-center'
+            }
+          >
+            <NavigationBarSymbol
+              className="-ml-2.25 fill-labelTertiary"
+              symbolName={symbolName}
+            />
+            {title}
+          </div>
+        </div>
+        {/* status */}
+        <h2 className="pl-2.25 mt-0.25 text-sm leading-4 text-labelSecondary">
+          {
+            viewModel.isLoading
+              ? Localizer.default().localize('Loading...')
+              : Localizer
+                .default()
+                .localize('%lld item(s)')
+                .replace('%lld', viewModel.files.length + '') +
+                Localizer.default().localize(', ') +
+                Localizer
+                  .default()
+                  .localize('%lld GB used')
+                  .replace(
+                    '%lld',
+                    (
+                      viewModel
+                        .files
+                        .reduce((a, f) => a + f.size, 0) / 1_000_000_000
+                    ).toFixed(2)
+                  )
+          }
+        </h2>
+      </div>
     </div>
   )
 }

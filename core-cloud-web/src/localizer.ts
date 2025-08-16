@@ -156,6 +156,9 @@ export default class Localizer {
     'Loading…': {
       'zh-TW': '載入中'
     },
+    'Loading...': {
+      'zh-TW': '正在載入…'
+    },
     'Locations': {
       'zh-TW': '位置'
     },
@@ -245,6 +248,15 @@ export default class Localizer {
     },
     'Your *X* Account information is used to allow you to sign in securely and access your data. *X* records certain data for security, support and reporting purposes. The majority of your *X* data — including photos, videos, files and more — is protected using end-to-end encryption. No one else can access your end-to-end encrypted data, not even *X*, and this data remains secure even in the case of a data breach in the cloud.': {
       'zh-TW': '*X* 帳號資訊讓你能安全地登入並存取你的資料。*X* 會記錄與安全、支援和報告用途相關的特定資料。你的大部分 *X* 資料（包括照片、影片、檔案等等）均會使用端對端加密保護。其他人，甚至是 *X*，都無法取用端對端加密的資料。即使雲端出現資料外洩，這些資料仍能安全無虞。'
+    },
+    '%lld item(s)': {
+      'zh-TW': '%lld 個項目'
+    },
+    '%lld GB used': {
+      'zh-TW': '已使用 %lld GB'
+    },
+    ', ': {
+      'zh-TW': '，'
     }
   }
 }

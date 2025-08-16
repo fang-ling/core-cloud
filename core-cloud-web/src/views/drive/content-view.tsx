@@ -429,18 +429,25 @@ export default function ContentView() {
                       </div>
                     </div>
 
-                    {
-                      (() => {
-                        switch (viewModel.selectedSidebarItemKey) {
-                          case 'recents': return null
-                          case 'shared': return null
-                          case 'recently-deleted': return null
-                          default: return (
-                            <DetailView />
-                          )
-                        }
-                      })()
-                    }
+                    <DetailView
+                      key={viewModel.selectedSidebarItemKey}
+                      title={
+                        viewModel.sections
+                          .flatMap(s => s.items)
+                          .find(i => {
+                            return i.key === viewModel.selectedSidebarItemKey
+                          })
+                          ?.title
+                      }
+                      symbolName={
+                        viewModel.sections
+                          .flatMap(s => s.items)
+                          .find(i => {
+                            return i.key === viewModel.selectedSidebarItemKey
+                          })
+                          ?.symbolName
+                      }
+                    />
                   </main>
                 </div>
               )
