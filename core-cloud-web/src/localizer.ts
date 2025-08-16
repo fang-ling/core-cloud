@@ -63,6 +63,9 @@ export default class Localizer {
     'Already have a *X* Account?': {
       'zh-TW': '已經有 *X* 帳號？'
     },
+    'Application Library': {
+      'zh-TW': '應用程式庫'
+    },
     'At least 1 lowercase letter': {
       'zh-TW': '至少 1 個小寫字母'
     },
@@ -117,6 +120,9 @@ export default class Localizer {
     'Customize Home Page': {
       'zh-TW': '自訂首頁'
     },
+    'Date': {
+      'zh-TW': '日期'
+    },
     'Done': {
       'zh-TW': '完成'
     },
@@ -147,11 +153,17 @@ export default class Localizer {
     'First Name': {
       'zh-TW': '名字'
     },
+    'Folder': {
+      'zh-TW': '檔案夾'
+    },
     'Forgot password?': {
       'zh-TW': '忘記密碼？'
     },
     'Keep me signed in': {
       'zh-TW': '讓我保持登入'
+    },
+    'Kind': {
+      'zh-TW': '種類'
     },
     'Last Name': {
       'zh-TW': '姓氏'
@@ -170,6 +182,9 @@ export default class Localizer {
     },
     'Master Password': {
       'zh-TW': '主密碼'
+    },
+    'Name': {
+      'zh-TW': '名稱'
     },
     'New Location': {
       'zh-TW': '新位置'
@@ -215,6 +230,9 @@ export default class Localizer {
     },
     'Sign Out': {
       'zh-TW': '登出'
+    },
+    'Size': {
+      'zh-TW': '大小'
     },
     'Strength: ': {
       'zh-TW': '密碼強度：'

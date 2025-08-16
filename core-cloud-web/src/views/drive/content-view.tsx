@@ -436,8 +436,8 @@ export default function ContentView() {
                           .flatMap(s => s.items)
                           .find(i => {
                             return i.key === viewModel.selectedSidebarItemKey
-                          })
-                          ?.title
+                          })!
+                          .title
                       }
                       symbolName={
                         viewModel.sections

@@ -20,16 +20,70 @@
 import { useState } from 'react'
 
 export default function useDetailView({
-
+  title
 }: {
-
+  title: string
 }) {
   const [isLoading, setIsLoading] = useState(true)
-  const [files, setFiles] = useState<{ size: number }/* TOOD: use DTO*/[]>([])
+  const [files, setFiles] = useState<
+    {
+      id: number,
+      name: string,
+      kind: string,
+      size: number,
+      date: string
+    }[]
+  >([])
+  const [navigationStack, setNavigationStack] = useState<string[]>([])
 
   /* MARK: - Event handlers */
   async function handleOnAppear() {
     setIsLoading(true)
+    setNavigationStack([title])
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    setFiles([
+      {
+        id: 0,
+        name: 'Placeholder',
+        kind: 'JPEG Image',
+        size: 100,
+        date: 'Jun 4, 1989 at 06:57:48 PM'
+      },
+      {
+        id: 1,
+        name: 'Placeholder - A very very very very very very very very very ' +
+          'very very very long file name',
+        kind: 'JPEG Image',
+        size: 100,
+        date: 'Jun 4, 1989 at 06:57:48 PM'
+      },
+      {
+        id: 2,
+        name: 'Placeholder',
+        kind: 'Folder',
+        size: 100,
+        date: 'Jun 4, 1989 at 06:57:48 PM'
+      },
+      {
+        id: 3,
+        name: 'Placeholder',
+        kind: 'Application Library',
+        size: 100,
+        date: 'Jun 4, 1989 at 06:57:48 PM'
+      }
+    ])
+    setIsLoading(false)
+  }
+
+  async function handleNavigationChange(fileName?: string) {
+    setIsLoading(true)
+    const newNavigationStack = navigationStack.slice()
+    if (fileName) {
+      newNavigationStack.push(fileName)
+    } else {
+      newNavigationStack.pop()
+    }
+    setNavigationStack(newNavigationStack)
     await new Promise(resolve => setTimeout(resolve, 2000))
     setIsLoading(false)
   }
@@ -37,6 +91,8 @@ export default function useDetailView({
   return {
     isLoading,
     files,
-    handleOnAppear
+    navigationStack,
+    handleOnAppear,
+    handleNavigationChange
   }
 }

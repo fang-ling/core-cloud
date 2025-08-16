@@ -47,6 +47,7 @@
   --theme-color-sidebar: rgb(251, 251, 253);
   --theme-color-systemBlack: rgb(0, 0, 0);
   --theme-color-systemBlue: rgb(0, 113, 227);
+  --theme-color-systemCyan: rgb(50, 173, 230);
   --theme-color-systemGreen: rgb(3, 161, 14);
   --theme-color-systemOrange: rgb(255, 149, 0);
   --theme-color-systemPurple: rgb(175, 82, 222);
@@ -88,6 +89,7 @@
     --theme-color-sidebar: rgb(32, 32, 35);
     --theme-color-systemBlack: rgb(255, 255, 255);
     --theme-color-systemBlue: rgb(0, 154, 255);
+    --theme-color-systemCyan: rgb(100, 210, 255);
     --theme-color-systemGreen: rgb(50, 209, 88);
     --theme-color-systemOrange: rgb(255, 159, 10);
     --theme-color-systemPurple: rgb(191, 90, 242);
@@ -133,6 +135,7 @@
   --color-sidebar: var(--theme-color-sidebar);
   --color-systemBlack: var(--theme-color-systemBlack);
   --color-systemBlue: var(--theme-color-systemBlue);
+  --color-systemCyan: var(--theme-color-systemCyan);
   --color-systemGreen: var(--theme-color-systemGreen);
   --color-systemOrange: var(--theme-color-systemOrange);
   --color-systemPurple: var(--theme-color-systemPurple);
