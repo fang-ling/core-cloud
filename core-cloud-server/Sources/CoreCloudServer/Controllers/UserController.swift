@@ -157,7 +157,7 @@ struct UserController: RouteCollection {
     }
 
     do {
-      let detail = try await userService.fetchUser(id: id, on: request.db)
+      let detail = try await userService.getUser(with: id, on: request.db)
 
       return try Response(
         status: .ok,

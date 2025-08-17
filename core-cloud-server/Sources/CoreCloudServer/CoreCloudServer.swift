@@ -120,6 +120,7 @@ struct CoreCloudServer {
     try app.routes.register(collection: SettingController())
     try app.routes.register(collection: DiskController())
     try app.routes.register(collection: LocationController())
+    try app.routes.register(collection: ApplicationTokenController())
   }
 }
 
@@ -131,6 +132,8 @@ extension CoreCloudServer {
 
   static let COOKIE_NAME = "CoreCloudServerJWT"
   static let COOKIE_MAX_AGE = 86400
+
+  static let APPLICATION_TOKEN_COOKIE_NAME = "CoreCloudServerApplicationToken"
 }
 
 extension CoreCloudServer {

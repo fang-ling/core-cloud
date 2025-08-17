@@ -126,12 +126,12 @@ struct UserServiceTests {
   }
 
   @Test
-  func testFetchUser() async throws {
+  func testGetUser() async throws {
     let userService = UserService()
 
     try await withApp(configure: CoreCloudServer.configure) { app in
       await #expect(throws: UserError.noSuchUser) {
-        try await userService.fetchUser(id: 1, on: app.db)
+        try await userService.getUser(with: 1, on: app.db)
       }
 
       try await userService.insertUser(
@@ -143,15 +143,38 @@ struct UserServiceTests {
         on: app.db
       )
 
-      let lorna = try await userService.fetchUser(id: 1, on: app.db)
+      let lorna = try await userService.getUser(with: 1, on: app.db)
       #expect(lorna.username == "lorna@example.com")
       #expect(lorna.firstName == "Lorna")
       #expect(lorna.lastName == "Chu")
       #expect(lorna.avatarURLs == [])
 
       await #expect(throws: UserError.noSuchUser) {
-        try await userService.fetchUser(id: 2, on: app.db)
+        try await userService.getUser(with: 2, on: app.db)
       }
+
+      await #expect(throws: UserError.noSuchUser) {
+        try await userService.getUser(
+          with: 2,
+          masterPassword: "1",
+          on: app.db
+        )
+      }
+
+      await #expect(throws: UserError.cryptoError) {
+        try await userService.getUser(
+          with: 1,
+          masterPassword: "1",
+          on: app.db
+        )
+      }
+
+      let key = try await userService.getUser(
+        with: 1,
+        masterPassword: "Top-0-Secret",
+        on: app.db
+      )
+      #expect(key.bitCount == 256)
     }
   }
 }

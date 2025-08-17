@@ -157,7 +157,7 @@ struct UserService {
    *   - ``UserError/databaseError``: if there is an issue accessing the
    *                                  database.
    */
-  func fetchUser(id: Int64, on database: Database) async throws -> (
+  func getUser(with id: Int64, on database: Database) async throws -> (
     username: String,
     firstName: String,
     lastName: String,
@@ -183,6 +183,65 @@ struct UserService {
       throw UserError.noSuchUser
     } catch {
       throw UserError.databaseError
+    }
+  }
+
+  /**
+   * Returns the master key of a user.
+   *
+   * - Parameters:
+   *   - id: The id of the user.
+   *   - masterPassword: The passcode to unlock the master key.
+   *   - database: The database to query for the user.
+   *
+   * - Returns: The master key of a user.
+   *
+   * - Throws:
+   *   - ``UserError/noSuchUser``: if the user is not found.
+   *   - ``UserError/cryptoError``: if there is an error during key derivation
+   *                                or encryption.
+   *   - ``UserError/databaseError``: if there is an issue accessing the
+   *                                  database.
+   */
+  func getUser(
+    with id: Int64,
+    masterPassword: String,
+    on database: Database
+  ) async throws -> SymmetricKey {
+    let user: User
+    do {
+      guard let _user = try await User.query(on: database)
+        .filter(\.$id == id)
+        .first()
+      else {
+        throw UserError.noSuchUser
+      }
+
+      user = _user
+    } catch UserError.noSuchUser {
+      throw UserError.noSuchUser
+    } catch {
+      throw UserError.databaseError
+    }
+
+    do {
+      let key = try KDF.Scrypt.deriveKey(
+        from: Data(masterPassword.utf8),
+        salt: user.masterKeySealedBoxSalt,
+        outputByteCount: CoreCloudServer.SCRYPT_OUTPUT_BYTE_COUNT,
+        rounds: CoreCloudServer.SCRYPT_ROUNDS,
+        blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
+        parallelism: CoreCloudServer.SCRYPT_PARALLELISM
+      )
+
+      return try SymmetricKey(
+        data: AES.GCM.open(
+          .init(combined: user.masterKeySealedBox),
+          using: key
+        )
+      )
+    } catch {
+      throw UserError.cryptoError
     }
   }
 }

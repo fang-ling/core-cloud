@@ -1,5 +1,5 @@
 //
-//  DiskService.swift
+//  ApplicationToken.swift
 //  core-cloud-server
 //
 //  Created by Fang Ling on 2025/8/17.
@@ -17,17 +17,18 @@
 //  limitations under the License.
 //
 
-import Vapor
+struct ApplicationToken { }
 
-struct DiskService {
-  /**
-   * Returns disk paths from the environment.
-   *
-   * - Returns: An array of disk paths. If no disks are found, an empty array
-   *            is returned.
-   */
-  func getDisks() -> [String] {
-    let disksString = Environment.get(CoreCloudServer.Keys.disks) ?? ""
-    return disksString.components(separatedBy: ",").filter({ !$0.isEmpty })
+extension ApplicationToken {
+  enum Singular { }
+}
+
+extension ApplicationToken.Singular {
+  enum Input { }
+}
+
+extension ApplicationToken.Singular.Input {
+  struct Insertion: Codable {
+    var masterPassword: String
   }
 }
