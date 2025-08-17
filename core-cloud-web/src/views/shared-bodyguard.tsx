@@ -97,6 +97,10 @@ export default function SharedBodyguard({
                     'placeholder:text-center text-ellipsis outline-hidden ' +
                     inputClassName
                 }
+                value={viewModel.masterPassword}
+                onChange={(event) => {
+                  viewModel.handleInputChange(event.target.value)
+                }}
                 type="password"
                 autoComplete="off"
                 autoCapitalize="off"

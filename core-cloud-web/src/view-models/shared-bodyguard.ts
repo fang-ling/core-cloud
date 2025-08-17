@@ -17,6 +17,7 @@
 //  limitations under the License.
 //
 
+import ApplicationTokenService from '@/services/application-token-service'
 import { useState } from 'react'
 
 export default function useSharedBodyguard({
@@ -26,19 +27,34 @@ export default function useSharedBodyguard({
 }) {
   const [isLoading, setIsLoading] = useState(false)
   const [isWrongPassword, setIsWrongPassword] = useState(false)
+  const [masterPassword, setMasterPassword] = useState('')
+
+  /* MARK: - Event handlers */
+  function handleInputChange(newMasterPassword: string) {
+    setMasterPassword(newMasterPassword)
+    setIsWrongPassword(false)
+  }
 
   async function handleInputSubmit() {
     setIsLoading(true)
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setIsLoading(false)
-    setIsWrongPassword(false)
 
-    onPass()
+    const passes = await ApplicationTokenService.insertApplicationToken({
+      masterPassword: masterPassword
+    })
+    if (passes) {
+      onPass()
+    } else {
+      setIsWrongPassword(true)
+    }
+
+    setIsLoading(false)
   }
 
   return {
     isLoading,
     isWrongPassword,
+    masterPassword,
+    handleInputChange,
     handleInputSubmit
   }
 }

@@ -18,6 +18,7 @@
 //
 
 import Localizer from '@/localizer'
+import ApplicationTokenService from '@/services/application-token-service'
 import UserService from '@/services/user-service'
 import { useState } from 'react'
 
@@ -74,7 +75,12 @@ export default function useContentView({
   async function handleViewAppear2() {
     setIsLoading(true)
 
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    const hasToken = await ApplicationTokenService.peekApplicationToken()
+    if (hasToken) {
+      setIsPassed(true)
+    }
+
+    //await new Promise(resolve => setTimeout(resolve, 2000))
     const newSections = sections.slice()
     newSections.push(
       {
@@ -120,6 +126,10 @@ export default function useContentView({
     setSelectedSidebarItemKey(key)
   }
 
+  function handleCheckPointPass() {
+    setIsPassed(true)
+  }
+
   return {
     firstName,
     lastName,
@@ -127,7 +137,6 @@ export default function useContentView({
     avatarURLs,
     isLoading,
     isPassed,
-    setIsPassed, /* Temporary */
     isSidebarOn,
     setIsSidebarOn,
     sections,
@@ -140,6 +149,7 @@ export default function useContentView({
     handleSidebarToggle,
     handleNewLocationButtonClick,
     handleNewLocationAdd,
-    handleSelectedSidebarItemChange
+    handleSelectedSidebarItemChange,
+    handleCheckPointPass
   }
 }

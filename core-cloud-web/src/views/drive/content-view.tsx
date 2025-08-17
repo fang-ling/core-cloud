@@ -478,7 +478,7 @@ export default function ContentView() {
               : (
                 <>
                   <SharedBodyguard
-                    onPass={() => viewModel.setIsPassed(true)}
+                    onPass={() => viewModel.handleCheckPointPass()}
                     inputClassName="focus:border-systemBlue"
                   />
                   <SharedFooter />
