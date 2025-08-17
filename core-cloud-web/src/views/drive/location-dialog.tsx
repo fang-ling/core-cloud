@@ -30,7 +30,7 @@ export default function LocationDialog({
   onAdd
 }: {
   setIsPresented: React.Dispatch<React.SetStateAction<boolean>>,
-  onAdd: (newLocation: { key: string, title: string }) => void
+  onAdd: ({ id, name }: { id: number, name: string }) => void
 }) {
   const viewModel = useLocationDialog({
     setIsPresented: setIsPresented,

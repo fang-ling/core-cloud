@@ -19,6 +19,7 @@
 
 import Localizer from '@/localizer'
 import ApplicationTokenService from '@/services/application-token-service'
+import LocationService from '@/services/location-service'
 import UserService from '@/services/user-service'
 import { useState } from 'react'
 
@@ -80,18 +81,18 @@ export default function useContentView({
       setIsPassed(true)
     }
 
-    //await new Promise(resolve => setTimeout(resolve, 2000))
+    const locations = await LocationService.fetchLocations()
     const newSections = sections.slice()
     newSections.push(
       {
         header: Localizer.default().localize('Locations'),
-        items: [
-          {
-            key: 'placeholder',
+        items: locations.map(location => {
+          return {
+            key: location.id + '',
             symbolName: 'folder',
-            title: 'Placeholder'
+            title: location.name
           }
-        ]
+        })
       }
     )
     setSections(newSections)
@@ -109,14 +110,11 @@ export default function useContentView({
     setIsLocationDialogPresented(true)
   }
 
-  /* TODO: use DTO */
-  function handleNewLocationAdd(
-    newLocation: { key: string, title: string },
-  ) {
+  function handleNewLocationAdd({ id, name }: { id: number, name: string }) {
     const newSections = sections.slice()
-    newSections[1].items.push({
-      key: newLocation.key,
-      title: newLocation.title,
+    newSections[newSections.length - 1].items.push({
+      key: id + '',
+      title: name,
       symbolName: 'folder'
     })
     setSections(newSections)

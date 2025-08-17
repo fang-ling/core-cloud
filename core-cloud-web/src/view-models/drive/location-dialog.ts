@@ -17,6 +17,8 @@
 //  limitations under the License.
 //
 
+import DiskService from '@/services/disk-service'
+import LocationService from '@/services/location-service'
 import { useState } from 'react'
 
 export default function useLocationDialog({
@@ -24,7 +26,7 @@ export default function useLocationDialog({
   onAdd
 }: {
   setIsPresented: React.Dispatch<React.SetStateAction<boolean>>,
-  onAdd: (newLocation: { key: string, title: string }) => void
+  onAdd: ({ id, name }: { id: number, name: string }) => void
 }) {
   const [isClosing, setIsClosing] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -42,22 +44,11 @@ export default function useLocationDialog({
   }
 
   async function handleContentAppear() {
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setDisks([{
-      path: '/mnt/placeholder'
-    },
-    {
-      path: '/mnt/placeholder2'
-    },
-    {
-      path: '/mnt/placeholder3'
-    },
-    {
-      path: '/mnt/placeholder4'
-    },
-    {
-      path: '/mnt/placeholder5'
-    }])
+    setIsLoading(true)
+
+    const disks = await DiskService.fetchDisks()
+    setDisks(disks)
+
     setIsLoading(false)
   }
 
@@ -72,14 +63,19 @@ export default function useLocationDialog({
   async function handleCreateButtonClick() {
     setIsLoading(true)
     setIsError(false)
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    /*
-     * We also need to fetch new locations here (and update the states)
-     * after the creation.
-     */
-    onAdd({ key: 'test', title: 'Test' })
-    const success = true
-    if (success) {
+
+    const successes = await LocationService.insertLocation({
+      name: name,
+      path: disks[selectedDiskIndex].path
+    })
+
+    if (successes) {
+      const newLocations = await LocationService.fetchLocations()
+      const newLocation = newLocations.findLast(l => l.name === name)
+      if (newLocation) {
+        onAdd(newLocation)
+      }
+
       handleCloseButtonClick()
     } else {
       setIsLoading(false)

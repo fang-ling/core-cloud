@@ -491,7 +491,7 @@ export default function ContentView() {
         viewModel.isLocationDialogPresented && (
           <LocationDialog
             setIsPresented={viewModel.setIsLocationDialogPresented}
-            onAdd={(newLocation) => viewModel.handleNewLocationAdd(newLocation)}
+            onAdd={({ id, name }) => viewModel.handleNewLocationAdd(newLocation)}
           />
         )
       }
