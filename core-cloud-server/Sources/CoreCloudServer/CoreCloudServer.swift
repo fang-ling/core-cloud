@@ -117,6 +117,7 @@ struct CoreCloudServer {
     try app.routes.register(collection: UserController())
     try app.routes.register(collection: UserTokenController())
     try app.routes.register(collection: SettingController())
+    try app.routes.register(collection: DiskController())
   }
 }
 
@@ -136,6 +137,7 @@ extension CoreCloudServer {
     static let tls = "TLS"
     static let certificate = "CERTIFICATE"
     static let privateKey = "PRIVATE_KEY"
+    static let disks = "DISKS"
   }
 }
 
