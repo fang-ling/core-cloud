@@ -30,7 +30,7 @@ struct UserTokenService {
    *   - username: The username of the user.
    *   - password: The password of the user.
    *   - database: The database to search for the user.
-   *   - jwt: The JWT instance used to sign the token.
+   *   - sign: A closure used to sign the token.
    *
    * - Returns: The JWT string.
    *
@@ -42,11 +42,11 @@ struct UserTokenService {
    *   - ``UserTokenError/jwtError``: if there is an issue during the signing
    *                                  process.
    */
-  func insertUserToken(
+  func signUserToken(
     username: String,
     password: String,
     on database: Database,
-    with jwt: Request.JWT
+    sign: (UserToken) async throws -> String
   ) async throws -> String {
     var token: UserToken
     do {
@@ -79,8 +79,38 @@ struct UserTokenService {
     }
 
     do {
-      return try await jwt.sign(token)
+      return try await sign(token)
     } catch {
+      throw UserTokenError.jwtError
+    }
+  }
+
+  /**
+   * Verifies the provided JWT (JSON Web Token).
+   *
+   * - Parameters:
+   *   - token: The JWT to be verified.
+   *   - verify: A closure that verifies the jwt.
+   *
+   * - Returns: The user id extracted from the jwt if verification is
+   *            successful.
+   *
+   * - Throws:
+   *   - ``UserTokenError/jwtError``: if there is an issue during the verifying
+   *                                  process.
+   */
+  func verifyUserToken(
+    from token: String,
+    verify: (String) async throws -> UserToken
+  ) async throws -> Int64 {
+    do {
+      let payload = try await verify(token)
+      guard let userID = User.IDValue(payload.subject.value) else {
+        throw UserTokenError.jwtError
+      }
+      return userID
+    } catch {
+      print(error)
       throw UserTokenError.jwtError
     }
   }

@@ -58,12 +58,13 @@ struct UserTokenController: RouteCollection {
     }
     
     do {
-      let token = try await userTokenService.insertUserToken(
+      let token = try await userTokenService.signUserToken(
         username: username,
         password: password,
-        on: request.db,
-        with: request.jwt
-      )
+        on: request.db
+      ) { token in
+        try await request.jwt.sign(token)
+      }
 
       return Response(
         status: .created,
