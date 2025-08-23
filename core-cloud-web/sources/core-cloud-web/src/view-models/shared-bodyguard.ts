@@ -17,8 +17,8 @@
 //  limitations under the License.
 //
 
-import ApplicationTokenService from '@/services/application-token-service'
-import { useState } from 'react'
+import ApplicationTokenService from "@/services/application-token-service"
+import { useState } from "react"
 
 export default function useSharedBodyguard({
   onPass
@@ -27,7 +27,7 @@ export default function useSharedBodyguard({
 }) {
   const [isLoading, setIsLoading] = useState(false)
   const [isWrongPassword, setIsWrongPassword] = useState(false)
-  const [masterPassword, setMasterPassword] = useState('')
+  const [masterPassword, setMasterPassword] = useState("")
 
   /* MARK: - Event handlers */
   function handleInputChange(newMasterPassword: string) {
@@ -44,8 +44,7 @@ export default function useSharedBodyguard({
     if (passes) {
       onPass()
     } else {
-      //setIsWrongPassword(true)
-      onPass()
+      setIsWrongPassword(true)
     }
 
     setIsLoading(false)

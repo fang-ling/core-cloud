@@ -22,7 +22,7 @@ import { useState } from "react"
 /**
  * A wrapper type that can read and write a value owned by a source of truth.
  */
-export class Binding<Value> {
+export type Binding<Value> = {
   value: Value
   setValue: React.Dispatch<React.SetStateAction<Value>>
 }
@@ -36,6 +36,6 @@ export function useBinding<T>(initialValue: T) {
   return {
     value,
     setValue,
-    ...(typeof initialValue === 'boolean' && { toggle }),
+    ...(typeof initialValue === "boolean" && { toggle }),
   } as unknown as T extends boolean ? BoolBinding : Binding<T>
 }

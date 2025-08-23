@@ -17,6 +17,7 @@
 //  limitations under the License.
 //
 
+import FileService from "@/services/file-service"
 import { useState } from "react"
 
 export default function useDetailView({
@@ -45,18 +46,24 @@ export default function useDetailView({
   /* MARK: - Event handlers */
   async function handleOnAppear() {
     setIsLoading(true)
+
     setNavigationStack([title])
     handleRootFilesAppear()
-    await new Promise(resolve => setTimeout(resolve, 2000))
+
     setIsLoading(false)
   }
 
   async function handleNavigationChange(fileName?: string) {
     setIsLoading(true)
+
     const newNavigationStack = navigationStack.slice()
     if (fileName) {
       newNavigationStack.push(fileName)
-      setFiles([]) /* TODO */
+      const newFiles = await FileService.fetchFiles({
+        application: fileName,
+        locationID: currentSidebarKey
+      })
+      setFiles(newFiles)
     } else {
       newNavigationStack.pop()
       if (newNavigationStack.length === 1) {
@@ -64,7 +71,7 @@ export default function useDetailView({
       }
     }
     setNavigationStack(newNavigationStack)
-    await new Promise(resolve => setTimeout(resolve, 2000))
+
     setIsLoading(false)
   }
 
