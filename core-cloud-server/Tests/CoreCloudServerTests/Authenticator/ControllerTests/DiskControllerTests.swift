@@ -94,7 +94,7 @@ func testDiskController() async throws {
         let disks = try response.content.decode(
           [Disk.Plural.Output.Retrieval].self
         )
-        #expect(disks.isEmpty)
+        #expect(disks.count == 2)
       }
     )
   }

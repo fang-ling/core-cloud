@@ -29,7 +29,7 @@ struct FileMigrationV1: AsyncMigration {
       .field(File.FieldKeys.kind, .string, .required)
       .field(File.FieldKeys.size, .int64, .required)
       .field(File.FieldKeys.checksum, .data, .required)
-      .field(File.FieldKeys.application, .int64, .required)
+      .field(File.FieldKeys.application, .string, .required)
       .field(File.FieldKeys.decryptionKeySealedBox, .data, .required)
       .field(
         File.FieldKeys.locationID,

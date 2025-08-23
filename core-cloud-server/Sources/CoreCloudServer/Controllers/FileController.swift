@@ -10,6 +10,9 @@ import NIOFileSystem
 import Vapor
 
 struct FileController: RouteCollection {
+  let fileService = FileService()
+  let userTokenService = UserTokenService()
+
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("api")
@@ -22,6 +25,12 @@ struct FileController: RouteCollection {
       .grouped("v1")
       .grouped("file")
       .get(use: fetchFileHandler)
+
+    routes
+      .grouped("api")
+      .grouped("v1")
+      .grouped("files")
+      .get(use: fetchFilesHandler)
   }
 
   func insertFileHandler(request: Request) async -> HTTPStatus {
@@ -29,10 +38,10 @@ struct FileController: RouteCollection {
       byteBuffer: inout ByteBuffer,
       hasher: inout SHA512,
       index: Int64
-    ) async throws {
-      if let buffer = byteBuffer.readData(
-        length: byteBuffer.readableBytes
-      ) {
+    ) async throws -> Int64 {
+      let count = Int64(byteBuffer.readableBytes)
+
+      if let buffer = byteBuffer.readData(length: Int(count)) {
         /* Update digest */
         hasher.update(data: buffer)
         /* Encryption */
@@ -49,6 +58,8 @@ struct FileController: RouteCollection {
           )
         }
       }
+
+      return count
     }
 
     func deleteFiles(path: FilePath, fileID: Int64) async throws {
@@ -70,12 +81,10 @@ struct FileController: RouteCollection {
     let userID: User.IDValue
     do {
       let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
-      let userToken = try await request.jwt.verify(
-        jwt ?? "",
-        as: UserToken.self
-      )
-      guard let id = User.IDValue(userToken.subject.value) else {
-        return .unauthorized
+      let id = try await userTokenService.verifyUserToken(
+        from: jwt ?? ""
+      ) { token in
+        try await request.jwt.verify(token)
       }
       userID = id
     } catch {
@@ -162,6 +171,7 @@ struct FileController: RouteCollection {
       var digest = SHA512()
       var index: Int64 = 0
       var accumulator = ByteBuffer()
+      var actualSize: Int64 = 0
 
       for try await chunk in request.body {
         var chunk = chunk
@@ -176,7 +186,7 @@ struct FileController: RouteCollection {
           }
 
           if accumulator.readableBytes == CoreCloudServer.CHUNK_SIZE {
-            try await saveFile(
+            actualSize += try await saveFile(
               byteBuffer: &accumulator,
               hasher: &digest,
               index: index
@@ -188,7 +198,7 @@ struct FileController: RouteCollection {
       }
       /* Process the (possible) remaining data. */
       if accumulator.readableBytes > 0 {
-        try await saveFile(
+        actualSize += try await saveFile(
           byteBuffer: &accumulator,
           hasher: &digest,
           index: index
@@ -196,9 +206,12 @@ struct FileController: RouteCollection {
       }
 
       let serverChecksum = digest.finalize()
-      if Data(serverChecksum) != file.checksum {
+      if (
+        Data(serverChecksum) != file.checksum ||
+        actualSize != file.size
+      ) {
         request.logger.notice(
-          "\((try? file.requireID()) ?? -1) checksum not matched"
+          "\((try? file.requireID()) ?? -1) checksum or size not matched"
         )
         try await deleteFiles(path: FilePath(path), fileID: file.requireID())
         try await File.query(on: request.db)
@@ -207,7 +220,7 @@ struct FileController: RouteCollection {
         return .badRequest
       }
 
-      return .ok
+      return .created
     } catch {
       request.logger.warning("\(error)")
       do {
@@ -217,23 +230,19 @@ struct FileController: RouteCollection {
           .delete()
       } catch {
         request.logger.warning("\(error)")
-        return .internalServerError
       }
+      return .internalServerError
     }
-
-    return .ok
   }
 
   func fetchFileHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
       let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
-      let userToken = try await request.jwt.verify(
-        jwt ?? "",
-        as: UserToken.self
-      )
-      guard let id = User.IDValue(userToken.subject.value) else {
-        return Response(status: .unauthorized)
+      let id = try await userTokenService.verifyUserToken(
+        from: jwt ?? ""
+      ) { token in
+        try await request.jwt.verify(token)
       }
       userID = id
     } catch {
@@ -266,6 +275,7 @@ struct FileController: RouteCollection {
     do {
       guard let _file = try await File.query(on: request.db)
         .filter(\.$id == fetchRequest.id)
+        .filter(\.$application == fetchRequest.application)
         .filter(\.$user.$id == userID)
         .first()
       else {
@@ -289,11 +299,10 @@ struct FileController: RouteCollection {
       return Response(status: .unauthorized)
     }
 
-
     let path: String
     do {
       guard let location = try await Location.query(on: request.db)
-        .filter(\.$id == fetchRequest.locationID)
+        .filter(\.$id == file.$location.id)
         .filter(\.$user.$id == userID)
         .first()
       else {
@@ -338,18 +347,12 @@ struct FileController: RouteCollection {
       headers: .init([
           (
             "Content-Type",
-            /*file.kind == "wav"
-            ? "audio/wav"
-            : file.kind == "mp4" ?*/ "video/mp4" //: ""
+            fileService.kindToContentType(kind: file.kind)
           ),
           (
             "Content-Range",
             "bytes \(startByte)-\(endByte)/\(file.size)"
-          ),
-//          (
-//            "Content-Length",
-//            "\(endByte - startByte)"
-//          )
+          )
       ]),
       body: .init(
         managedAsyncStream: { writer in
@@ -419,5 +422,58 @@ struct FileController: RouteCollection {
     )
     response.headers.remove(name: "Transfer-Encoding")
     return response
+  }
+
+  func fetchFilesHandler(request: Request) async -> Response {
+    let userID: User.IDValue
+    do {
+      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let id = try await userTokenService.verifyUserToken(
+        from: jwt ?? ""
+      ) { token in
+        try await request.jwt.verify(token)
+      }
+      userID = id
+    } catch {
+      return Response(status: .unauthorized)
+    }
+
+    let fetchRequest: File.Plural.Input.Retrieval
+    do {
+      fetchRequest = try request.query.decode(
+        File.Plural.Input.Retrieval.self
+      )
+    } catch {
+      return Response(status: .badRequest)
+    }
+
+    do {
+      let files = try await fileService.getFiles(
+        for: userID,
+        application: fetchRequest.application,
+        locationID: fetchRequest.locationID,
+        on: request.db
+      )
+
+      return try Response(
+        status: .ok,
+        headers: .init([("Content-Type", "application/json")]),
+        body: .init(
+          data: CoreCloudServer.encoder.encode(
+            files.map { file in
+              File.Plural.Output.Retrieval(
+                id: file.id,
+                name: file.name,
+                kind: file.kind,
+                size: file.size,
+                date: Int64((file.date.timeIntervalSince1970 * 1000).rounded())
+              )
+            }
+          )
+        )
+      )
+    } catch {
+      return Response(status: .serviceUnavailable)
+    }
   }
 }

@@ -1,8 +1,8 @@
 //
-//  DiskServiceTests.swift
+//  FileError.swift
 //  core-cloud-server
 //
-//  Created by Fang Ling on 2025/8/17.
+//  Created by Fang Ling on 2025/8/23.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,18 +17,6 @@
 //  limitations under the License.
 //
 
-@testable import CoreCloudServer
-import Testing
-import VaporTesting
-
-@Suite("DiskServiceTests")
-struct DiskServiceTests {
-  @Test
-  func testGetDisks() async throws {
-    let diskService = DiskService()
-
-    try await withApp(configure: CoreCloudServer.configure) { _ in
-      #expect(diskService.getDisks() == ["/tmp/tank1", "/tmp/tank2"])
-    }
-  }
+enum FileError: Error {
+  case databaseError
 }

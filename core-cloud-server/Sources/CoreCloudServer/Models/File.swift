@@ -37,7 +37,7 @@ final class File: Model, @unchecked Sendable {
   var checksum: Data
 
   @Field(key: FieldKeys.application)
-  var application: Int64
+  var application: String
 
   @Field(key: FieldKeys.decryptionKeySealedBox)
   var decryptionKeySealedBox: Data
@@ -62,7 +62,7 @@ final class File: Model, @unchecked Sendable {
     kind: String,
     size: Int64,
     checksum: Data,
-    application: Int64,
+    application: String,
     decryptionKeySealedBox: Data,
     locationID: Location.IDValue,
     userID: User.IDValue,
@@ -121,13 +121,29 @@ extension File.Singular.Input {
     var kind: String
     var size: Int64
     var checksum: String
-    var application: Int64
+    var application: String
     var locationID: Int64
   }
 
   struct Retrieval: Codable {
     var id: Int64
+    var application: String
+  }
+}
+
+extension File.Plural.Input {
+  struct Retrieval: Codable {
     var locationID: Int64
-    var application: Int64
+    var application: String
+  }
+}
+
+extension File.Plural.Output {
+  struct Retrieval: Codable {
+    var id: Int64
+    var name: String
+    var kind: String
+    var size: Int64
+    var date: Int64
   }
 }
