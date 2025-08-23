@@ -112,6 +112,7 @@ struct CoreCloudServer {
     app.migrations.add(UserMigrationV1())
     app.migrations.add(SettingMigrationV1())
     app.migrations.add(LocationMigrationV1())
+    app.migrations.add(FileMigrationV1())
     try await app.autoMigrate()
 
     /* Routes */
@@ -121,6 +122,7 @@ struct CoreCloudServer {
     try app.routes.register(collection: DiskController())
     try app.routes.register(collection: LocationController())
     try app.routes.register(collection: ApplicationTokenController())
+    try app.routes.register(collection: FileController())
   }
 }
 
@@ -134,6 +136,8 @@ extension CoreCloudServer {
   static let COOKIE_MAX_AGE = 86400
 
   static let APPLICATION_TOKEN_COOKIE_NAME = "CoreCloudServerApplicationToken"
+
+  static let CHUNK_SIZE: Int64 = 4 * 1024 * 1024
 }
 
 extension CoreCloudServer {
