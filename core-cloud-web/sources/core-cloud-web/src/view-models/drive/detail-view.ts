@@ -21,10 +21,14 @@ import { useState } from "react"
 
 export default function useDetailView({
   title,
-  currentSidebarKey
+  currentSidebarKey,
+  navigationStack,
+  setNavigationStack
 }: {
   title: string,
-  currentSidebarKey: string
+  currentSidebarKey: string,
+  navigationStack: string[],
+  setNavigationStack: React.Dispatch<React.SetStateAction<string[]>>
 }) {
   const ROOT_FILES = [
     {
@@ -37,7 +41,6 @@ export default function useDetailView({
   ]
   const [isLoading, setIsLoading] = useState(true)
   const [files, setFiles] = useState<typeof ROOT_FILES>([])
-  const [navigationStack, setNavigationStack] = useState<string[]>([])
 
   /* MARK: - Event handlers */
   async function handleOnAppear() {

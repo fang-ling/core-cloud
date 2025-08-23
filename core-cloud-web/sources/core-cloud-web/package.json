@@ -6,10 +6,11 @@
     "build": "next build"
   },
   "dependencies": {
-    "foundation": "*",
     "next": "15.4.6",
     "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "react-dom": "19.1.1",
+    "foundation": "*",
+    "ui": "*"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.11",

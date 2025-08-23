@@ -22,6 +22,7 @@ import ApplicationTokenService from "@/services/application-token-service"
 import LocationService from "@/services/location-service"
 import UserService from "@/services/user-service"
 import { useState } from "react"
+import { useBinding } from "ui/binding"
 
 export default function useContentView({
 
@@ -61,6 +62,8 @@ export default function useContentView({
     false
   )
   const [selectedSidebarItemKey, setSelectedSidebarItemKey] = useState("")
+  const [navigationStack, setNavigationStack] = useState<string[]>([])
+  const isUploadSheetPresented = useBinding(false)
 
   /* MARK: - Event handlers */
   async function handleViewAppear1() {
@@ -124,10 +127,15 @@ export default function useContentView({
 
   function handleSelectedSidebarItemChange(key: string) {
     setSelectedSidebarItemKey(key)
+    setNavigationStack([])
   }
 
   function handleCheckPointPass() {
     setIsPassed(true)
+  }
+
+  function uploadButtonDidClick() {
+    isUploadSheetPresented.toggle()
   }
 
   return {
@@ -144,12 +152,16 @@ export default function useContentView({
     isLocationDialogPresented,
     setIsLocationDialogPresented,
     selectedSidebarItemKey,
+    navigationStack,
+    setNavigationStack,
+    isUploadSheetPresented,
     handleViewAppear1,
     handleViewAppear2,
     handleSidebarToggle,
     handleNewLocationButtonClick,
     handleNewLocationAdd,
     handleSelectedSidebarItemChange,
-    handleCheckPointPass
+    handleCheckPointPass,
+    uploadButtonDidClick
   }
 }
