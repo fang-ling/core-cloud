@@ -220,7 +220,9 @@ export default function ContentView() {
                     }
                   >
                     {/* Toolbar */}
-                    <div className="w-full h-10 mb-0.75 flex items-center">
+                    <div
+                      className="w-full h-10 mb-0.75 flex items-center min-h-10"
+                    >
                       {/* Group: start */}
                       <div
                         className={
@@ -431,6 +433,7 @@ export default function ContentView() {
 
                     <DetailView
                       key={viewModel.selectedSidebarItemKey}
+                      currentSidebarKey={viewModel.selectedSidebarItemKey}
                       title={
                         viewModel.sections
                           .flatMap(s => s.items)
@@ -491,7 +494,9 @@ export default function ContentView() {
         viewModel.isLocationDialogPresented && (
           <LocationDialog
             setIsPresented={viewModel.setIsLocationDialogPresented}
-            onAdd={({ id, name }) => viewModel.handleNewLocationAdd(newLocation)}
+            onAdd={({ id, name }) => {
+              viewModel.handleNewLocationAdd({ id, name })
+            }}
           />
         )
       }

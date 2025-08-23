@@ -1,0 +1,8 @@
+{
+  "name": "foundation",
+  "private": true,
+  "exports": {
+    "./measurement": "./src/measurement.ts",
+    "./unit": "./src/unit.ts"
+  }
+}

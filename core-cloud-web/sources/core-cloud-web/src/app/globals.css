@@ -24,6 +24,14 @@
   color-scheme: light dark;
 
   /* COLORS */
+  --music-keyColor: rgb(250, 35, 59);
+  --sk-body-link-color: #06c;
+  --sk-body-text-color: #1d1d1f;
+  --sk-button-background: #0071e3;
+  --sk-button-border-color: #06c;
+  --sk-button-color: #06c;
+  --sk-button-background-hover: #0076df;
+  --sk-button-background-active: #006edb;
   --theme-color-appTint: hsl(210, 100, 44.5);
   --theme-color-backdrop: rgba(245, 245, 247, 0.85);
   --theme-color-backgroundLayer1: rgb(242, 242, 247);
@@ -50,22 +58,24 @@
   --theme-color-systemCyan: rgb(50, 173, 230);
   --theme-color-systemGreen: rgb(3, 161, 14);
   --theme-color-systemOrange: rgb(255, 149, 0);
+  --theme-color-systemPink: rgb(255, 45, 85);
   --theme-color-systemPurple: rgb(175, 82, 222);
   --theme-color-systemRed: hsl(0, 100, 44.5);
   --theme-color-systemWhite: hsl(0, 0, 100);
   --theme-color-systemYellow: rgb(255, 205, 0);
-  --sk-body-link-color: #06c;
-  --sk-body-text-color: #1d1d1f;
-  --sk-button-background: #0071e3;
-  --sk-button-border-color: #06c;
-  --sk-button-color: #06c;
-  --sk-button-background-hover: #0076df;
-  --sk-button-background-active: #006edb;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     /* COLORS */
+    --music-keyColor: rgb(250, 45, 72);
+    --sk-body-link-color: #2997ff;
+    --sk-body-text-color: #f5f5f7;
+    --sk-button-background: #0071e3;
+    --sk-button-border-color: #2997ff;
+    --sk-button-color: #2997ff;
+    --sk-button-background-hover: #0076df;
+    --sk-button-background-active: #006edb;
     --theme-color-appTint: hsl(204, 100, 50);
     --theme-color-backdrop: rgba(10, 10, 10, 0.8);
     --theme-color-backgroundLayer1: rgb(50, 50, 54);
@@ -92,17 +102,11 @@
     --theme-color-systemCyan: rgb(100, 210, 255);
     --theme-color-systemGreen: rgb(50, 209, 88);
     --theme-color-systemOrange: rgb(255, 159, 10);
+    --theme-color-systemPink: rgb(255, 55, 95);
     --theme-color-systemPurple: rgb(191, 90, 242);
     --theme-color-systemRed: hsl(358, 100, 59.4);
     --theme-color-systemWhite: hsl(0, 0, 100);
     --theme-color-systemYellow: rgb(255, 214, 10);
-    --sk-body-link-color: #2997ff;
-    --sk-body-text-color: #f5f5f7;
-    --sk-button-background: #0071e3;
-    --sk-button-border-color: #2997ff;
-    --sk-button-color: #2997ff;
-    --sk-button-background-hover: #0076df;
-    --sk-button-background-active: #006edb;
   }
 }
 
@@ -138,10 +142,14 @@
   --color-systemCyan: var(--theme-color-systemCyan);
   --color-systemGreen: var(--theme-color-systemGreen);
   --color-systemOrange: var(--theme-color-systemOrange);
+  --color-systemPink: var(--theme-color-systemPink);
   --color-systemPurple: var(--theme-color-systemPurple);
   --color-systemRed: var(--theme-color-systemRed);
   --color-systemWhite: var(--theme-color-systemWhite);
   --color-systemYellow: var(--theme-color-systemYellow);
+
+  --color-music-keyColor: var(--music-keyColor);
+
   --color-sk-body-link-color: var(--sk-body-link-color);
   --color-sk-body-text-color: var(--sk-body-text-color);
   --color-sk-button-background: var(--sk-button-background);

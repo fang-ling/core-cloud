@@ -17,61 +17,34 @@
 //  limitations under the License.
 //
 
-import { useState } from 'react'
+import { useState } from "react"
 
 export default function useDetailView({
-  title
+  title,
+  currentSidebarKey
 }: {
-  title: string
+  title: string,
+  currentSidebarKey: string
 }) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [files, setFiles] = useState<
+  const ROOT_FILES = [
     {
-      id: number,
-      name: string,
-      kind: string,
-      size: number,
-      date: string
-    }[]
-  >([])
+      id: 0,
+      name: "Music",
+      kind: "Application Library",
+      size: -1,
+      date: -1
+    }
+  ]
+  const [isLoading, setIsLoading] = useState(true)
+  const [files, setFiles] = useState<typeof ROOT_FILES>([])
   const [navigationStack, setNavigationStack] = useState<string[]>([])
 
   /* MARK: - Event handlers */
   async function handleOnAppear() {
     setIsLoading(true)
     setNavigationStack([title])
+    handleRootFilesAppear()
     await new Promise(resolve => setTimeout(resolve, 2000))
-    setFiles([
-      {
-        id: 0,
-        name: 'Placeholder',
-        kind: 'JPEG Image',
-        size: 100,
-        date: 'Jun 4, 1989 at 06:57:48 PM'
-      },
-      {
-        id: 1,
-        name: 'Placeholder - A very very very very very very very very very ' +
-          'very very very long file name',
-        kind: 'JPEG Image',
-        size: 100,
-        date: 'Jun 4, 1989 at 06:57:48 PM'
-      },
-      {
-        id: 2,
-        name: 'Placeholder',
-        kind: 'Folder',
-        size: 100,
-        date: 'Jun 4, 1989 at 06:57:48 PM'
-      },
-      {
-        id: 3,
-        name: 'Placeholder',
-        kind: 'Application Library',
-        size: 100,
-        date: 'Jun 4, 1989 at 06:57:48 PM'
-      }
-    ])
     setIsLoading(false)
   }
 
@@ -80,12 +53,29 @@ export default function useDetailView({
     const newNavigationStack = navigationStack.slice()
     if (fileName) {
       newNavigationStack.push(fileName)
+      setFiles([]) /* TODO */
     } else {
       newNavigationStack.pop()
+      if (newNavigationStack.length === 1) {
+        handleRootFilesAppear()
+      }
     }
     setNavigationStack(newNavigationStack)
     await new Promise(resolve => setTimeout(resolve, 2000))
     setIsLoading(false)
+  }
+
+  function handleRootFilesAppear() {
+    if (
+      currentSidebarKey === "recents" ||
+        currentSidebarKey === "shared" ||
+        currentSidebarKey === "recently-deleted"
+    ) {
+      /* TODO */
+      setFiles([])
+    } else {
+      setFiles(ROOT_FILES)
+    }
   }
 
   return {

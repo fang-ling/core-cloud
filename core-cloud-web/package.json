@@ -2,21 +2,12 @@
   "name": "core-cloud-web",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build"
-  },
-  "dependencies": {
-    "next": "15.4.6",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "build": "turbo run build",
+    "dev": "turbo run dev"
   },
   "devDependencies": {
-    "@types/node": "20.19.9",
-    "@types/react": "19.1.9",
-    "@types/react-dom": "19.1.7",
-    "postcss": "8.5.6",
-    "tailwindcss": "4.1.11",
-    "@tailwindcss/postcss": "4.1.11",
-    "typescript": "5.9.2"
-  }
+    "turbo": "2.5.6"
+  },
+  "workspaces": ["sources/*"],
+  "packageManager": "npm@10.8.2"
 }

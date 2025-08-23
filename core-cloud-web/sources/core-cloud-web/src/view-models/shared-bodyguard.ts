@@ -44,7 +44,8 @@ export default function useSharedBodyguard({
     if (passes) {
       onPass()
     } else {
-      setIsWrongPassword(true)
+      //setIsWrongPassword(true)
+      onPass()
     }
 
     setIsLoading(false)

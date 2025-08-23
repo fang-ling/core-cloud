@@ -63,6 +63,9 @@ export default class Localizer {
     'Already have a *X* Account?': {
       'zh-TW': '已經有 *X* 帳號？'
     },
+    'Apple MPEG-4 Audio': {
+      'zh-TW': 'Apple MPEG-4 音訊'
+    },
     'Application Library': {
       'zh-TW': '應用程式庫'
     },
@@ -183,6 +186,9 @@ export default class Localizer {
     'Master Password': {
       'zh-TW': '主密碼'
     },
+    'Music': {
+      'zh-TW': '音樂'
+    },
     'Name': {
       'zh-TW': '名稱'
     },
@@ -282,8 +288,8 @@ export default class Localizer {
     '%lld item(s)': {
       'zh-TW': '%lld 個項目'
     },
-    '%lld GB used': {
-      'zh-TW': '已使用 %lld GB'
+    '%lld used': {
+      'zh-TW': '已使用 %lld'
     },
     ', ': {
       'zh-TW': '，'

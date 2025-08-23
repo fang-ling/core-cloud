@@ -17,42 +17,42 @@
 //  limitations under the License.
 //
 
-import Localizer from '@/localizer'
-import ApplicationTokenService from '@/services/application-token-service'
-import LocationService from '@/services/location-service'
-import UserService from '@/services/user-service'
-import { useState } from 'react'
+import Localizer from "@/localizer"
+import ApplicationTokenService from "@/services/application-token-service"
+import LocationService from "@/services/location-service"
+import UserService from "@/services/user-service"
+import { useState } from "react"
 
 export default function useContentView({
 
 }: {
 
 }) {
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [username, setUsername] = useState('')
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [username, setUsername] = useState("")
   const [avatarURLs, setAvatarURLs] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isPassed, setIsPassed] = useState(false)
   const [isSidebarOn, setIsSidebarOn] = useState(true)
   const [sections, setSections] = useState([
     {
-      header: Localizer.default().localize('Drive'),
+      header: Localizer.default().localize("Drive"),
       items: [
         {
-          key: 'recents',
-          symbolName: 'clock',
-          title: Localizer.default().localize('Recents')
+          key: "recents",
+          symbolName: "clock",
+          title: Localizer.default().localize("Recents")
         },
         {
-          key: 'shared',
-          symbolName: 'shared',
-          title: Localizer.default().localize('Shared')
+          key: "shared",
+          symbolName: "shared",
+          title: Localizer.default().localize("Shared")
         },
         {
-          key: 'recently-deleted',
-          symbolName: 'trash',
-          title: Localizer.default().localize('Recently Deleted')
+          key: "recently-deleted",
+          symbolName: "trash",
+          title: Localizer.default().localize("Recently Deleted")
         }
       ]
     }
@@ -60,7 +60,7 @@ export default function useContentView({
   const [isLocationDialogPresented, setIsLocationDialogPresented] = useState(
     false
   )
-  const [selectedSidebarItemKey, setSelectedSidebarItemKey] = useState('')
+  const [selectedSidebarItemKey, setSelectedSidebarItemKey] = useState("")
 
   /* MARK: - Event handlers */
   async function handleViewAppear1() {
@@ -83,18 +83,20 @@ export default function useContentView({
 
     const locations = await LocationService.fetchLocations()
     const newSections = sections.slice()
-    newSections.push(
-      {
-        header: Localizer.default().localize('Locations'),
-        items: locations.map(location => {
-          return {
-            key: location.id + '',
-            symbolName: 'folder',
-            title: location.name
-          }
-        })
-      }
-    )
+    if (locations.length > 0) {
+      newSections.push(
+        {
+          header: Localizer.default().localize("Locations"),
+          items: locations.map(location => {
+            return {
+              key: location.id + "",
+              symbolName: "folder",
+              title: location.name
+            }
+          })
+        }
+      )
+    }
     setSections(newSections)
     setSelectedSidebarItemKey(newSections[0].items[0].key)
 
@@ -106,16 +108,16 @@ export default function useContentView({
   }
 
   function handleNewLocationButtonClick() {
-    document.body.style.setProperty('overflow', 'hidden')
+    document.body.style.setProperty("overflow", "hidden")
     setIsLocationDialogPresented(true)
   }
 
   function handleNewLocationAdd({ id, name }: { id: number, name: string }) {
     const newSections = sections.slice()
     newSections[newSections.length - 1].items.push({
-      key: id + '',
+      key: id + "",
       title: name,
-      symbolName: 'folder'
+      symbolName: "folder"
     })
     setSections(newSections)
   }

@@ -23,20 +23,25 @@ import { useEffect } from 'react'
 import NavigationBarSymbol from './navigation-bar-symbol'
 import UIProgress from '../ui-progress'
 import TableView from './table-view'
+import Measurement from 'foundation/measurement'
+import { UnitInformationStorage } from 'foundation/unit'
 
 export default function DetailView({
+  currentSidebarKey,
   title,
   symbolName,
   emptyMessage,
   emptyDescription
 }: {
+  currentSidebarKey: string,
   title: string,
   symbolName?: string,
   emptyMessage?: string,
   emptyDescription?: string
 }) {
   const viewModel = useDetailView({
-    title: title
+    title: title,
+    currentSidebarKey: currentSidebarKey
   })
 
   useEffect(() => {
@@ -44,7 +49,7 @@ export default function DetailView({
   }, [])
 
   return (
-    <div className="grow flex flex-col">
+    <div className="grow flex flex-col overflow-y-auto">
       {/* Navigation bar */}
       <div className="flex pl-2.5 pr-3.75 py-1.25 flex-col select-none">
         <div className="flex">
@@ -102,7 +107,11 @@ export default function DetailView({
               className="-ml-2.25 fill-labelTertiary"
               symbolName={symbolName}
             />
-            {viewModel.navigationStack[viewModel.navigationStack.length-1]}
+            {
+              Localizer.default().localize(
+                viewModel.navigationStack[viewModel.navigationStack.length-1]
+              )
+            }
           </div>
         </div>
         {/* status */}
@@ -124,14 +133,15 @@ export default function DetailView({
                 .replace('%lld', viewModel.files.length + '') + (
                   viewModel.navigationStack.length > 1
                     ? Localizer.default().localize(', ') +
-                      /* TODO: Use measurement API */
                       Localizer
                         .default()
-                        .localize('%lld GB used')
+                        .localize('%lld used')
                         .replace(
                           '%lld',
-                          (viewModel.files.reduce((a, f) => a+f.size, 0) / 1e9)
-                            .toFixed(2)
+                          new Measurement({
+                            value: viewModel.files.reduce((a,f) => a+f.size, 0),
+                            unit: UnitInformationStorage.bytes
+                          }).formatted()
                         )
                     : ''
                 )
@@ -140,7 +150,7 @@ export default function DetailView({
       </div>
       <div
         className={
-          'grow w-full flex ' + (
+          'grow w-full flex overflow-y-auto ' + (
             viewModel.isLoading || viewModel.files.length <= 0
               ? 'items-center justify-center'
               : ''

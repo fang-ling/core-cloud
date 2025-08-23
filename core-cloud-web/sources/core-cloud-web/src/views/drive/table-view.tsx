@@ -21,6 +21,8 @@ import Localizer from '@/localizer'
 import useTableView from '@/view-models/drive/table-view'
 import { Fragment } from 'react'
 import TableViewSymbol from './table-view-symbol'
+import Measurement from 'foundation/measurement'
+import { UnitInformationStorage } from 'foundation/unit'
 
 export default function TableView({
   files,
@@ -31,7 +33,7 @@ export default function TableView({
     name: string,
     kind: string,
     size: number,
-    date: string
+    date: number
   }[],
   onNavigation?: (fileName: string) => void
 }) {
@@ -41,12 +43,12 @@ export default function TableView({
 
   return (
     <table className="mx-4.5 w-full table-fixed mt-5 md:mt-0">
-      <thead>
+      <thead className="sticky top-0 bg-backgroundPrimary">
         <tr
           className={
             'w-[calc(100%-36px)] text-labelTertiary text-sm ' +
               'leading-4 h-11 relative not-md:hidden ' +
-              'border-separator border-b'
+              '*:shadow-[inset_0_-1px_var(--color-separator)]'
           }
         >
           <th className="w-13.5" />
@@ -99,13 +101,13 @@ export default function TableView({
                   <div className="size-5.5">
                     <TableViewSymbol
                       kind={file.kind}
-                      className={
-                        'size-full ' + (
-                          viewModel.selectedFileID === file.id
-                            ? 'fill-systemWhite'
-                            : 'fill-systemCyan'
-                        )
+                      applicationName={
+                        file.kind === 'Application Library'
+                          ? file.name
+                          : undefined
                       }
+                      selected={viewModel.selectedFileID === file.id}
+                      className="size-full overflow-visible"
                     />
                   </div>
                 </td>
@@ -123,19 +125,24 @@ export default function TableView({
                       )
                   }
                 >
-                  {file.name}
+                  {
+                    file.kind === 'Application Library'
+                      ? Localizer.default().localize(file.name)
+                      : file.name
+                  }
                 </td>
                 <td
                   className={
-                    'px-3 w-[calc(25%-18.4px)] text-sm leading-4 ' + (
-                      index !== files.length - 1
-                        ? 'border-b border-separator '
-                        : ''
-                    ) + (
-                      viewModel.selectedFileID === file.id
-                        ? 'text-systemWhite'
-                        : 'text-labelSecondary'
-                    )
+                    'px-3 w-[calc(25%-18.4px)] text-sm leading-4 ' +
+                      'text-ellipsis overflow-hidden whitespace-nowrap ' + (
+                        index !== files.length - 1
+                          ? 'border-b border-separator '
+                          : ''
+                      ) + (
+                        viewModel.selectedFileID === file.id
+                          ? 'text-systemWhite'
+                          : 'text-labelSecondary'
+                      )
                   }
                 >
                   {Localizer.default().localize(file.kind)}
@@ -154,7 +161,14 @@ export default function TableView({
                       )
                   }
                 >
-                  {file.size}
+                  {
+                    file.size === -1
+                      ? '--'
+                      : new Measurement({
+                        value: file.size,
+                        unit: UnitInformationStorage.bytes
+                      }).formatted()
+                  }
                 </td>
                 <td
                   className={
@@ -171,7 +185,11 @@ export default function TableView({
                       )
                   }
                 >
-                  {file.date}
+                  {
+                    file.date === -1
+                      ? ''
+                      : new Date(file.date).toLocaleString()
+                  }
                 </td>
               </tr>
 
@@ -196,13 +214,13 @@ export default function TableView({
                   <div className="size-5.5">
                     <TableViewSymbol
                       kind={file.kind}
-                      className={
-                        'size-full ' + (
-                          viewModel.selectedFileID === file.id
-                            ? 'fill-systemWhite'
-                            : 'fill-systemCyan'
-                        )
+                      applicationName={
+                        file.kind === 'Application Library'
+                          ? file.name
+                          : undefined
                       }
+                      selected={viewModel.selectedFileID === file.id}
+                      className="size-full overflow-visible"
                     />
                   </div>
                 </td>
@@ -225,7 +243,11 @@ export default function TableView({
                         )
                     }
                   >
-                    {file.name}
+                    {
+                      file.kind === 'Application Library'
+                        ? Localizer.default().localize(file.name)
+                        : file.name
+                    }
                   </div>
                   <div
                     className={
@@ -236,7 +258,7 @@ export default function TableView({
                       )
                     }
                   >
-                    {file.kind}
+                    {Localizer.default().localize(file.kind)}
                   </div>
                 </td>
               </tr>
