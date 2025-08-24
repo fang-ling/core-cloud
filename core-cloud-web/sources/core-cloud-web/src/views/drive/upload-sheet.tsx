@@ -27,11 +27,22 @@ import Sheet from "ui/sheet"
 import UISFSymbol from "../ui-sf-symbol"
 
 export default function UploadSheet({
-  isPresented
+  isPresented,
+  application,
+  locationID,
+  onUpload
 }: {
-  isPresented: BoolBinding
+  isPresented: BoolBinding,
+  application: string,
+  locationID: string,
+  onUpload: () => void
 }) {
-  const viewModel = useUploadSheet({ })
+  const viewModel = useUploadSheet({
+    isPresented: isPresented,
+    application: application,
+    locationID: locationID,
+    onUpload: onUpload
+  })
 
   return (
     <Sheet isPresented={isPresented}>
@@ -103,6 +114,7 @@ export default function UploadSheet({
               id="dropzone-file"
               type="file"
               className="hidden"
+              accept=".m4a"
               onChange={(event) => {
                 viewModel.fileInputDidChange((event.target.files ?? [])[0])
               }}

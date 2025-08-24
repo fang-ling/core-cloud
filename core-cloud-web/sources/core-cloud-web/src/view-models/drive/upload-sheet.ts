@@ -18,11 +18,19 @@
 //
 
 import { useState } from "react"
+import FileService from "@/services/file-service"
+import { BoolBinding } from "ui/binding"
 
 export default function useUploadSheet({
-
+  isPresented,
+  application,
+  locationID,
+  onUpload
 }: {
-
+  isPresented: BoolBinding,
+  application: string,
+  locationID: string,
+  onUpload: () => void
 }) {
   const [sha512, setSHA512] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -39,7 +47,39 @@ export default function useUploadSheet({
   }
 
   async function uploadButtonDidClick() {
+    if (!file) {
+      setIsError(true)
+      return
+    }
 
+    let kind= ""
+    const components = file.name.split(".")
+    if (components[components.length - 1] === "m4a") {
+      kind = "Apple MPEG-4 Audio"
+    }
+
+    setIsError(false)
+    setIsLoading(true)
+    const response = await FileService.insertFile({
+      request: {
+        name: file.name.split(".")[0],
+        kind: kind,
+        size: `${file.size}`,
+        checksum: sha512,
+        application: application,
+        locationID: locationID
+      },
+      /*fileStream: file.stream()*/
+      file: file
+    })
+    if (!response) {
+      setIsError(true)
+      setIsLoading(false)
+    } else {
+      onUpload()
+      setIsLoading(false)
+      isPresented.toggle()
+    }
   }
 
   return {

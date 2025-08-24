@@ -117,15 +117,28 @@ export default function useContentView({
 
   function handleNewLocationAdd({ id, name }: { id: number, name: string }) {
     const newSections = sections.slice()
-    newSections[newSections.length - 1].items.push({
+    const newLocation = {
       key: id + "",
       title: name,
       symbolName: "folder"
-    })
+    }
+    if (newSections.length <= 1) {
+      newSections.push({
+        header: Localizer.default().localize("Locations"),
+        items: [newLocation]
+      })
+    } else {
+      newSections[newSections.length - 1].items.push(newLocation)
+    }
     setSections(newSections)
   }
 
   function handleSelectedSidebarItemChange(key: string) {
+    if (selectedSidebarItemKey === key) {
+      /* No-op when click current key. */
+      return
+    }
+
     setSelectedSidebarItemKey(key)
     setNavigationStack([])
   }
@@ -136,6 +149,10 @@ export default function useContentView({
 
   function uploadButtonDidClick() {
     isUploadSheetPresented.toggle()
+  }
+
+  function fileDidUpload() {
+    window.location.reload()
   }
 
   return {
@@ -162,6 +179,7 @@ export default function useContentView({
     handleNewLocationAdd,
     handleSelectedSidebarItemChange,
     handleCheckPointPass,
-    uploadButtonDidClick
+    uploadButtonDidClick,
+    fileDidUpload
   }
 }

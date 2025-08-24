@@ -512,6 +512,9 @@ export default function ContentView() {
         viewModel.isUploadSheetPresented.value && (
           <UploadSheet
             isPresented={viewModel.isUploadSheetPresented}
+            application={viewModel.navigationStack[1]}
+            locationID={viewModel.selectedSidebarItemKey}
+            onUpload={() => viewModel.fileDidUpload()}
           />
         )
       }

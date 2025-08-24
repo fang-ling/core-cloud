@@ -42,8 +42,34 @@ namespace FileService {
     }
   }
 
-  export async function insertFile() {
+  /* Send ReadableStream in request body is not yet supported in Safari. */
+  export async function insertFile({
+    request,
+    file
+    /*fileStream*/
+  }: {
+    request: File.Singular.Input.Insertion,
+    file: File
+    /*fileStream: ReadableStream<Uint8Array>*/
+  }): Promise<boolean> {
+    try {
+      const queryString = new URLSearchParams(request).toString()
 
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/file?${queryString}`,
+        {
+          method: "POST",
+          body: file /*fileStream*/
+        }
+      )
+      if (response.status === 201) {
+        return true
+      } else {
+        throw new Error()
+      }
+    } catch {
+      return false
+    }
   }
 }
 export default FileService
