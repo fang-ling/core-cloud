@@ -22,7 +22,7 @@
 import PackageDescription
 
 let dependencies: [(String, PackageDescription.Version)] = [
-  ("https://github.com/apple/swift-crypto.git", "3.14.0"),
+  /*("https://github.com/apple/swift-crypto.git", "3.14.0"),*/
   ("https://github.com/vapor/fluent.git", "4.12.0"),
   ("https://github.com/vapor/fluent-sqlite-driver.git", "4.8.1"),
   ("https://github.com/vapor/jwt.git", "5.1.2"),
@@ -32,7 +32,13 @@ let dependencies: [(String, PackageDescription.Version)] = [
 let package = Package(
   name: "core-cloud-server",
   platforms: [.macOS(.v15)],
-  dependencies: dependencies.map({ .package(url: $0.0, exact: $0.1) }),
+  dependencies: dependencies.map({ .package(url: $0.0, exact: $0.1) }) +
+  [
+    .package(
+      url: "https://github.com/apple/swift-crypto.git",
+      branch: "wwdc-25"
+    )
+  ],
   targets: [
     .executableTarget(
       name: "CoreCloudServer",
