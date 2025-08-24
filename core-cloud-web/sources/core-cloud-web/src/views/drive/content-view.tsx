@@ -34,7 +34,6 @@ export default function ContentView() {
   const viewModel = useContentView({ })
 
   useEffect(() => {
-    viewModel.handleViewAppear1()
     viewModel.handleViewAppear2()
   }, [])
 
@@ -48,10 +47,6 @@ export default function ContentView() {
               ? "app"
               : "thinMaterial"
           }
-          firstName={viewModel.firstName}
-          lastName={viewModel.lastName}
-          username={viewModel.username}
-          urls={viewModel.avatarURLs}
         />
 
         {

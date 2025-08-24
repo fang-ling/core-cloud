@@ -20,7 +20,6 @@
 import Localizer from "@/localizer"
 import ApplicationTokenService from "@/services/application-token-service"
 import LocationService from "@/services/location-service"
-import UserService from "@/services/user-service"
 import { useState } from "react"
 import { useBinding } from "ui/binding"
 
@@ -29,10 +28,6 @@ export default function useContentView({
 }: {
 
 }) {
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [username, setUsername] = useState("")
-  const [avatarURLs, setAvatarURLs] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isPassed, setIsPassed] = useState(false)
   const [isSidebarOn, setIsSidebarOn] = useState(true)
@@ -66,16 +61,6 @@ export default function useContentView({
   const isUploadSheetPresented = useBinding(false)
 
   /* MARK: - Event handlers */
-  async function handleViewAppear1() {
-    const user = await UserService.fetchUser()
-    if (user) {
-      setFirstName(user.firstName)
-      setLastName(user.lastName)
-      setUsername(user.username)
-      setAvatarURLs(user.avatarURLs)
-    }
-  }
-
   async function handleViewAppear2() {
     setIsLoading(true)
 
@@ -156,10 +141,6 @@ export default function useContentView({
   }
 
   return {
-    firstName,
-    lastName,
-    username,
-    avatarURLs,
     isLoading,
     isPassed,
     isSidebarOn,
@@ -172,7 +153,6 @@ export default function useContentView({
     navigationStack,
     setNavigationStack,
     isUploadSheetPresented,
-    handleViewAppear1,
     handleViewAppear2,
     handleSidebarToggle,
     handleNewLocationButtonClick,

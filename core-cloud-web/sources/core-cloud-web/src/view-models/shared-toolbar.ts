@@ -17,13 +17,16 @@
 //  limitations under the License.
 //
 
-'use client'
+"use client"
 
-import { useState } from 'react'
+import UserService from "@/services/user-service"
+import { useState } from "react"
 
 export default function useSharedToolbar({
+  source,
   onCustomize
 }: {
+  source: "authenticator" | "home" | "drive" | "music",
   onCustomize?: () => void
 }) {
   /*
@@ -34,6 +37,10 @@ export default function useSharedToolbar({
    */
   const [radioMode, setRadioMode] = useState(0)
   const [modalRight, setModalRight] = useState(0)
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [username, setUsername] = useState("")
+  const [avatarURLs, setAvatarURLs] = useState<string[]>([])
 
   /* MARK: - Event handlers */
   function handleModalOpen(
@@ -41,7 +48,7 @@ export default function useSharedToolbar({
     newRadioMode: 1 | 2 | 3
   ) {
     /* Disable body scrolling when modal is open. */
-    document.body.style.setProperty('overflow', 'hidden')
+    document.body.style.setProperty("overflow", "hidden")
 
     const right = event.currentTarget.getBoundingClientRect().right
     setModalRight(window.innerWidth - right)
@@ -50,24 +57,47 @@ export default function useSharedToolbar({
 
   function handleModalClose() {
     /* Revert body scrolling disable */
-    document.body.style.removeProperty('overflow')
+    document.body.style.removeProperty("overflow")
 
     setRadioMode(0)
   }
 
   function handleOnCustomize() {
     /* Revert body scrolling disable */
-    document.body.style.removeProperty('overflow')
+    document.body.style.removeProperty("overflow")
 
     setRadioMode(0)
     onCustomize?.()
   }
 
+  async function viewDidAppear() {
+    if (
+      source !== "home" &&
+        source !== "drive" &&
+        source !== "music"
+    ) {
+      return
+    }
+
+    const user = await UserService.fetchUser()
+    if (user) {
+      setFirstName(user.firstName)
+      setLastName(user.lastName)
+      setUsername(user.username)
+      setAvatarURLs(user.avatarURLs)
+    }
+  }
+
   return {
     radioMode,
     modalRight,
+    firstName,
+    lastName,
+    username,
+    avatarURLs,
     handleModalOpen,
     handleModalClose,
-    handleOnCustomize
+    handleOnCustomize,
+    viewDidAppear
   }
 }

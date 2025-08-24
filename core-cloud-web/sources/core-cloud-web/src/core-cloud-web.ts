@@ -17,14 +17,19 @@
 //  limitations under the License.
 //
 
-import Localizer from './localizer'
+import Localizer from "./localizer"
 
 namespace CoreCloudWeb {
   export const APPS = [
     {
-      urls: process.env.NEXT_PUBLIC_DRIVE_ICON_URLS?.split(',') ?? [],
-      name: Localizer.default().localize('Drive'),
-      href: '/drive'
+      urls: process.env.NEXT_PUBLIC_DRIVE_ICON_URLS?.split(",") ?? [],
+      name: Localizer.default().localize("Drive"),
+      href: "/drive"
+    },
+    {
+      urls: process.env.NEXT_PUBLIC_MUSIC_ICON_URLS?.split(",") ?? [],
+      name: Localizer.default().localize("Music"),
+      href: "/music"
     }
   ]
 }

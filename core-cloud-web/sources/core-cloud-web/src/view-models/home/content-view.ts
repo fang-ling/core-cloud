@@ -17,11 +17,11 @@
 //  limitations under the License.
 //
 
-'use client'
+"use client"
 
-import SettingService from '@/services/setting-service'
-import UserService from '@/services/user-service'
-import { useState } from 'react'
+import SettingService from "@/services/setting-service"
+import UserService from "@/services/user-service"
+import { useState } from "react"
 
 export default function useContentView({
 
@@ -41,9 +41,9 @@ export default function useContentView({
    */
   const [radioMode, setRadioMode] = useState(0)
   const [modalRight, setModalRight] = useState(0)
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [username, setUsername] = useState('')
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [username, setUsername] = useState("")
   const [avatarURLs, setAvatarURLs] = useState<string[]>([])
 
   /* MARK: - Event handlers */
@@ -59,14 +59,14 @@ export default function useContentView({
     event: React.MouseEvent<HTMLButtonElement>,
     newRadioMode: 0 | 1
   ) {
-    document.body.style.setProperty('overflow', 'hidden')
+    document.body.style.setProperty("overflow", "hidden")
     const right = event.currentTarget.getBoundingClientRect().right
     setModalRight(window.innerWidth - right)
     setRadioMode(newRadioMode)
   }
 
   function handleModalClose() {
-    document.body.style.removeProperty('overflow')
+    document.body.style.removeProperty("overflow")
     setRadioMode(0)
   }
 
@@ -80,24 +80,24 @@ export default function useContentView({
 
     let newValue = -1
     switch (newBackgroundColor) {
-      case 'blue': newValue = 0; break;
-      case 'purple': newValue = 1; break;
-      case 'green': newValue = 2; break;
-      case 'red': newValue = 3; break;
-      case 'orange': newValue = 4; break;
-      case 'yellow': newValue = 5; break;
+      case "blue": newValue = 0; break;
+      case "purple": newValue = 1; break;
+      case "green": newValue = 2; break;
+      case "red": newValue = 3; break;
+      case "orange": newValue = 4; break;
+      case "yellow": newValue = 5; break;
     }
 
     const result = await SettingService.modifySetting({
-      key: 'homeBackgroundColor',
-      value: newValue + ''
+      key: "homeBackgroundColor",
+      value: newValue + ""
     })
     if (!result) {
       setBackgroundColor(oldBackgroundColor)
     }
   }
 
-  async function handleViewAppear1() {
+  async function viewDidAppear() {
     const user = await UserService.fetchUser()
     if (user) {
       setFirstName(user.firstName)
@@ -109,15 +109,15 @@ export default function useContentView({
 
   async function handleViewAppear2() {
     const homeBackgroundColor = await SettingService.fetchSetting({
-      key: 'homeBackgroundColor'
+      key: "homeBackgroundColor"
     })
     switch (homeBackgroundColor?.homeBackgroundColor) {
-      case 0: setBackgroundColor('blue'); break;
-      case 1: setBackgroundColor('purple'); break;
-      case 2: setBackgroundColor('green'); break;
-      case 3: setBackgroundColor('red'); break;
-      case 4: setBackgroundColor('orange'); break;
-      case 5: setBackgroundColor('yellow'); break;
+      case 0: setBackgroundColor("blue"); break;
+      case 1: setBackgroundColor("purple"); break;
+      case 2: setBackgroundColor("green"); break;
+      case 3: setBackgroundColor("red"); break;
+      case 4: setBackgroundColor("orange"); break;
+      case 5: setBackgroundColor("yellow"); break;
     }
   }
 
@@ -135,7 +135,7 @@ export default function useContentView({
     handleModalOpen,
     handleModalClose,
     handleBackgroundColorChange,
-    handleViewAppear1,
+    viewDidAppear,
     handleViewAppear2
   }
 }
