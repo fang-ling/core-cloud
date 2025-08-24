@@ -345,14 +345,14 @@ struct FileController: RouteCollection {
     let response = Response(
       status: .partialContent,
       headers: .init([
-          (
-            "Content-Type",
-            fileService.kindToContentType(kind: file.kind)
-          ),
-          (
-            "Content-Range",
-            "bytes \(startByte)-\(endByte)/\(file.size)"
-          )
+        (
+          "Content-Type",
+          fileService.kindToContentType(kind: file.kind)
+        ),
+        (
+          "Content-Range",
+          "bytes \(startByte)-\(endByte)/\(file.size)"
+        )
       ]),
       body: .init(
         managedAsyncStream: { writer in
