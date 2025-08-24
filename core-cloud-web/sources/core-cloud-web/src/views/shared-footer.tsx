@@ -17,30 +17,30 @@
 //  limitations under the License.
 //
 
-import Localizer from '@/localizer'
+import Localizer from "@/localizer"
 
 export default function SharedFooter() {
   return (
     <footer className="w-full py-7.5 bg-gray6 flex justify-center">
       <div
         className={
-          'w-full text-[11px] text-labelSecondary leading-[2] flex-wrap ' +
-            'flex justify-between max-w-86.25 md:max-w-172.5 lg:max-w-258.75'
+          "w-full text-[11px] text-labelSecondary leading-[2] flex-wrap " +
+            "flex justify-between max-w-86.25 md:max-w-172.5 lg:max-w-258.75"
         }
       >
         <p>
-          {Localizer.default().localize('Version')}
-          {' 2.0-beta'}
+          {Localizer.default().localize("Version")}
+          {" 2.0"}
         </p>
         <p>
-          {'Copyright © 2025 '}
+          {"Copyright © 2025 "}
           <span
             dangerouslySetInnerHTML={{
-              __html: process.env.NEXT_PUBLIC_TITLE ?? ''
+              __html: process.env.NEXT_PUBLIC_TITLE ?? ""
             }}
           />
-          {'. '}
-          {Localizer.default().localize('All rights reserved.')}
+          {". "}
+          {Localizer.default().localize("All rights reserved.")}
         </p>
       </div>
     </footer>
