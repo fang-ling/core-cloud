@@ -1,0 +1,61 @@
+//
+//  v-stack.tsx
+//  core-cloud-web
+//
+//  Created by Fang Ling on 2025/8/25.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
+import React from "react"
+import HorizontalAlignment from "./horizontal-alignment"
+
+/**
+ * A view that arranges its subviews in a vertical line.
+ */
+export default function VStack({
+  alignment = HorizontalAlignment.center,
+  widthClassName = "",
+  heightClassName = "",
+  marginClassName = "",
+  children
+}: {
+  /**
+   * The guide for aligning the subviews in this stack.
+   */
+  alignment?: HorizontalAlignment,
+  /**
+   * A fixed width for the resulting view.
+   */
+  widthClassName?: string
+  /**
+   * A fixed height for the resulting view.
+   */
+  heightClassName?: string,
+  marginClassName?: string,
+  /**
+   * A view builder that creates the content of this stack.
+   */
+  children: React.ReactNode
+}) {
+  return (
+    <div
+      className={
+        `flex flex-col ${alignment.className} ${heightClassName} ` +
+          `${widthClassName} ${marginClassName}`
+      }
+    >
+      {children}
+    </div>
+  )
+}

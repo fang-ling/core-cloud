@@ -71,7 +71,7 @@ export default function SharedToolbar({
       <header
         className={
           "top-0 height-11 min-h-11 pl-4 pr-1.5 flex sticky items-center " +
-            "select-none " + (
+            "select-none w-full " + (
               variant === "thinMaterial"
                 ? (
                   "before:absolute before:backdrop-blur-[10px] z-3 " +
@@ -93,32 +93,26 @@ export default function SharedToolbar({
           href="/home"
           className="flex items-center mr-0.5"
         >
-          {
-            (() => {
-              switch (source) {
-                case "authenticator": return (
-                  <Icon
-                    urls={
-                      process
-                        .env
-                        .NEXT_PUBLIC_AUTHENTICATOR_ICON_URLS
-                        ?.split(",")
-                    }
-                  />
-                )
-                case "home": return (
-                  <Icon
-                    urls={process.env.NEXT_PUBLIC_HOME_ICON_URLS?.split(",")}
-                  />
-                )
-                case "drive": return (
-                  <Icon
-                    urls={process.env.NEXT_PUBLIC_DRIVE_ICON_URLS?.split(",")}
-                  />
-                )
-              }
-            })()
-          }
+          <Icon
+            urls={
+              (() => {
+                switch (source) {
+                  case "authenticator": return (
+                    process.env.NEXT_PUBLIC_AUTHENTICATOR_ICON_URLS
+                  )
+                  case "home": return (
+                    process.env.NEXT_PUBLIC_HOME_ICON_URLS
+                  )
+                  case "drive": return (
+                    process.env.NEXT_PUBLIC_DRIVE_ICON_URLS
+                  )
+                  case "music": return (
+                    process.env.NEXT_PUBLIC_MUSIC_ICON_URLS
+                  )
+                }
+              })()?.split(",")
+            }
+          />
           <div className="font-semibold text-[21px] text-systemBlack">
             <div
               dangerouslySetInnerHTML={{
@@ -131,6 +125,13 @@ export default function SharedToolbar({
           source === "drive" && (
             <div className="font-semibold text-[21px] text-systemBlue">
               {Localizer.default().localize("Drive")}
+            </div>
+          )
+        }
+        {
+          source === "music" && (
+            <div className="font-semibold text-[21px] text-music-keyColor">
+              {Localizer.default().localize("Music")}
             </div>
           )
         }
@@ -429,7 +430,7 @@ export default function SharedToolbar({
                     __html: Localizer
                       .default()
                       .localize(
-                        "*X* doesn\"t have access to display some of your " +
+                        "*X* doesn't have access to display some of your " +
                           "data, including photos, videos, songs and files. " +
                           "Select an app to allow access using your master " +
                           "password."

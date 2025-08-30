@@ -2,7 +2,16 @@
   "name": "ui",
   "private": true,
   "exports": {
+    "./async-image": "./src/views/async-image.tsx",
     "./binding": "./src/binding.ts",
-    "./sheet": "./src/views/sheet.tsx"
+    "./content-mode": "./src/views/content-mode.ts",
+    "./grid": "./src/views/grid.tsx",
+    "./h-stack": "./src/views/h-stack.tsx",
+    "./image": "./src/views/image.tsx",
+    "./navigation-split-view": "./src/views/navigation-split-view.tsx",
+    "./sheet": "./src/views/sheet.tsx",
+    "./text": "./src/views/text.tsx",
+    "./v-stack": "./src/views/v-stack.tsx",
+    "./z-stack": "./src/views/z-stack.tsx"
   }
 }
