@@ -36,6 +36,14 @@ extension ControllerTests {
       )
 
       try await app.testing().test(
+        .GET,
+        "api/v1/songs",
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
+
+      try await app.testing().test(
         .POST,
         "api/v1/user",
         beforeRequest: { request async throws in
@@ -108,6 +116,27 @@ extension ControllerTests {
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/v1/songs",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .ok)
+
+          let songs = try response.content.decode(
+            [Song.Plural.Output.Retrieval].self
+          )
+          #expect(songs.isEmpty)
         }
       )
 
@@ -375,6 +404,38 @@ extension ControllerTests {
         },
         afterResponse: { response async throws in
           #expect(response.status == .serviceUnavailable)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/v1/songs",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .ok)
+
+          let songs = try response.content.decode(
+            [Song.Plural.Output.Retrieval].self
+          )
+          #expect(songs.count == 1)
+          #expect(songs.first?.id == 1)
+          #expect(songs.first?.title == "Por Una Cabeza")
+          #expect(songs.first?.artist == "Thomas Newman")
+          #expect(songs.first?.genre == "Soundtrack")
+          #expect(songs.first?.year == 1997)
+          #expect(songs.first?.trackNumber == 7)
+          #expect(songs.first?.discNumber == 1)
+          #expect(songs.first?.playCount == 0)
+          #expect(songs.first?.sampleSize == 16)
+          #expect(songs.first?.sampleRate == 44100)
+          #expect(songs.first?.fileID == 3)
         }
       )
     }

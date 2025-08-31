@@ -128,8 +128,28 @@ extension Song.Singular {
   enum Input { }
 }
 
+extension Song.Plural {
+  enum Output { }
+}
+
 extension Song.Singular.Input {
   struct Insertion: Codable {
+    var title: String
+    var artist: String
+    var genre: String
+    var year: Int64
+    var trackNumber: Int64
+    var discNumber: Int64
+    var playCount: Int64
+    var sampleSize: Int64
+    var sampleRate: Int64
+    var fileID: Int64
+  }
+}
+
+extension Song.Plural.Output {
+  struct Retrieval: Codable {
+    var id: Int64
     var title: String
     var artist: String
     var genre: String
