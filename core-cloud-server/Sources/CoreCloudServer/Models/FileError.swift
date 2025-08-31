@@ -19,4 +19,5 @@
 
 enum FileError: Error {
   case databaseError
+  case noSuchFile
 }

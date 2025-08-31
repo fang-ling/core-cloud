@@ -54,6 +54,46 @@ struct FileService {
     }
   }
 
+  /**
+   * Returns a file by its identifier for a specified user.
+   *
+   * - Parameters:
+   *   - id: An identifier for the file.
+   *   - userID: An identifier for the user requesting the file.
+   *   - database: The database instance from which the file will be retrieved.
+   *
+   * - Returns:
+   *   - kind: The kind of the file.
+   *
+   * - Throws:
+   *   - ``FileError/noSuchFile``: if the file is not found.
+   *   - ``FileError/databaseError``: if there is an issue accessing the
+   *                                  database.
+   */
+  func getFile(
+    by id: File.IDValue,
+    for userID: User.IDValue,
+    on database: Database
+  ) async throws -> (
+    /*kind: */String
+  ) {
+    do {
+      guard let file = try await File.query(on: database)
+        .filter(\.$id == id)
+        .filter(\.$user.$id == userID)
+        .first()
+      else {
+        throw FileError.noSuchFile
+      }
+
+      return file.kind
+    } catch FileError.noSuchFile {
+      throw FileError.noSuchFile
+    } catch {
+      throw FileError.databaseError
+    }
+  }
+
   func kindToContentType(kind: String) -> String {
     if (kind == "Apple MPEG-4 Audio") {
       return "audio/mp4"
