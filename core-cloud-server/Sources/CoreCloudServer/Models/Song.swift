@@ -145,6 +145,11 @@ extension Song.Singular.Input {
     var sampleRate: Int64
     var fileID: Int64
   }
+
+  struct Modification: Codable {
+    var id: Int64
+    var playCount: Int64?
+  }
 }
 
 extension Song.Plural.Output {

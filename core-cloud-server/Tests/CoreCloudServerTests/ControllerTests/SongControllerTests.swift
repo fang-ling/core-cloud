@@ -44,6 +44,14 @@ extension ControllerTests {
       )
 
       try await app.testing().test(
+        .PATCH,
+        "api/v1/song",
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
+
+      try await app.testing().test(
         .POST,
         "api/v1/user",
         beforeRequest: { request async throws in
@@ -408,6 +416,38 @@ extension ControllerTests {
       )
 
       try await app.testing().test(
+        .PATCH,
+        "api/v1/song",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .badRequest)
+        }
+      )
+
+      try await app.testing().test(
+        .PATCH,
+        "api/v1/song?id=1&playCount=19358",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .ok)
+        }
+      )
+
+      try await app.testing().test(
         .GET,
         "api/v1/songs",
         beforeRequest: { request async throws in
@@ -432,7 +472,7 @@ extension ControllerTests {
           #expect(songs.first?.year == 1997)
           #expect(songs.first?.trackNumber == 7)
           #expect(songs.first?.discNumber == 1)
-          #expect(songs.first?.playCount == 0)
+          #expect(songs.first?.playCount == 19358)
           #expect(songs.first?.sampleSize == 16)
           #expect(songs.first?.sampleRate == 44100)
           #expect(songs.first?.fileID == 3)

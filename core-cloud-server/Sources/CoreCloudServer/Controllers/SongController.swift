@@ -36,6 +36,12 @@ struct SongController: RouteCollection {
       .grouped("v1")
       .grouped("songs")
       .get(use: fetchSongsHandler)
+
+    routes
+      .grouped("api")
+      .grouped("v1")
+      .grouped("song")
+      .patch(use: modifySongHandler)
   }
 
   /**
@@ -173,6 +179,62 @@ struct SongController: RouteCollection {
       return Response(status: .serviceUnavailable)
     } catch {
       return Response(status: .internalServerError)
+    }
+  }
+
+  /**
+   * - URL: PATCH /api/v1/song
+   *
+   * - Query Parameters:
+   *   - id [Int64] (required): The id of the song.
+   *   - playCount [Int64] (optional): The new play count of the song.
+   *
+   * - Response Codes:
+   *   - 200 OK: The request was successful.
+   *   - 400 Bad Request: The server cannot or will not process the request due
+   *                      to an apparent client error.
+   *   - 401 Unauthorized: The authentication is required and has failed.
+   *   - 500 Internal Server Error: A response indicating an error occurred on
+   *                                the server.
+   *   - 503 Service Unavailable: A response indicating that the server is not
+   *                              ready to handle the request.
+   */
+  func modifySongHandler(request: Request) async -> HTTPStatus {
+    let userID: User.IDValue
+    do {
+      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let id = try await userTokenService.verifyUserToken(
+        from: jwt ?? ""
+      ) { token in
+        try await request.jwt.verify(token)
+      }
+      userID = id
+    } catch {
+      return .unauthorized
+    }
+
+    var modifyRequest: Song.Singular.Input.Modification
+    do {
+      modifyRequest = try request.query.decode(
+        Song.Singular.Input.Modification.self
+      )
+    } catch {
+      return .badRequest
+    }
+
+    do {
+      try await songService.updateSong(
+        with: modifyRequest.id,
+        playCount: modifyRequest.playCount,
+        for: userID,
+        on: request.db
+      )
+
+      return .ok
+    } catch SongError.databaseError {
+      return .serviceUnavailable
+    } catch {
+      return .internalServerError
     }
   }
 }
