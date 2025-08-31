@@ -22,122 +22,124 @@ import Fluent
 import Testing
 import VaporTesting
 
-@Suite("SettingServiceTests")
-struct SettingServiceTests {
-  @Test
-  func testInsertSetting() async throws {
-    let settingService = SettingService()
+extension ServiceTests {
+  @Suite("SettingServiceTests")
+  struct SettingServiceTests {
+    @Test
+    func testInsertSetting() async throws {
+      let settingService = SettingService()
 
-    try await withApp(configure: CoreCloudServer.configure) { app in
-      let alice = User(
-        firstName: "Alice",
-        lastName: "Ou",
-        username: "alice@example.com",
-        key: Data(),
-        salt: Data(),
-        masterKeySealedBox: Data(),
-        masterKeySealedBoxSalt: Data(),
-        avatarURLs: "https://example.com/1.png"
-      )
-      try await alice.save(on: app.db)
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        let alice = User(
+          firstName: "Alice",
+          lastName: "Ou",
+          username: "alice@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await alice.save(on: app.db)
 
-      try await settingService.insertSetting(
-        homeBackgroundColor: 0,
-        for: alice.requireID(),
-        on: app.db
-      )
-      let exists = try await Setting.query(on: app.db)
-        .filter(\.$user.$id == alice.requireID())
-        .first()
-      #expect(exists != nil)
-      #expect(exists?.homeBackgroundColor == 0)
-
-      await #expect(throws: SettingError.databaseError) {
         try await settingService.insertSetting(
           homeBackgroundColor: 0,
           for: alice.requireID(),
           on: app.db
         )
-      }
+        let exists = try await Setting.query(on: app.db)
+          .filter(\.$user.$id == alice.requireID())
+          .first()
+        #expect(exists != nil)
+        #expect(exists?.homeBackgroundColor == 0)
 
-      await #expect(throws: SettingError.databaseError) {
-        try await settingService.insertSetting(
-          homeBackgroundColor: 0,
-          for: -1,
+        await #expect(throws: SettingError.databaseError) {
+          try await settingService.insertSetting(
+            homeBackgroundColor: 0,
+            for: alice.requireID(),
+            on: app.db
+          )
+        }
+
+        await #expect(throws: SettingError.databaseError) {
+          try await settingService.insertSetting(
+            homeBackgroundColor: 0,
+            for: -1,
+            on: app.db
+          )
+        }
+      }
+    }
+
+    @Test
+    func testFetchSetting() async throws {
+      let settingService = SettingService()
+
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        await #expect(throws: SettingError.noSuchSetting) {
+          try await settingService.fetchSetting(for: -1, on: app.db)
+        }
+
+        let alice = User(
+          firstName: "Alice",
+          lastName: "Ou",
+          username: "alice@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await alice.save(on: app.db)
+
+        let aliceSetting = try Setting(
+          userID: alice.requireID(),
+          homeBackgroundColor: 12333
+        )
+        try await aliceSetting.save(on: app.db)
+
+        let setting = try await settingService.fetchSetting(
+          for: alice.requireID(),
           on: app.db
         )
+        #expect(setting == aliceSetting.homeBackgroundColor)
       }
     }
-  }
 
-  @Test
-  func testFetchSetting() async throws {
-    let settingService = SettingService()
+    @Test
+    func testModifySetting() async throws {
+      let settingService = SettingService()
 
-    try await withApp(configure: CoreCloudServer.configure) { app in
-      await #expect(throws: SettingError.noSuchSetting) {
-        try await settingService.fetchSetting(for: -1, on: app.db)
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        let alice = User(
+          firstName: "Alice",
+          lastName: "Ou",
+          username: "alice@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await alice.save(on: app.db)
+
+        let aliceSetting = try Setting(
+          userID: alice.requireID(),
+          homeBackgroundColor: 12333
+        )
+        try await aliceSetting.save(on: app.db)
+
+        try await settingService.modifySetting(
+          homeBackgroundColor: -12333,
+          for: alice.requireID(),
+          on: app.db
+        )
+        let modified = try await Setting.query(on: app.db)
+          .filter(\.$user.$id == alice.requireID())
+          .first()
+        #expect(modified != nil)
+        #expect(modified?.homeBackgroundColor == -12333)
       }
-
-      let alice = User(
-        firstName: "Alice",
-        lastName: "Ou",
-        username: "alice@example.com",
-        key: Data(),
-        salt: Data(),
-        masterKeySealedBox: Data(),
-        masterKeySealedBoxSalt: Data(),
-        avatarURLs: "https://example.com/1.png"
-      )
-      try await alice.save(on: app.db)
-
-      let aliceSetting = try Setting(
-        userID: alice.requireID(),
-        homeBackgroundColor: 12333
-      )
-      try await aliceSetting.save(on: app.db)
-
-      let setting = try await settingService.fetchSetting(
-        for: alice.requireID(),
-        on: app.db
-      )
-      #expect(setting == aliceSetting.homeBackgroundColor)
-    }
-  }
-
-  @Test
-  func testModifySetting() async throws {
-    let settingService = SettingService()
-
-    try await withApp(configure: CoreCloudServer.configure) { app in
-      let alice = User(
-        firstName: "Alice",
-        lastName: "Ou",
-        username: "alice@example.com",
-        key: Data(),
-        salt: Data(),
-        masterKeySealedBox: Data(),
-        masterKeySealedBoxSalt: Data(),
-        avatarURLs: "https://example.com/1.png"
-      )
-      try await alice.save(on: app.db)
-
-      let aliceSetting = try Setting(
-        userID: alice.requireID(),
-        homeBackgroundColor: 12333
-      )
-      try await aliceSetting.save(on: app.db)
-
-      try await settingService.modifySetting(
-        homeBackgroundColor: -12333,
-        for: alice.requireID(),
-        on: app.db
-      )
-      let modified = try await Setting.query(on: app.db)
-        .filter(\.$user.$id == alice.requireID())
-        .first()
-      #expect(modified != nil)
-      #expect(modified?.homeBackgroundColor == -12333)
     }
   }
 }

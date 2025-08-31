@@ -23,114 +23,116 @@ import VaporTesting
 
 extension Location.Singular.Input.Insertion: Content { }
 
-@Test("LocationControllerTests")
-func testLocationController() async throws  {
-  try await withApp(configure: CoreCloudServer.configure) { app in
-    try await app.testing().test(
-      .POST,
-      "api/v1/location",
-      afterResponse: { response async throws in
-        #expect(response.status == .unauthorized)
-      }
-    )
+extension ControllerTests {
+  @Test("LocationControllerTests")
+  func testLocationController() async throws  {
+    try await withApp(configure: CoreCloudServer.configure) { app in
+      try await app.testing().test(
+        .POST,
+        "api/v1/location",
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
 
-    try await app.testing().test(
-      .GET,
-      "api/v1/locations",
-      afterResponse: { response async throws in
-        #expect(response.status == .unauthorized)
-      }
-    )
+      try await app.testing().test(
+        .GET,
+        "api/v1/locations",
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
 
-    try await app.testing().test(
-      .POST,
-      "api/v1/user",
-      beforeRequest: { request async throws in
-        try request.content.encode(
-          User.Singular.Input.Insertion(
-            firstName: "Tracy",
-            lastName: "Tang",
+      try await app.testing().test(
+        .POST,
+        "api/v1/user",
+        beforeRequest: { request async throws in
+          try request.content.encode(
+            User.Singular.Input.Insertion(
+              firstName: "Tracy",
+              lastName: "Tang",
+              username: "tracy@example.com",
+              password: "19342Top-Secret",
+              masterPassword: "Top--1-Secret"
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      var cookie: HTTPCookies.Value?
+      try await app.testing().test(
+        .POST,
+        "api/v1/user-token",
+        beforeRequest: { request async throws in
+          request.headers.basicAuthorization = .init(
             username: "tracy@example.com",
-            password: "19342Top-Secret",
-            masterPassword: "Top--1-Secret"
+            password: "19342Top-Secret"
           )
-        )
-      },
-      afterResponse: { response async throws in
-        #expect(response.status == .created)
-      }
-    )
-
-    var cookie: HTTPCookies.Value?
-    try await app.testing().test(
-      .POST,
-      "api/v1/user-token",
-      beforeRequest: { request async throws in
-        request.headers.basicAuthorization = .init(
-          username: "tracy@example.com",
-          password: "19342Top-Secret"
-        )
-        try request.content.encode(
-          UserToken.Singular.Input.Insertion(rememberMe: false)
-        )
-      },
-      afterResponse: { response async throws in
-        #expect(response.status == .created)
-
-        cookie = response
-          .headers
-          .setCookie?
-          .all[CoreCloudServer.COOKIE_NAME]
-        #expect(cookie?.string != nil)
-        #expect(cookie?.path == "/")
-        #expect(cookie?.maxAge == nil)
-        #expect(cookie?.isHTTPOnly == true)
-      }
-    )
-
-    try await app.testing().test(
-      .POST,
-      "api/v1/location",
-      beforeRequest: { request async throws in
-        request.headers.cookie = .init(
-          dictionaryLiteral: (
-            CoreCloudServer.COOKIE_NAME,
-            cookie!
+          try request.content.encode(
+            UserToken.Singular.Input.Insertion(rememberMe: false)
           )
-        )
-        try request.content.encode(
-          Location.Singular.Input.Insertion(
-            name: "Tank",
-            path: "/mnt"
-          )
-        )
-      },
-      afterResponse: { response async throws in
-        #expect(response.status == .created)
-      }
-    )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
 
-    try await app.testing().test(
-      .GET,
-      "api/v1/locations",
-      beforeRequest: { request async throws in
-        request.headers.cookie = .init(
-          dictionaryLiteral: (
-            CoreCloudServer.COOKIE_NAME,
-            cookie!
-          )
-        )
-      },
-      afterResponse: { response async throws in
-        #expect(response.status == .ok)
+          cookie = response
+            .headers
+            .setCookie?
+            .all[CoreCloudServer.COOKIE_NAME]
+          #expect(cookie?.string != nil)
+          #expect(cookie?.path == "/")
+          #expect(cookie?.maxAge == nil)
+          #expect(cookie?.isHTTPOnly == true)
+        }
+      )
 
-        let locations = try response.content.decode(
-          [Location.Plural.Output.Retrieval].self
-        )
-        #expect(locations.count == 1)
-        #expect(locations.first?.name == "Tank")
-        #expect(locations.first?.id == 1)
-      }
-    )
+      try await app.testing().test(
+        .POST,
+        "api/v1/location",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            Location.Singular.Input.Insertion(
+              name: "Tank",
+              path: "/mnt"
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/v1/locations",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .ok)
+
+          let locations = try response.content.decode(
+            [Location.Plural.Output.Retrieval].self
+          )
+          #expect(locations.count == 1)
+          #expect(locations.first?.name == "Tank")
+          #expect(locations.first?.id == 1)
+        }
+      )
+    }
   }
 }

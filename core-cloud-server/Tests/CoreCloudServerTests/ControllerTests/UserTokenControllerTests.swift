@@ -23,126 +23,128 @@ import VaporTesting
 
 extension UserToken.Singular.Input.Insertion: Content { }
 
-@Test("UserTokenControllerTests")
-func testUserTokenController() async throws {
-  try await withApp(configure: CoreCloudServer.configure) { app in
-    try await app.testing().test(
-      .POST,
-      "api/v1/user",
-      beforeRequest: { request async throws in
-        try request.content.encode(
-          User.Singular.Input.Insertion(
-            firstName: "Diana",
-            lastName: "Hsu",
-            username: "diana@example.com",
-            password: "19348Top-Secret",
-            masterPassword: "Top--1-Secret"
+extension ControllerTests {
+  @Test("UserTokenControllerTests")
+  func testUserTokenController() async throws {
+    try await withApp(configure: CoreCloudServer.configure) { app in
+      try await app.testing().test(
+        .POST,
+        "api/v1/user",
+        beforeRequest: { request async throws in
+          try request.content.encode(
+            User.Singular.Input.Insertion(
+              firstName: "Diana",
+              lastName: "Hsu",
+              username: "diana@example.com",
+              password: "19348Top-Secret",
+              masterPassword: "Top--1-Secret"
+            )
           )
-        )
-      },
-      afterResponse: { response async throws in
-        #expect(response.status == .created)
-      }
-    )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
 
-    try await app.testing().test(
-      .POST,
-      "api/v1/user-token",
-      beforeRequest: { request async throws in
-        request.headers.basicAuthorization = .init(
-          username: "diana@example.com",
-          password: "19348Top-Secret"
-        )
-        try request.content.encode(
-          UserToken.Singular.Input.Insertion(rememberMe: true)
-        )
-      },
-      afterResponse: { response async throws in
-        #expect(response.status == .created)
+      try await app.testing().test(
+        .POST,
+        "api/v1/user-token",
+        beforeRequest: { request async throws in
+          request.headers.basicAuthorization = .init(
+            username: "diana@example.com",
+            password: "19348Top-Secret"
+          )
+          try request.content.encode(
+            UserToken.Singular.Input.Insertion(rememberMe: true)
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
 
-        let cookie = response
-          .headers
-          .setCookie?
-          .all[CoreCloudServer.COOKIE_NAME]
-        #expect(cookie?.string != nil)
-        #expect(cookie?.path == "/")
-        #expect(cookie?.maxAge == CoreCloudServer.COOKIE_MAX_AGE)
-        #expect(cookie?.isHTTPOnly == true)
-      }
-    )
+          let cookie = response
+            .headers
+            .setCookie?
+            .all[CoreCloudServer.COOKIE_NAME]
+          #expect(cookie?.string != nil)
+          #expect(cookie?.path == "/")
+          #expect(cookie?.maxAge == CoreCloudServer.COOKIE_MAX_AGE)
+          #expect(cookie?.isHTTPOnly == true)
+        }
+      )
 
-    try await app.testing().test(
-      .POST,
-      "api/v1/user-token",
-      beforeRequest: { request async throws in
-        request.headers.basicAuthorization = .init(
-          username: "diana@example.com",
-          password: "19348Top-Secret"
-        )
-        try request.content.encode(
-          UserToken.Singular.Input.Insertion(rememberMe: false)
-        )
-      },
-      afterResponse: { response async throws in
-        #expect(response.status == .created)
+      try await app.testing().test(
+        .POST,
+        "api/v1/user-token",
+        beforeRequest: { request async throws in
+          request.headers.basicAuthorization = .init(
+            username: "diana@example.com",
+            password: "19348Top-Secret"
+          )
+          try request.content.encode(
+            UserToken.Singular.Input.Insertion(rememberMe: false)
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
 
-        let cookie = response
-          .headers
-          .setCookie?
-          .all[CoreCloudServer.COOKIE_NAME]
-        #expect(cookie?.string != nil)
-        #expect(cookie?.path == "/")
-        #expect(cookie?.maxAge == nil)
-        #expect(cookie?.isHTTPOnly == true)
-      }
-    )
+          let cookie = response
+            .headers
+            .setCookie?
+            .all[CoreCloudServer.COOKIE_NAME]
+          #expect(cookie?.string != nil)
+          #expect(cookie?.path == "/")
+          #expect(cookie?.maxAge == nil)
+          #expect(cookie?.isHTTPOnly == true)
+        }
+      )
 
-    try await app.testing().test(
-      .POST,
-      "api/v1/user-token",
-      beforeRequest: { request async throws in
-        request.headers.basicAuthorization = .init(
-          username: "diana@example.com",
-          password: "19348Top-Secret"
-        )
-      },
-      afterResponse: { response async throws in
-        #expect(response.status == .badRequest)
-      }
-    )
+      try await app.testing().test(
+        .POST,
+        "api/v1/user-token",
+        beforeRequest: { request async throws in
+          request.headers.basicAuthorization = .init(
+            username: "diana@example.com",
+            password: "19348Top-Secret"
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .badRequest)
+        }
+      )
 
-    try await app.testing().test(
-      .POST,
-      "api/v1/user-token",
-      beforeRequest: { request async throws in
-        request.headers.basicAuthorization = .init(
-          username: "diana@example.com",
-          password: "12345678"
-        )
-        try request.content.encode(
-          UserToken.Singular.Input.Insertion(rememberMe: true)
-        )
-      },
-      afterResponse: { response async throws in
-        #expect(response.status == .unauthorized)
-      }
-    )
+      try await app.testing().test(
+        .POST,
+        "api/v1/user-token",
+        beforeRequest: { request async throws in
+          request.headers.basicAuthorization = .init(
+            username: "diana@example.com",
+            password: "12345678"
+          )
+          try request.content.encode(
+            UserToken.Singular.Input.Insertion(rememberMe: true)
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
 
-    try await app.testing().test(
-      .POST,
-      "api/v1/user-token",
-      beforeRequest: { request async throws in
-        request.headers.basicAuthorization = .init(
-          username: "sue@example.com",
-          password: "19348Top-Secret"
-        )
-        try request.content.encode(
-          UserToken.Singular.Input.Insertion(rememberMe: true)
-        )
-      },
-      afterResponse: { response async throws in
-        #expect(response.status == .unauthorized)
-      }
-    )
+      try await app.testing().test(
+        .POST,
+        "api/v1/user-token",
+        beforeRequest: { request async throws in
+          request.headers.basicAuthorization = .init(
+            username: "sue@example.com",
+            password: "19348Top-Secret"
+          )
+          try request.content.encode(
+            UserToken.Singular.Input.Insertion(rememberMe: true)
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
+    }
   }
 }

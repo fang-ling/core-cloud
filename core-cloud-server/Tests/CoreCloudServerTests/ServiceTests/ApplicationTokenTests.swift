@@ -21,28 +21,30 @@
 import Testing
 import VaporTesting
 
-@Suite("ApplicationTokenTests")
-struct ApplicationTokenTests {
-  @Test
-  func testCreateApplicationToken() async throws {
-    let applicationTokenService = ApplicationTokenService()
+extension ServiceTests {
+  @Suite("ApplicationTokenTests")
+  struct ApplicationTokenTests {
+    @Test
+    func testCreateApplicationToken() async throws {
+      let applicationTokenService = ApplicationTokenService()
 
-    try await withApp(configure: CoreCloudServer.configure) { _ in
-      let masterKey1 = SymmetricKey(size: .bits256)
-      let appToken = applicationTokenService.createApplicationToken(
-        masterKey: masterKey1
-      )
-      #expect(appToken.bitCount == 256)
+      try await withApp(configure: CoreCloudServer.configure) { _ in
+        let masterKey1 = SymmetricKey(size: .bits256)
+        let appToken = applicationTokenService.createApplicationToken(
+          masterKey: masterKey1
+        )
+        #expect(appToken.bitCount == 256)
 
-      let appToken2 = applicationTokenService.createApplicationToken(
-        masterKey: masterKey1
-      )
-      #expect(appToken == appToken2)
+        let appToken2 = applicationTokenService.createApplicationToken(
+          masterKey: masterKey1
+        )
+        #expect(appToken == appToken2)
 
-      let appToken3 = applicationTokenService.createApplicationToken(
-        masterKey: SymmetricKey(size: .bits256)
-      )
-      #expect(appToken != appToken3)
+        let appToken3 = applicationTokenService.createApplicationToken(
+          masterKey: SymmetricKey(size: .bits256)
+        )
+        #expect(appToken != appToken3)
+      }
     }
   }
 }
