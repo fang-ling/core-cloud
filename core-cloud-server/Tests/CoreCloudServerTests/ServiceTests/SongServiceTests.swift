@@ -216,5 +216,78 @@ extension ServiceTests {
         #expect(songs.first?.sampleRate == 44100)
       }
     }
+
+    @Test
+    func testUpdateSong() async throws {
+      let songService = SongService()
+
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        let eva = User(
+          firstName: "Eva",
+          lastName: "Chan",
+          username: "eva@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await eva.save(on: app.db)
+
+        let location = try Location(
+          name: "Tank",
+          path: "/mnt/tank1",
+          userID: eva.requireID()
+        )
+        try await location.save(on: app.db)
+
+        let file = try File(
+          name: "Por Una Cabeza",
+          kind: "Apple MPEG-4 Audio",
+          size: 123,
+          checksum: Data(),
+          application: "Music",
+          decryptionKeySealedBox: Data(),
+          locationID: 1,
+          userID: eva.requireID()
+        )
+        try await file.save(on: app.db)
+
+        let song = try Song(
+          title: "Por Una Cabeza",
+          artist: "Thomas Newman",
+          genre: "Soundtrack",
+          year: 1992,
+          trackNumber: 7,
+          discNumber: 1,
+          playCount: 0,
+          sampleSize: 16,
+          sampleRate: 44100,
+          fileID: file.requireID(),
+          userID: eva.requireID()
+        )
+        try await song.save(on: app.db)
+
+        try await songService.updateSong(
+          with: song.requireID(),
+          playCount: 19358,
+          for: eva.requireID(),
+          on: app.db
+        )
+
+        let retrievedSong = try await Song.query(on: app.db)
+          .first()
+        #expect(retrievedSong?.id == 1)
+        #expect(retrievedSong?.title == "Por Una Cabeza")
+        #expect(retrievedSong?.artist == "Thomas Newman")
+        #expect(retrievedSong?.genre == "Soundtrack")
+        #expect(retrievedSong?.year == 1992)
+        #expect(retrievedSong?.trackNumber == 7)
+        #expect(retrievedSong?.discNumber == 1)
+        #expect(retrievedSong?.playCount == 19358)
+        #expect(retrievedSong?.sampleSize == 16)
+        #expect(retrievedSong?.sampleRate == 44100)
+      }
+    }
   }
 }

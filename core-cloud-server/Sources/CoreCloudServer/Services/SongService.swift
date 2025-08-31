@@ -140,4 +140,39 @@ struct SongService {
       throw SongError.databaseError
     }
   }
+
+  /**
+   * Updates the info of a song for a specified user.
+   *
+   * - Parameters:
+   *   - id: An identifier for the song to be updated.
+   *   - playCount: The new play count for the song. If `nil`, the play count
+   *                will not be updated.
+   *   - userID: An identifier for the user updating the song.
+   *   - database: The database instance where the update will occur.
+   *
+   * - Throws:
+   *   - ``SongError/databaseError``: if there is an issue accessing the
+   *                                  database.
+   */
+  func updateSong(
+    with id: Song.IDValue,
+    playCount: Int64?,
+    for userID: User.IDValue,
+    on database: Database
+  ) async throws {
+    do {
+      let query = Song.query(on: database)
+        .filter(\.$id == id)
+        .filter(\.$user.$id == userID)
+
+      if let playCount {
+        query.set(\.$playCount, to: playCount)
+      }
+
+      try await query.update()
+    } catch {
+      throw SongError.databaseError
+    }
+  }
 }
