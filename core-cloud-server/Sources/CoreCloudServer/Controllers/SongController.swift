@@ -32,6 +32,20 @@ struct SongController: RouteCollection {
       .post(use: insertSongHandler)
   }
 
+  /**
+   * - URL: POST /api/v1/song
+   *
+   * - Response Codes:
+   *   - 201 Created: The request has been fulfilled, resulting in the creation
+   *                  of a new song.
+   *   - 400 Bad Request: The server cannot or will not process the request due
+   *                      to an apparent client error.
+   *   - 401 Unauthorized: The authentication is required and has failed.
+   *   - 500 Internal Server Error: A response indicating an error occurred on
+   *                                the server.
+   *   - 503 Service Unavailable: A response indicating that the server is not
+   *                              ready to handle the request.
+   */
   func insertSongHandler(request: Request) async -> HTTPStatus {
     let userID: User.IDValue
     do {
