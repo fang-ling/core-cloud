@@ -25,14 +25,16 @@ import React from "react"
 export default function AsyncImage({
   urls = [],
   widthClassName = "",
-  heightClassName
+  heightClassName = "",
+  marginClassName = ""
 }: {
   /**
    * The URL of the image to display.
    */
   urls?: string[],
   widthClassName?: string,
-  heightClassName?: string
+  heightClassName?: string,
+  marginClassName?: string
 }) {
   return (
     <picture>
@@ -47,7 +49,7 @@ export default function AsyncImage({
       }
       <img
         src={urls[urls.length - 1]}
-        className={`${widthClassName} ${heightClassName}`}
+        className={`${widthClassName} ${heightClassName} ${marginClassName}`}
       />
     </picture>
   )

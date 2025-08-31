@@ -31,20 +31,31 @@ export default function useSheet({
 
   /* MARK: - Event handlers */
   function viewDidAppear() {
+    isPresented.setValue(true)
     document.body.style.setProperty("overflow", "hidden")
   }
 
   async function closeButtonDidClick() {
+    await dismissCleanup()
+  }
+
+  async function viewDidDisappear() {
+    await dismissCleanup()
+  }
+
+  /* MARK: - Utilities */
+  async function dismissCleanup() {
     setIsClosing(true)
-    await new Promise(resolve => setTimeout(resolve, 200))
-    isPresented.toggle()
     onDismiss?.()
+    await new Promise(resolve => setTimeout(resolve, 200))
     document.body.style.removeProperty("overflow")
+    isPresented.setValue(false)
   }
 
   return {
     isClosing,
     viewDidAppear,
-    closeButtonDidClick
+    closeButtonDidClick,
+    viewDidDisappear
   }
 }

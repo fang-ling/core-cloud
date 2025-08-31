@@ -19,8 +19,9 @@
 
 import { BoolBinding } from "../binding"
 import { createPortal } from "react-dom"
-import React from "react"
+import React, { useEffect } from "react"
 import useSheet from "../view-models/sheet"
+import Image from "./image"
 
 /**
  * A view that presents a sheet when a binding to a Boolean value that you
@@ -35,16 +36,26 @@ import useSheet from "../view-models/sheet"
 export default function Sheet({
   isPresented,
   onDismiss,
+  closeButtonActiveBackgroundStyleClassName = "active:bg-appTint/16",
   children
 }: {
   isPresented: BoolBinding
   onDismiss?: () => void,
+  closeButtonActiveBackgroundStyleClassName?: string,
   children: React.ReactNode
 }) {
   const viewModel = useSheet({
     isPresented: isPresented,
     onDismiss: onDismiss
   })
+
+  useEffect(() => {
+    viewModel.viewDidAppear()
+
+    return () => {
+      viewModel.viewDidDisappear()
+    }
+  }, [])
 
   return createPortal(
     (
@@ -79,31 +90,16 @@ export default function Sheet({
                 className={
                   "cursor-pointer px-1.5 mt-3 ml-2.5 rounded-lg h-7 min-w-7 " +
                     "flex items-center justify-center hover:bg-fillTertiary " +
-                    "active:bg-appTint/16 group"
+                    "fill-labelPrimary active:fill-labelQuaternary " +
+                    closeButtonActiveBackgroundStyleClassName
                 }
                 onClick={() => viewModel.closeButtonDidClick()}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 12.731 12.742"
-                  className={
-                    "fill-labelPrimary size-3.5 " +
-                      "group-active:fill-labelQuaternary"
-                  }
-                >
-                  <path
-                    d={
-                      "M.287 12.454c.39.383 1.054.375 1.422.008l4.657-4.657 " +
-                        "4.652 4.654c.378.378 1.035.38 " +
-                        "1.42-.007.385-.39.387-1.037.01-1.417l-4.653-4.66 " +
-                        "4.653-4.652c.377-.377.38-1.03-.01-1.414-.39-.39-" +
-                        "1.042-.393-1.42-.01L6.366 4.95 1.71.296C1.34-.074" +
-                        ".672-.089.287.306-.095.696-.088 1.353.279 " +
-                        "1.72l4.658 4.655L.279 11.04c-.367.365-.38 1.03.008 " +
-                        "1.414z"
-                    }
-                  />
-                </svg>
+                <Image
+                  systemName="xmark"
+                  widthClassName="w-3.5"
+                  weight="semibold"
+                />
               </button>
             </div>
             <div className="flex relative items-center p-2.5 flex-col">

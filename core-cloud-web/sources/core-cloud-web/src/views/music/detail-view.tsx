@@ -25,9 +25,46 @@ import Image from "ui/image"
 import Text from "ui/text"
 import VStack from "ui/v-stack"
 import ZStack from "ui/z-stack"
+import SongDetailView from "./song-detail-view"
+import { useEffect } from "react"
 
-export default function DetailView() {
-  const viewModel = useDetailView()
+export default function DetailView({
+  selectedSidebarItemKey,
+  songs,
+  setSongs
+}: {
+  selectedSidebarItemKey: string,
+  songs: {
+    id: number,
+    title: string,
+    artist: string,
+    genre: string,
+    year: number,
+    trackNumber: number,
+    discNumber: number,
+    playCount: number,
+    sampleSize: number,
+    sampleRate: number,
+    fileID: number
+  }[],
+  setSongs: React.Dispatch<React.SetStateAction<{
+    id: number,
+    title: string,
+    artist: string,
+    genre: string,
+    year: number,
+    trackNumber: number,
+    discNumber: number,
+    playCount: number,
+    sampleSize: number,
+    sampleRate: number,
+    fileID: number
+  }[]>>
+}) {
+  const viewModel = useDetailView({
+    songs: songs,
+    setSongs: setSongs
+  })
 
   const PLAYER_OUTER_BUTTON_STYLE = (
     "w-7.5 h-8 flex items-center justify-center transition-colors " +
@@ -38,6 +75,14 @@ export default function DetailView() {
       "ease-[ease-out] fill-music-systemSecondary " +
       "hover:fill-music-systemPrimary-vibrant"
   )
+
+  useEffect(() => {
+    const cleanup = viewModel.currentPlayingSongDidChange()
+
+    return () => {
+      cleanup?.()
+    }
+  }, [viewModel.currentPlayingSong])
 
   return (
     <VStack>
@@ -71,6 +116,8 @@ export default function DetailView() {
             <HStack marginClassName="mx-auto">
               <button
                 className={
+                  /* TODO: support shuffle */
+                  "opacity-40 pointer-events-none " +
                   `${PLAYER_OUTER_BUTTON_STYLE} ` + (
                     viewModel.isShuffleEnabled
                       ? "fill-music-keyColor"
@@ -102,7 +149,13 @@ export default function DetailView() {
                 />
               </button>
               <button
-                className={`${PLAYER_INNER_BUTTON_STYLE} cursor-pointer`}
+                className={
+                  `${PLAYER_INNER_BUTTON_STYLE} ` + (
+                    viewModel.currentPlayingSong
+                      ? "cursor-pointer"
+                      : "opacity-40 pointer-events-none"
+                  )
+                }
                 onClick={() => viewModel.playPauseButtonDidClick()}
               >
                 <Image
@@ -127,6 +180,8 @@ export default function DetailView() {
               </button>
               <button
                 className={
+                  /* TODO: support repeat */
+                  "opacity-40 pointer-events-none " +
                   `${PLAYER_OUTER_BUTTON_STYLE} ` + (
                     viewModel.repeatMode > 0
                       ? "fill-music-keyColor"
@@ -257,6 +312,9 @@ export default function DetailView() {
                   heightClassName="h-0.75"
                   borderClassName="rounded-[1.25px]"
                   backgroundStyleClassName="bg-music-playerScrubberTrack"
+                  visibilityClassName={
+                    !viewModel.currentPlayingSong ? "hidden" : ""
+                  }
                   style={{
                     gridRowStart: "track",
                     gridColumnStart: "track",
@@ -269,7 +327,10 @@ export default function DetailView() {
                     backgroundStyleClassName="bg-music-playerLCDBGFill"
                     positionClassName="absolute left-0"
                     style={{
-                      width: "50%"
+                      width: (
+                        (viewModel.elapsed / viewModel.totalRef.current * 100) +
+                          "%"
+                      )
                     }}
                   >
                     <HStack
@@ -285,7 +346,10 @@ export default function DetailView() {
                     positionClassName="absolute bottom-0 -translate-x-1/2"
                     backgroundStyleClassName="bg-music-playerLCDBGFill"
                     style={{
-                      left: "50%"
+                      left: (
+                        (viewModel.elapsed / viewModel.totalRef.current * 100) +
+                          "%"
+                      )
                     }}
                     visibilityClassName="not-group-hover:hidden"
                   >
@@ -392,7 +456,13 @@ export default function DetailView() {
 
         <HStack>
           <button
-            className={`${PLAYER_INNER_BUTTON_STYLE} cursor-pointer mr-2.25`}
+            className={
+              `${PLAYER_INNER_BUTTON_STYLE} mr-2.25 ` + (
+                viewModel.currentPlayingSong
+                  ? "cursor-pointer"
+                  : "opacity-40 pointer-events-none"
+              )
+            }
             onClick={() => viewModel.playPauseButtonDidClick()}
           >
             <Image
@@ -417,6 +487,16 @@ export default function DetailView() {
           </button>
         </HStack>
       </HStack>
+
+      {
+        selectedSidebarItemKey === "songs" && (
+          <SongDetailView
+            songs={songs}
+            setSongs={setSongs}
+            setCurrentPlayingSong={viewModel.setCurrentPlayingSong}
+          />
+        )
+      }
     </VStack>
   )
 }

@@ -25,9 +25,18 @@ import SharedFooter from "../shared-footer"
 import SharedSidebar from "../shared-sidebar"
 import VStack from "ui/v-stack"
 import DetailView from "./detail-view"
+import HStack from "ui/h-stack"
+import Image from "ui/image"
+import Text from "ui/text"
+import SongSheet from "./song-sheet"
+import { useEffect } from "react"
 
 export default function ContentView() {
   const viewModel = useContentView()
+
+  useEffect(() => {
+    viewModel.viewDidAppear()
+  }, [])
 
   return (
     <VStack heightClassName="h-dvh">
@@ -43,18 +52,55 @@ export default function ContentView() {
               selectedItemKey,
               onChange
             }) => (
-              <SharedSidebar
-                sections={viewModel.sectionsRef.current}
-                selectedItemKey={selectedItemKey}
-                itemForegroundStyleClassName="fill-music-keyColor"
-                itemBackgroundStyleClassName="active:bg-music-keyColor"
-                onSelectedItemKeyChange={(newSelectedItemKey) => {
-                  onChange(newSelectedItemKey)
-                }}
-              />
+              <>
+                <SharedSidebar
+                  sections={viewModel.sectionsRef.current}
+                  selectedItemKey={selectedItemKey}
+                  itemForegroundStyleClassName="fill-music-keyColor"
+                  itemBackgroundStyleClassName="active:bg-music-keyColor"
+                  onSelectedItemKeyChange={(newSelectedItemKey) => {
+                    onChange(newSelectedItemKey)
+                  }}
+                />
+                <HStack
+                  marginClassName="mt-auto"
+                  paddingClassName="pb-2.5"
+                >
+                  <button
+                    className={
+                      "cursor-pointer rounded-lg text-music-keyColor px-2.5 " +
+                        "flex items-center h-7.5 hover:bg-fillTertiary " +
+                        "active:bg-music-keyColor/16 " +
+                        "active:text-music-keyColor/30"
+                    }
+                    onClick={() => viewModel.newSongButtonDidClick()}
+                  >
+                    <HStack
+                      widthClassName="w-4.75"
+                      marginClassName="mr-1"
+                      foregroundStyleClassName="fill-current"
+                    >
+                      <Image
+                        systemName="plus.circle"
+                        widthClassName="w-full"
+                      />
+                    </HStack>
+                    <Text
+                      textKey="New Song"
+                      fontSizeClassName="text-[15px]"
+                      fontWeightClassName="font-semibold"
+                      lineHeightClassName="leading-4.5"
+                    />
+                  </button>
+                </HStack>
+              </>
             )}
             detail={() => (
-              <DetailView />
+              <DetailView
+                songs={viewModel.songs}
+                setSongs={viewModel.setSongs}
+                selectedSidebarItemKey={viewModel.selectedSidebarItemKey}
+              />
             )}
             selectedSidebarItemKey={viewModel.selectedSidebarItemKey}
             onSelectedSidebarItemKeyChange={(newSelectedSidebarItemKey) => {
@@ -76,11 +122,20 @@ export default function ContentView() {
         !viewModel.isPassed && (
           <>
             <SharedBodyguard
-              onPass={() => {}}
+              onPass={() => viewModel.checkPointDidPass()}
               inputClassName="focus:border-music-keyColor"
             />
             <SharedFooter />
           </>
+        )
+      }
+
+      {
+        viewModel.isNewSongSheetPresented.value && (
+          <SongSheet
+            isPresented={viewModel.isNewSongSheetPresented}
+            onCreate={() => viewModel.newSongDidCreate()}
+          />
         )
       }
     </VStack>

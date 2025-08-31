@@ -29,7 +29,8 @@ export default function ZStack({
   heightClassName = "",
   borderClassName = "",
   style,
-  backgroundStyleClassName,
+  backgroundStyleClassName = "",
+  visibilityClassName = "",
   children
 }: {
   /**
@@ -42,13 +43,15 @@ export default function ZStack({
   borderClassName?: string,
   style?: React.CSSProperties,
   backgroundStyleClassName?: string,
+  visibilityClassName?: string,
   children: React.ReactNode
 }) {
   return (
     <div
       className={
         `relative flex ${alignment.className} ${widthClassName} ` +
-          `${heightClassName} ${borderClassName} ${backgroundStyleClassName}`
+          `${heightClassName} ${borderClassName} ` +
+          `${backgroundStyleClassName} ${visibilityClassName}`
       }
       style={style}
     >

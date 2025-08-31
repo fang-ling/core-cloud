@@ -17,12 +17,15 @@
 //  limitations under the License.
 //
 
+import ApplicationTokenService from "@/services/application-token-service"
+import SongService from "@/services/song-service"
 import { useRef, useState } from "react"
+import { useBinding } from "ui/binding"
 
 export default function useContentView() {
-  const [isPassed, setIsPassed] = useState(true)
+  const [isPassed, setIsPassed] = useState(false)
   const [selectedSidebarItemKey, setSelectedSidebarItemKey] = useState(
-    "artists"
+    "songs"
   )
   const sectionsRef = useRef([{
     header: "Library",
@@ -30,26 +33,89 @@ export default function useContentView() {
       key: "artists",
       symbolName: "music.microphone",
       title: "Artists"
-    },*/{
+    },{
       key: "albums",
       symbolName: "square.stack",
       title: "Albums"
-    },{
+   },*/{
       key: "songs",
       symbolName: "music.note",
       title: "Songs"
     }]
   }])
+  const isNewSongSheetPresented = useBinding(false)
+  const [songs, setSongs] = useState<{
+    id: number,
+    title: string,
+    artist: string,
+    genre: string,
+    year: number,
+    trackNumber: number,
+    discNumber: number,
+    playCount: number,
+    sampleSize: number,
+    sampleRate: number,
+    fileID: number
+  }[]>([])
+  /*const [albums, setAlbums] = useState([])*/
 
   /* MARK: - Event handlers */
   function selectedSidebarItemKeyDidChange(newSelectedSidebarItemKey: string) {
     setSelectedSidebarItemKey(newSelectedSidebarItemKey)
   }
 
+  function newSongButtonDidClick() {
+    isNewSongSheetPresented.toggle()
+  }
+
+  async function newSongDidCreate() {
+    if (selectedSidebarItemKey !== "songs") {
+      return
+    }
+
+    let newSongs = await SongService.fetchSongs()
+    setSongs(
+      newSongs.map(newSong => {
+        return {
+          id: newSong.id,
+          title: newSong.title,
+          artist: newSong.artist,
+          genre: newSong.genre,
+          year: newSong.year,
+          trackNumber: newSong.trackNumber,
+          discNumber: newSong.discNumber,
+          playCount: newSong.playCount,
+          sampleSize: newSong.sampleSize,
+          sampleRate: newSong.sampleRate,
+          fileID: newSong.fileID
+        }
+      })
+    )
+  }
+
+  function checkPointDidPass() {
+    setIsPassed(true)
+  }
+
+  async function viewDidAppear() {
+    /* TODO: Add loading, like drive */
+    const passed = await ApplicationTokenService.peekApplicationToken()
+    if (passed) {
+      setIsPassed(passed)
+    }
+  }
+
   return {
     isPassed,
     selectedSidebarItemKey,
     sectionsRef,
-    selectedSidebarItemKeyDidChange
+    isNewSongSheetPresented,
+    songs,
+    setSongs,
+    selectedSidebarItemKeyDidChange,
+    newSongButtonDidClick,
+    newSongDidCreate,
+    checkPointDidPass,
+    viewDidAppear
   }
 }

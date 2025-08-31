@@ -46,17 +46,59 @@ export default class NewLocalizer {
     "Albums": {
       "zh-TW": "專輯"
     },
+    "Artist": {
+      "zh-TW": "藝人"
+    },
     "Artists": {
       "zh-TW": "藝人"
+    },
+    "Create": {
+      "zh-TW": "建立"
+    },
+    "Disc Number": {
+      "zh-TW": "光碟編號"
+    },
+    "Genre": {
+      "zh-TW": "類型"
     },
     "Library": {
       "zh-TW": "資料庫"
     },
-    "Songs": {
-      "zh-TW": "歌曲"
+    "Loading...": {
+      "zh-TW": "正在載入…"
+    },
+    "New Song": {
+      "zh-TW": "新歌曲"
     },
     "Not Playing": {
       "zh-TW": "未在播放"
+    },
+    "Play Count": {
+      "zh-TW": "播放次數"
+    },
+    "Sample Rate": {
+      "zh-TW": "取樣頻率"
+    },
+    "Sample Size": {
+      "zh-TW": "取樣大小"
+    },
+    "Songs": {
+      "zh-TW": "歌曲"
+    },
+    "Soundtrack": {
+      "zh-TW": "原聲帶"
+    },
+    "Title": {
+      "zh-TW": "名稱"
+    },
+    "Track Number": {
+      "zh-TW": "音軌編號"
+    },
+    "Year": {
+      "zh-TW": "年份"
+    },
+    "Unable to create song. Try again later.": {
+      "zh-TW": "無法建立歌曲。請稍後再試。"
     }
   }
 }
