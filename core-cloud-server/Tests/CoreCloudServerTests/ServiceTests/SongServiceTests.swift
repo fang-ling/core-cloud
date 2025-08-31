@@ -204,6 +204,7 @@ extension ServiceTests {
           on: app.db
         )
         #expect(songs.count > 0)
+        #expect(songs.first?.id == 1)
         #expect(songs.first?.title == "Por Una Cabeza")
         #expect(songs.first?.artist == "Thomas Newman")
         #expect(songs.first?.genre == "Soundtrack")

@@ -104,6 +104,7 @@ struct SongService {
     for userID: User.IDValue,
     on database: Database
   ) async throws -> [(
+    id: Int64,
     title: String,
     artist: String,
     genre: String,
@@ -120,8 +121,9 @@ struct SongService {
         .filter(\.$user.$id == userID)
         .all()
 
-      return songs.map { song in
+      return try songs.map { song in
         (
+          id: try song.requireID(),
           title: song.title,
           artist: song.artist,
           genre: song.genre,
