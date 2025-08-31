@@ -55,14 +55,18 @@ struct SongController: RouteCollection {
       return .badRequest
     }
 
-    let fileKind: String
+    let (fileKind, fileApplication): (String, String)
     do {
-      fileKind = try await fileService.getFile(
+      (fileKind, fileApplication) = try await fileService.getFile(
         by: insertRequest.fileID,
         for: userID,
         on: request.db
       )
     } catch {
+      return .badRequest
+    }
+
+    if fileApplication != "Music" {
       return .badRequest
     }
 

@@ -226,6 +226,67 @@ extension ControllerTests {
         }
       )
 
+      let sixBytes = Data([UInt8].random(count: 6))
+      let sixByteSHA512 = Data(SHA512.hash(data: sixBytes))
+        .base64EncodedString()
+        .addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+
+      try await app.testing().test(
+        .POST,
+        "api/v1/file" +
+        "?name=byte" +
+        "&kind=Apple%20MPEG-4%20Audio" +
+        "&size=6" +
+        "&checksum=\(sixByteSHA512)" +
+        "&application=Photos" +
+        "&locationID=1",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            ), (
+              CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME,
+              token!
+            )
+          )
+          request.body = .init(data: sixBytes)
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/v1/song",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            Song.Singular.Input.Insertion(
+              title: "Por Una Cabeza",
+              artist: "Thomas Newman",
+              genre: "Soundtrack",
+              year: 1997,
+              trackNumber: 7,
+              discNumber: 1,
+              playCount: 0,
+              sampleSize: 16,
+              sampleRate: 44100,
+              fileID: 2
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .badRequest)
+        }
+      )
+
       let tenBytes = Data([UInt8].random(count: 10))
       let tenByteSHA512 = Data(SHA512.hash(data: tenBytes))
         .base64EncodedString()
@@ -278,7 +339,7 @@ extension ControllerTests {
               playCount: 0,
               sampleSize: 16,
               sampleRate: 44100,
-              fileID: 2
+              fileID: 3
             )
           )
         },
@@ -308,7 +369,7 @@ extension ControllerTests {
               playCount: 0,
               sampleSize: 16,
               sampleRate: 44100,
-              fileID: 2
+              fileID: 3
             )
           )
         },
