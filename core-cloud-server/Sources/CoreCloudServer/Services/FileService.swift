@@ -64,6 +64,7 @@ struct FileService {
    *
    * - Returns:
    *   - kind: The kind of the file.
+   *   - application: The application of the file.
    *
    * - Throws:
    *   - ``FileError/noSuchFile``: if the file is not found.
@@ -75,7 +76,8 @@ struct FileService {
     for userID: User.IDValue,
     on database: Database
   ) async throws -> (
-    /*kind: */String
+    kind: String,
+    application: String
   ) {
     do {
       guard let file = try await File.query(on: database)
@@ -86,7 +88,10 @@ struct FileService {
         throw FileError.noSuchFile
       }
 
-      return file.kind
+      return (
+        kind: file.kind,
+        application: file.application
+      )
     } catch FileError.noSuchFile {
       throw FileError.noSuchFile
     } catch {

@@ -69,12 +69,13 @@ extension ServiceTests {
         )
         try await file.save(on: app.db)
 
-        let retrievedFileKind = try await fileService.getFile(
+        let retrievedFile = try await fileService.getFile(
           by: file.requireID(),
           for: lorna.requireID(),
           on: app.db
         )
-        #expect(retrievedFileKind == "JPEG Image")
+        #expect(retrievedFile.kind == "JPEG Image")
+        #expect(retrievedFile.application == "Photos")
       }
     }
   }
