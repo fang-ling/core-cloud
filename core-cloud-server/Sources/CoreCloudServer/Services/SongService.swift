@@ -76,4 +76,66 @@ struct SongService {
       throw SongError.databaseError
     }
   }
+
+  /**
+   * Returns a list of songs for a specified user.
+   *
+   * - Parameters:
+   *   - userID: An identifier for the user whose songs are being retrieved.
+   *   - database: The database instance from which the songs will be fetched.
+   *
+   * - Returns: An array of tuples, each containing the song details:
+   *   - `title`: The title of the song.
+   *   - `artist`: The artist of the song.
+   *   - `genre`: The genre of the song.
+   *   - `year`: The release year of the song.
+   *   - `trackNumber`: The track number in the album.
+   *   - `discNumber`: The disc number for multi-disc albums.
+   *   - `playCount`: The number of times the song has been played.
+   *   - `sampleSize`: The size of the audio sample.
+   *   - `sampleRate`: The audio sample rate.
+   *   - `fileID`: The identifier for the audio file.
+   *
+   * - Throws:
+   *   - ``SongError/databaseError``: if there is an issue accessing the
+   *                                  database.
+   */
+  func getSongs(
+    for userID: User.IDValue,
+    on database: Database
+  ) async throws -> [(
+    title: String,
+    artist: String,
+    genre: String,
+    year: Int64,
+    trackNumber: Int64,
+    discNumber: Int64,
+    playCount: Int64,
+    sampleSize: Int64,
+    sampleRate: Int64,
+    fileID: Int64
+  )] {
+    do {
+      let songs = try await Song.query(on: database)
+        .filter(\.$user.$id == userID)
+        .all()
+
+      return songs.map { song in
+        (
+          title: song.title,
+          artist: song.artist,
+          genre: song.genre,
+          year: song.year,
+          trackNumber: song.trackNumber,
+          discNumber: song.discNumber,
+          playCount: song.playCount,
+          sampleSize: song.sampleSize,
+          sampleRate: song.sampleRate,
+          fileID: song.$file.id
+        )
+      }
+    } catch {
+      throw SongError.databaseError
+    }
+  }
 }
