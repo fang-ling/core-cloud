@@ -118,3 +118,27 @@ extension Song {
     static let updatedAt: FieldKey = "updated_at"
   }
 }
+
+extension Song {
+  enum Singular { }
+  enum Plural { }
+}
+
+extension Song.Singular {
+  enum Input { }
+}
+
+extension Song.Singular.Input {
+  struct Insertion: Codable {
+    var title: String
+    var artist: String
+    var genre: String
+    var year: Int64
+    var trackNumber: Int64
+    var discNumber: Int64
+    var playCount: Int64
+    var sampleSize: Int64
+    var sampleRate: Int64
+    var fileID: Int64
+  }
+}

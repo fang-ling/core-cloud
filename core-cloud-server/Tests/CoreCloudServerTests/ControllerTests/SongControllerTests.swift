@@ -1,0 +1,321 @@
+//
+//  SongControllerTests.swift
+//  core-cloud-server
+//
+//  Created by Fang Ling on 2025/8/31.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
+@testable import CoreCloudServer
+import Testing
+import VaporTesting
+
+extension Song.Singular.Input.Insertion: Content { }
+
+extension ControllerTests {
+  @Test("SongControllerTests")
+  func testSongController() async throws {
+    try await withApp(configure: CoreCloudServer.configure) { app in
+      try await app.testing().test(
+        .POST,
+        "api/v1/song",
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/v1/user",
+        beforeRequest: { request async throws in
+          try request.content.encode(
+            User.Singular.Input.Insertion(
+              firstName: "Tracy",
+              lastName: "Tang",
+              username: "tracy@example.com",
+              password: "19342Top-Secret",
+              masterPassword: "Top--1-Secret"
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      var cookie: HTTPCookies.Value?
+      try await app.testing().test(
+        .POST,
+        "api/v1/user-token",
+        beforeRequest: { request async throws in
+          request.headers.basicAuthorization = .init(
+            username: "tracy@example.com",
+            password: "19342Top-Secret"
+          )
+          try request.content.encode(
+            UserToken.Singular.Input.Insertion(rememberMe: false)
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+
+          cookie = response
+            .headers
+            .setCookie?
+            .all[CoreCloudServer.COOKIE_NAME]
+          #expect(cookie?.string != nil)
+          #expect(cookie?.path == "/")
+          #expect(cookie?.maxAge == nil)
+          #expect(cookie?.isHTTPOnly == true)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/v1/song",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            Song.Singular.Input.Insertion(
+              title: "Por Una Cabeza",
+              artist: "Thomas Newman",
+              genre: "Soundtrack",
+              year: 1997,
+              trackNumber: 7,
+              discNumber: 1,
+              playCount: 0,
+              sampleSize: 16,
+              sampleRate: 44100,
+              fileID: 1
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .badRequest)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/v1/location",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            Location.Singular.Input.Insertion(
+              name: "Tank2",
+              path: "/tmp/song-controller-test"
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      var token: HTTPCookies.Value?
+      try await app.testing().test(
+        .POST,
+        "api/v1/application-token",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+
+          try request.content.encode(
+            ApplicationToken.Singular.Input.Insertion(
+              masterPassword: "Top--1-Secret"
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+
+          token = response
+            .headers
+            .setCookie?
+            .all[CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME]
+          #expect(cookie?.string != nil)
+          #expect(cookie?.path == "/")
+          #expect(cookie?.maxAge == nil)
+          #expect(cookie?.isHTTPOnly == true)
+        }
+      )
+
+      let twoBytes = Data([UInt8].random(count: 2))
+      let twoByteSHA512 = Data(SHA512.hash(data: twoBytes))
+        .base64EncodedString()
+        .addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+
+      try await app.testing().test(
+        .POST,
+        "api/v1/file" +
+        "?name=byte" +
+        "&kind=JPEG%20Image" +
+        "&size=2" +
+        "&checksum=\(twoByteSHA512)" +
+        "&application=Music" +
+        "&locationID=1",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            ), (
+              CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME,
+              token!
+            )
+          )
+          request.body = .init(data: twoBytes)
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/v1/song",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            Song.Singular.Input.Insertion(
+              title: "Por Una Cabeza",
+              artist: "Thomas Newman",
+              genre: "Soundtrack",
+              year: 1997,
+              trackNumber: 7,
+              discNumber: 1,
+              playCount: 0,
+              sampleSize: 16,
+              sampleRate: 44100,
+              fileID: 1
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .badRequest)
+        }
+      )
+
+      let tenBytes = Data([UInt8].random(count: 10))
+      let tenByteSHA512 = Data(SHA512.hash(data: tenBytes))
+        .base64EncodedString()
+        .addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+
+      try await app.testing().test(
+        .POST,
+        "api/v1/file" +
+        "?name=byte" +
+        "&kind=Apple%20MPEG-4%20Audio" +
+        "&size=10" +
+        "&checksum=\(tenByteSHA512)" +
+        "&application=Music" +
+        "&locationID=1",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            ), (
+              CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME,
+              token!
+            )
+          )
+          request.body = .init(data: tenBytes)
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/v1/song",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            Song.Singular.Input.Insertion(
+              title: "Por Una Cabeza",
+              artist: "Thomas Newman",
+              genre: "Soundtrack",
+              year: 1997,
+              trackNumber: 7,
+              discNumber: 1,
+              playCount: 0,
+              sampleSize: 16,
+              sampleRate: 44100,
+              fileID: 2
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/v1/song",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            Song.Singular.Input.Insertion(
+              title: "Por Una Cabeza",
+              artist: "Thomas Newman",
+              genre: "Soundtrack",
+              year: 1997,
+              trackNumber: 7,
+              discNumber: 1,
+              playCount: 0,
+              sampleSize: 16,
+              sampleRate: 44100,
+              fileID: 2
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .serviceUnavailable)
+        }
+      )
+    }
+  }
+}
