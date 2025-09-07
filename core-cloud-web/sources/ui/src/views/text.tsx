@@ -32,6 +32,7 @@ export default function Text({
   foregroundStyleClassName = "",
   lineHeightClassName = "",
   alignmentClassName = "",
+  truncationClassName = ""
 }: {
   /**
    * The key for the localized text.
@@ -61,21 +62,21 @@ export default function Text({
    * Class name for controlling the line height of text.
    */
   lineHeightClassName?: string,
-  alignmentClassName?: string
+  alignmentClassName?: string,
+  truncationClassName?: string
 }) {
   return (
     <p
       className={
         `${marginClassName} ${fontSizeClassName} ${fontWeightClassName} ` +
           `${foregroundStyleClassName} ${lineHeightClassName} select-none ` +
-          `truncate w-full ${alignmentClassName}`
+          `${truncationClassName} w-full ${alignmentClassName}`
+      }
+      dangerouslySetInnerHTML={
+        verbatimContent ? { __html: verbatimContent } : undefined
       }
     >
-      {
-        textKey
-          ? NewLocalizer.default.localize(textKey)
-          : verbatimContent
-      }
+      {textKey && NewLocalizer.default.localize(textKey)}
     </p>
   )
 }

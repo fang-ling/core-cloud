@@ -18,18 +18,13 @@
 //
 
 import Localizer from "@/localizer"
-import ApplicationTokenService from "@/services/application-token-service"
 import LocationService from "@/services/location-service"
 import { useState } from "react"
 import { useBinding } from "ui/binding"
 
-export default function useContentView({
-
-}: {
-
-}) {
+export default function useContentView() {
   const [isLoading, setIsLoading] = useState(true)
-  const [isPassed, setIsPassed] = useState(false)
+  const isCheckpointPassed = useBinding(false)
   const [isSidebarOn, setIsSidebarOn] = useState(true)
   const [sections, setSections] = useState([
     {
@@ -61,13 +56,8 @@ export default function useContentView({
   const isUploadSheetPresented = useBinding(false)
 
   /* MARK: - Event handlers */
-  async function handleViewAppear2() {
+  async function viewDidAppear() {
     setIsLoading(true)
-
-    const hasToken = await ApplicationTokenService.peekApplicationToken()
-    if (hasToken) {
-      setIsPassed(true)
-    }
 
     const locations = await LocationService.fetchLocations()
     const newSections = sections.slice()
@@ -128,10 +118,6 @@ export default function useContentView({
     setNavigationStack([])
   }
 
-  function handleCheckPointPass() {
-    setIsPassed(true)
-  }
-
   function uploadButtonDidClick() {
     isUploadSheetPresented.toggle()
   }
@@ -142,7 +128,7 @@ export default function useContentView({
 
   return {
     isLoading,
-    isPassed,
+    isCheckpointPassed,
     isSidebarOn,
     setIsSidebarOn,
     sections,
@@ -153,12 +139,11 @@ export default function useContentView({
     navigationStack,
     setNavigationStack,
     isUploadSheetPresented,
-    handleViewAppear2,
+    viewDidAppear,
     handleSidebarToggle,
     handleNewLocationButtonClick,
     handleNewLocationAdd,
     handleSelectedSidebarItemChange,
-    handleCheckPointPass,
     uploadButtonDidClick,
     fileDidUpload
   }

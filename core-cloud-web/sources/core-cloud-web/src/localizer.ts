@@ -138,17 +138,11 @@ export default class Localizer {
     "Enter a valid email address to use as your primary email address.": {
       "zh-TW": "請輸入有效的電子郵件地址，來作為你的主要電子郵件地址。"
     },
-    "Enter Master Password": {
-      "zh-TW": "輸入主密碼"
-    },
     "Enter your first name.": {
       "zh-TW": "輸入你的名字。"
     },
     "Enter your last name.": {
       "zh-TW": "輸入你的姓氏。"
-    },
-    "Enter your master password": {
-      "zh-TW": "輸入你的主密碼"
     },
     "Email or Phone Number": {
       "zh-TW": "電子郵件地址或電話號碼"
@@ -210,9 +204,6 @@ export default class Localizer {
     "Password": {
       "zh-TW": "密碼"
     },
-    "Password incorrect.": {
-      "zh-TW": "密碼不正確。"
-    },
     "Password Requirements": {
       "zh-TW": "密碼要求"
     },
@@ -266,12 +257,6 @@ export default class Localizer {
     },
     "This will be your new *X* Account.": {
       "zh-TW": "這將是你的新 *X* 帳號。"
-    },
-    "To allow *X* to access and display your data, you'll need to enter your master password.": {
-      "zh-TW": "若要允許 *X* 存取並顯示你的資料，請輸入你的主密碼。"
-    },
-    "Try entering it again.": {
-      "zh-TW": "請嘗試再輸入一次。"
     },
     "Upload": {
       "zh-TW": "上傳"

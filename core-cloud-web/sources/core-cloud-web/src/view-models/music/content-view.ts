@@ -17,13 +17,12 @@
 //  limitations under the License.
 //
 
-import ApplicationTokenService from "@/services/application-token-service"
 import SongService from "@/services/song-service"
 import { useRef, useState } from "react"
 import { useBinding } from "ui/binding"
 
 export default function useContentView() {
-  const [isPassed, setIsPassed] = useState(false)
+  const isCheckpointPassed = useBinding(false)
   const [selectedSidebarItemKey, setSelectedSidebarItemKey] = useState(
     "songs"
   )
@@ -93,20 +92,8 @@ export default function useContentView() {
     )
   }
 
-  function checkPointDidPass() {
-    setIsPassed(true)
-  }
-
-  async function viewDidAppear() {
-    /* TODO: Add loading, like drive */
-    const passed = await ApplicationTokenService.peekApplicationToken()
-    if (passed) {
-      setIsPassed(passed)
-    }
-  }
-
   return {
-    isPassed,
+    isCheckpointPassed,
     selectedSidebarItemKey,
     sectionsRef,
     isNewSongSheetPresented,
@@ -114,8 +101,6 @@ export default function useContentView() {
     setSongs,
     selectedSidebarItemKeyDidChange,
     newSongButtonDidClick,
-    newSongDidCreate,
-    checkPointDidPass,
-    viewDidAppear
+    newSongDidCreate
   }
 }

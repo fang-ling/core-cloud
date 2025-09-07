@@ -17,141 +17,153 @@
 //  limitations under the License.
 //
 
-import Localizer from '@/localizer'
-import useSharedBodyguard from '@/view-models/shared-bodyguard'
-import UILoading from './ui-loading'
+import useSharedBodyguard from "@/view-models/shared-bodyguard"
+import { BoolBinding } from "ui/binding"
+import VStack from "ui/v-stack"
+import Spacer from "ui/spacer"
+import Text from "ui/text"
+import Image from "ui/image"
+import ProgressView from "ui/progress-view"
+import HStack from "ui/h-stack"
+import NewLocalizer from "ui/localizer"
+import SecureField from "ui/secure-field"
+import { useEffect } from "react"
+import ZStack from "ui/z-stack"
 
 export default function SharedBodyguard({
-  onPass,
-  inputClassName
+  isPassed,
+  secureFieldTintClassName
 }: {
-  onPass: () => void,
-  inputClassName?: string
+  isPassed: BoolBinding,
+  secureFieldTintClassName?: string
 }) {
   const viewModel = useSharedBodyguard({
-    onPass: onPass
+    isPassed: isPassed
   })
 
-  return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
-      {
-        viewModel.isLoading
-          ? <UILoading />
-          : (
-            <>
-              <svg
-                viewBox="0 0 65.239013671875 98.0947265625"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                className="fill-labelSecondary w-11"
-              >
-                <g transform="matrix(1 0 0 1 -20.60546386718761 84.27734375)">
-                  <path
-                    d={
-                      'M29.9805 10.9863L76.4648 10.9863C82.7637 10.9863 ' +
-                        '85.8398 7.86133 85.8398 ' +
-                        '1.02539L85.8398-34.8145C85.8398-40.9668 ' +
-                        '83.3008-44.1406 ' +
-                        '78.0762-44.6777L78.0762-56.9824C78.0762-75.3906 ' +
-                        '66.0156-84.2773 53.2227-84.2773C40.4297-84.2773 ' +
-                        '28.3691-75.3906 ' +
-                        '28.3691-56.9824L28.3691-44.4336C23.584-43.7012 ' +
-                        '20.6055-40.5762 ' +
-                        '20.6055-34.8145L20.6055 1.02539C20.6055 7.86133 ' +
-                        '23.6816 10.9863 29.9805 ' +
-                        '10.9863ZM36.2305-58.0078C36.2305-70.2637 ' +
-                        '44.0918-76.7578 53.2227-76.7578C62.3535-76.7578 ' +
-                        '70.2148-70.2637 ' +
-                        '70.2148-58.0078L70.2148-44.7266L36.2305-44.6777Z'
-                    }
-                  />
-                </g>
-              </svg>
+  useEffect(() => {
+    viewModel.viewDidAppear()
+  }, [])
 
-              <h2
-                className={
-                  'mt-4 text-labelPrimary text-base leading-5.25 font-semibold'
-                }
-              >
-                {Localizer.default().localize('Enter your master password')}
-              </h2>
-              <p
-                className={
-                  'max-w-75 text-center text-labelSecondary text-[15px] ' +
-                    'leading-5 mt-1'
-                }
-                dangerouslySetInnerHTML={{
-                  __html: Localizer
-                    .default()
+  return (
+    <VStack
+      widthClassName="w-full"
+      heightClassName="h-full"
+    >
+      <Spacer />
+
+      {viewModel.isLoading && <ProgressView size="large" style="dotted" />}
+
+      {
+        !viewModel.isLoading && (
+          <>
+            <Image
+              systemName="lock.fill"
+              widthClassName="w-11 fill-labelSecondary"
+            />
+
+            <Text
+              textKey="Enter your master password"
+              marginClassName="mt-4"
+              foregroundStyleClassName="text-labelPrimary"
+              fontSizeClassName="text-base"
+              lineHeightClassName="leading-5.25"
+              fontWeightClassName="font-semibold"
+              alignmentClassName="text-center"
+            />
+
+            <HStack widthClassName="max-w-75">
+              <Text
+                verbatimContent={
+                  NewLocalizer
+                    .default
                     .localize(
-                      'To allow *X* to access and display your data, ' +
-                        'you\'ll need to enter your master password.'
+                      "To allow *X* to access and display your data, " +
+                        "you'll need to enter your master password."
                     )
-                    .replace('*X*', process.env.NEXT_PUBLIC_TITLE ?? '')
-                }}
-              />
-              <input
-                className={
-                  'mt-4 h-8 w-60 px-[7.05px] py-0.75 rounded-lg ' +
-                    'text-labelPrimary text-[15px] border border-separator ' +
-                    'placeholder:text-center text-ellipsis outline-hidden ' +
-                    inputClassName
+                    .replace("*X*", process.env.NEXT_PUBLIC_TITLE ?? "")
                 }
-                value={viewModel.masterPassword}
-                onChange={(event) => {
-                  viewModel.handleInputChange(event.target.value)
-                }}
-                type="password"
-                autoComplete="off"
-                autoCapitalize="off"
-                autoCorrect="off"
-                placeholder={
-                  Localizer.default().localize('Enter Master Password')
-                }
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    viewModel.handleInputSubmit()
-                  }
-                }}
+                foregroundStyleClassName="text-labelSecondary"
+                alignmentClassName="text-center"
+                fontSizeClassName="text-[15px]"
+                lineHeightClassName="leading-5"
+                marginClassName="mt-1"
               />
-              {
-                viewModel.isWrongPassword && (
-                  <div
-                    className={
-                      'relative top-4 max-w-75 w-full mx-auto ' +
-                        'animate-[fade-in_.2s_ease-in-out]'
-                    }
-                  >
-                    <div
-                      className={
-                        'absolute -ml-[50%] left-1/2 w-full bg-[#fae9a3] ' +
-                          'rounded-[5px] border border-[rgba(185,149,1,.47)] ' +
-                          'shadow-[0_5px_10px_2px_rgba(0,0,0,.1)] mt-1.25 ' +
-                          'p-2.75 text-sm leading-5 text-[#503e30] ' +
-                          'font-semibold ' +
-                          'before:size-3.75 before:bg-[#fae9a3] ' +
-                          'before:absolute before:left-[47.2%] ' +
-                          'before:rotate-135 before:skew-5 before:-top-2 ' +
-                          'before:border-l ' +
-                          'before:border-[rgba(185,149,1,.47)] ' +
-                          'before:border-b ' +
-                      'before:shadow-[-1px_1px_2px_-1px_rgba(185,149,1,.47)] ' +
-                          'text-center'
-                      }
-                    >
-                      <p>
-                        {Localizer.default().localize('Password incorrect.')}
-                      </p>
-                      <p>
-                        {Localizer.default().localize('Try entering it again.')}
-                      </p>
-                    </div>
-                  </div>
-                )
+            </HStack>
+
+            <SecureField
+              text={viewModel.masterPassword}
+              prompt="Enter Master Password"
+              marginClassName="mt-4"
+              widthClassName="w-60"
+              heightClassName="h-8"
+              paddingClassName="px-[7.05px] py-0.75"
+              borderClassName={
+                "rounded-lg border border-separator outline-hidden"
               }
-            </>
-          )
+              foregroundStyleClassName="text-labelPrimary"
+              fontSizeClassName="text-[15px]"
+              promptMultilineTextAlignmentClassName="placeholder:text-center"
+              tintClassName={secureFieldTintClassName}
+              onChange={() => viewModel.masterPasswordDidChange()}
+              autocompletionDisabled={true}
+              autocapitalizationDisabled={true}
+              autocorrectionDisabled={true}
+              onSubmit={() => viewModel.masterPasswordDidSubmit()}
+            />
+
+            {
+              viewModel.isWrongPassword && (
+                <ZStack
+                  positionClassName="top-14"
+                  widthClassName="max-w-75 w-full"
+                  marginClassName="mx-auto"
+                  animationClassName="animate-[fade-in_.2s_ease-in-out]"
+                >
+                  <VStack
+                    positionClassName="absolute left-1/2"
+                    marginClassName="-ml-[50%] mt-1.25"
+                    paddingClassName="p-2.75"
+                    widthClassName="w-full"
+                    backgroundStyleClassName="bg-[#fae9a3]"
+                    borderClassName="rounded-[5px] border border-[#b9950178]"
+                    shadowClassName="shadow-[0_5px_10px_2px_rgba(0,0,0,.1)]"
+                  >
+                    <HStack
+                      widthClassName="w-3.75"
+                      heightClassName="h-3.75"
+                      positionClassName="absolute left-[47.2%] -top-2"
+                      backgroundStyleClassName="bg-[#fae9a3]"
+                      transformationClassName="rotate-135 skew-5"
+                      borderClassName="border-l border-[#b9950178] border-b"
+                      shadowClassName="shadow-[-1px_1px_2px_-1px_#b9950178]"
+                    />
+                    <Text
+                      textKey="Password incorrect."
+                      alignmentClassName="text-center"
+                      fontWeightClassName="font-semibold"
+                      fontSizeClassName="text-sm"
+                      lineHeightClassName="leading-5"
+                      foregroundStyleClassName="text-[#503e30]"
+                    />
+                    <Text
+                      textKey="Try entering it again."
+                      alignmentClassName="text-center"
+                      fontWeightClassName="font-semibold"
+                      fontSizeClassName="text-sm"
+                      lineHeightClassName="leading-5"
+                      foregroundStyleClassName="text-[#503e30]"
+                    />
+                  </VStack>
+                </ZStack>
+              )
+            }
+          </>
+        )
       }
-    </div>
+
+      <Spacer />
+
+    </VStack>
   )
 }

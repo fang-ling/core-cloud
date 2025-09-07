@@ -19,30 +19,30 @@
 
 import ApplicationTokenService from "@/services/application-token-service"
 import { useState } from "react"
+import { BoolBinding, useBinding } from "ui/binding"
 
 export default function useSharedBodyguard({
-  onPass
+  isPassed
 }: {
-  onPass: () => void
+  isPassed: BoolBinding
 }) {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [isWrongPassword, setIsWrongPassword] = useState(false)
-  const [masterPassword, setMasterPassword] = useState("")
+  const masterPassword = useBinding("")
 
   /* MARK: - Event handlers */
-  function handleInputChange(newMasterPassword: string) {
-    setMasterPassword(newMasterPassword)
+  function masterPasswordDidChange() {
     setIsWrongPassword(false)
   }
 
-  async function handleInputSubmit() {
+  async function masterPasswordDidSubmit() {
     setIsLoading(true)
 
     const passes = await ApplicationTokenService.insertApplicationToken({
-      masterPassword: masterPassword
+      masterPassword: masterPassword.value
     })
     if (passes) {
-      onPass()
+      isPassed.setValue(true)
     } else {
       setIsWrongPassword(true)
     }
@@ -50,11 +50,23 @@ export default function useSharedBodyguard({
     setIsLoading(false)
   }
 
+  async function viewDidAppear() {
+    setIsLoading(true)
+
+    const passed = await ApplicationTokenService.peekApplicationToken()
+    setIsLoading(false)
+
+    if (passed) {
+      isPassed.setValue(true)
+    }
+  }
+
   return {
     isLoading,
     isWrongPassword,
     masterPassword,
-    handleInputChange,
-    handleInputSubmit
+    masterPasswordDidChange,
+    masterPasswordDidSubmit,
+    viewDidAppear
   }
 }

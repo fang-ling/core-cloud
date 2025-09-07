@@ -58,6 +58,12 @@ export default class NewLocalizer {
     "Disc Number": {
       "zh-TW": "光碟編號"
     },
+    "Enter Master Password": {
+      "zh-TW": "輸入主密碼"
+    },
+    "Enter your master password": {
+      "zh-TW": "輸入你的主密碼"
+    },
     "Genre": {
       "zh-TW": "類型"
     },
@@ -72,6 +78,9 @@ export default class NewLocalizer {
     },
     "Not Playing": {
       "zh-TW": "未在播放"
+    },
+    "Password incorrect.": {
+      "zh-TW": "密碼不正確。"
     },
     "Play Count": {
       "zh-TW": "播放次數"
@@ -91,8 +100,15 @@ export default class NewLocalizer {
     "Title": {
       "zh-TW": "名稱"
     },
+    "To allow *X* to access and display your data, you'll need to enter your \
+master password.": {
+       "zh-TW": "若要允許 *X* 存取並顯示你的資料，請輸入你的主密碼。"
+    },
     "Track Number": {
       "zh-TW": "音軌編號"
+    },
+    "Try entering it again.": {
+      "zh-TW": "請嘗試再輸入一次。"
     },
     "Year": {
       "zh-TW": "年份"

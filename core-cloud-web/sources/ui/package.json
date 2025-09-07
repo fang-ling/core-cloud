@@ -8,8 +8,12 @@
     "./grid": "./src/views/grid.tsx",
     "./h-stack": "./src/views/h-stack.tsx",
     "./image": "./src/views/image.tsx",
+    "./localizer": "./src/localizer.ts",
     "./navigation-split-view": "./src/views/navigation-split-view.tsx",
+    "./progress-view": "./src/views/progress-view.tsx",
+    "./secure-field": "./src/views/secure-field.tsx",
     "./sheet": "./src/views/sheet.tsx",
+    "./spacer": "./src/views/spacer.tsx",
     "./text": "./src/views/text.tsx",
     "./v-stack": "./src/views/v-stack.tsx",
     "./z-stack": "./src/views/z-stack.tsx"

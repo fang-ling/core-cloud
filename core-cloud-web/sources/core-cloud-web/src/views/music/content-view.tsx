@@ -29,24 +29,19 @@ import HStack from "ui/h-stack"
 import Image from "ui/image"
 import Text from "ui/text"
 import SongSheet from "./song-sheet"
-import { useEffect } from "react"
 
 export default function ContentView() {
   const viewModel = useContentView()
-
-  useEffect(() => {
-    viewModel.viewDidAppear()
-  }, [])
 
   return (
     <VStack heightClassName="h-dvh">
       <SharedToolbar
         source="music"
-        variant={viewModel.isPassed ? "app" : "thinMaterial"}
+        variant={viewModel.isCheckpointPassed.value ? "app" : "thinMaterial"}
       />
 
       {
-        viewModel.isPassed && (
+        viewModel.isCheckpointPassed.value && (
           <NavigationSplitView
             sidebar={({
               selectedItemKey,
@@ -119,11 +114,13 @@ export default function ContentView() {
       }
 
       {
-        !viewModel.isPassed && (
+        !viewModel.isCheckpointPassed.value && (
           <>
             <SharedBodyguard
-              onPass={() => viewModel.checkPointDidPass()}
-              inputClassName="focus:border-music-keyColor"
+              isPassed={viewModel.isCheckpointPassed}
+              secureFieldTintClassName={
+                "focus:border-music-keyColor caret-music-keyColor"
+              }
             />
             <SharedFooter />
           </>

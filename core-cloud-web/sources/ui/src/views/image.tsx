@@ -144,6 +144,38 @@ export default function Image({
         )
       }
 
+    case "lock.fill":
+      switch (weight) {
+        case "regular": return (
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 11.0703 15.7422"
+            className={className}
+            preserveAspectRatio={preserveAspectRatio}
+          >
+            <g>
+              <rect height="15.7422" opacity="0" width="11.0703" x="0" y="0" />
+              <path
+                d={
+                  "M1.75781 15.3281L8.90625 15.3281C10.0547 15.3281 10.6641 1" +
+                    "4.7031 10.6641 13.4688L10.6641 8.08594C10.6641 6.85156 1" +
+                    "0.0547 6.23438 8.90625 6.23438L1.75781 6.23438C0.609375 " +
+                    "6.23438 0 6.85156 0 8.08594L0 13.4688C0 14.7031 0.609375" +
+                    " 15.3281 1.75781 15.3281ZM1.36719 6.83594L2.60938 6.8359" +
+                    "4L2.60938 4.19531C2.60938 2.22656 3.86719 1.17969 5.3281" +
+                    "2 1.17969C6.78906 1.17969 8.0625 2.22656 8.0625 4.19531L" +
+                    "8.0625 6.83594L9.29688 6.83594L9.29688 4.36719C9.29688 1" +
+                    ".42969 7.375 0 5.32812 0C3.28906 0 1.36719 1.42969 1.367" +
+                    "19 4.36719Z"
+                }
+              />
+            </g>
+          </svg>
+        )
+      }
+
     case "music.microphone":
       switch (weight) {
         case "regular": return (

@@ -29,6 +29,10 @@ export default function VStack({
   heightClassName = "",
   marginClassName = "",
   paddingClassName = "",
+  positionClassName = "",
+  backgroundStyleClassName = "",
+  borderClassName = "",
+  shadowClassName = "",
   children
 }: {
   /**
@@ -45,6 +49,10 @@ export default function VStack({
   heightClassName?: string,
   marginClassName?: string,
   paddingClassName?: string,
+  positionClassName?: string,
+  backgroundStyleClassName?: string,
+  borderClassName?: string,
+  shadowClassName?: string,
   /**
    * A view builder that creates the content of this stack.
    */
@@ -54,7 +62,9 @@ export default function VStack({
     <div
       className={
         `flex flex-col ${alignment.className} ${heightClassName} ` +
-          `${widthClassName} ${marginClassName} ${paddingClassName}`
+          `${widthClassName} ${marginClassName} ${paddingClassName} ` +
+          `${positionClassName} ${backgroundStyleClassName} ` +
+          `${borderClassName} ${shadowClassName}`
       }
     >
       {children}

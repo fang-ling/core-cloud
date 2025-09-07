@@ -31,10 +31,10 @@ import LocationDialog from "./location-dialog"
 import UploadSheet from "./upload-sheet"
 
 export default function ContentView() {
-  const viewModel = useContentView({ })
+  const viewModel = useContentView()
 
   useEffect(() => {
-    viewModel.handleViewAppear2()
+    viewModel.viewDidAppear()
   }, [])
 
   return (
@@ -43,7 +43,7 @@ export default function ContentView() {
         <SharedToolbar
           source="drive"
           variant={
-            (!viewModel.isLoading && viewModel.isPassed)
+            (!viewModel.isLoading && viewModel.isCheckpointPassed.value)
               ? "app"
               : "thinMaterial"
           }
@@ -63,7 +63,7 @@ export default function ContentView() {
                 <SharedFooter />
               </>
             )
-            : viewModel.isPassed
+            : viewModel.isCheckpointPassed.value
               ? (
                 <div className="relative h-full">
                   <Sidebar
@@ -484,8 +484,10 @@ export default function ContentView() {
               : (
                 <>
                   <SharedBodyguard
-                    onPass={() => viewModel.handleCheckPointPass()}
-                    inputClassName="focus:border-systemBlue"
+                    isPassed={viewModel.isCheckpointPassed}
+                    secureFieldTintClassName={
+                      "focus:border-systemBlue caret-systemBlue"
+                    }
                   />
                   <SharedFooter />
                 </>
