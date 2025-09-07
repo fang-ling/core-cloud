@@ -277,7 +277,7 @@ export default function DetailView({
                             fontSizeClassName="text-xs"
                             fontWeightClassName="font-semibold"
                             lineHeightClassName="leading-3.75"
-                            alignmentClassName="text-center"
+                            multilineTextAlignmentClassName="text-center"
                             foregroundStyleClassName={
                               "text-music-lcd-primary-text-color"
                             }
@@ -295,7 +295,7 @@ export default function DetailView({
                               }
                               fontSizeClassName="text-xs"
                               lineHeightClassName="leading-3.75"
-                              alignmentClassName="text-center"
+                              multilineTextAlignmentClassName="text-center"
                               foregroundStyleClassName={
                                 "text-music-lcd-secondary-text-color"
                               }
@@ -391,7 +391,7 @@ export default function DetailView({
                           .toISOString()
                           .substring(14, 19)
                       }
-                      alignmentClassName="text-right"
+                      multilineTextAlignmentClassName="text-right"
                       fontSizeClassName="text-[10px]"
                       lineHeightClassName="leading-3.25"
                       foregroundStyleClassName="text-music-systemTertiary"

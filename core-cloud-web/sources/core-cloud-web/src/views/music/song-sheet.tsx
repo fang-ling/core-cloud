@@ -59,7 +59,7 @@ export default function SongSheet({
         fontWeightClassName="font-semibold"
         lineHeightClassName="leading-5.5"
         marginClassName="mb-3.5"
-        alignmentClassName="text-center"
+        multilineTextAlignmentClassName="text-center"
       />
       <VStack
         widthClassName="w-full"
@@ -76,7 +76,7 @@ export default function SongSheet({
                 fontSizeClassName="text-sm"
                 lineHeightClassName="leading-4.25"
                 marginClassName="mb-1.25"
-                alignmentClassName="text-left"
+                multilineTextAlignmentClassName="text-left"
               />
               <input
                 className={
@@ -105,7 +105,7 @@ export default function SongSheet({
               fontSizeClassName="text-sm"
               lineHeightClassName="leading-5"
               marginClassName="mb-2.5"
-              alignmentClassName="text-center"
+              multilineTextAlignmentClassName="text-center"
             />
           )
         }

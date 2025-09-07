@@ -69,7 +69,7 @@ export default function SharedBodyguard({
               fontSizeClassName="text-base"
               lineHeightClassName="leading-5.25"
               fontWeightClassName="font-semibold"
-              alignmentClassName="text-center"
+              multilineTextAlignmentClassName="text-center"
             />
 
             <HStack widthClassName="max-w-75">
@@ -84,7 +84,7 @@ export default function SharedBodyguard({
                     .replace("*X*", process.env.NEXT_PUBLIC_TITLE ?? "")
                 }
                 foregroundStyleClassName="text-labelSecondary"
-                alignmentClassName="text-center"
+                multilineTextAlignmentClassName="text-center"
                 fontSizeClassName="text-[15px]"
                 lineHeightClassName="leading-5"
                 marginClassName="mt-1"
@@ -140,7 +140,7 @@ export default function SharedBodyguard({
                     />
                     <Text
                       textKey="Password incorrect."
-                      alignmentClassName="text-center"
+                      multilineTextAlignmentClassName="text-center"
                       fontWeightClassName="font-semibold"
                       fontSizeClassName="text-sm"
                       lineHeightClassName="leading-5"
@@ -148,7 +148,7 @@ export default function SharedBodyguard({
                     />
                     <Text
                       textKey="Try entering it again."
-                      alignmentClassName="text-center"
+                      multilineTextAlignmentClassName="text-center"
                       fontWeightClassName="font-semibold"
                       fontSizeClassName="text-sm"
                       lineHeightClassName="leading-5"
