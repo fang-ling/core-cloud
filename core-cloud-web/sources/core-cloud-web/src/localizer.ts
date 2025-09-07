@@ -102,9 +102,6 @@ export default class Localizer {
     "Choose a Disk": {
       "zh-TW": "選擇磁碟"
     },
-    "Choose a File": {
-      "zh-TW": "選擇檔案"
-    },
     "Confirm Master Password": {
       "zh-TW": "確認主密碼"
     },
@@ -189,9 +186,6 @@ export default class Localizer {
     "Name": {
       "zh-TW": "名稱"
     },
-    "New File": {
-      "zh-TW": "新檔案"
-    },
     "New Location": {
       "zh-TW": "新位置"
     },
@@ -258,17 +252,11 @@ export default class Localizer {
     "This will be your new *X* Account.": {
       "zh-TW": "這將是你的新 *X* 帳號。"
     },
-    "Upload": {
-      "zh-TW": "上傳"
-    },
     "Upper & lowercase letters": {
       "zh-TW": "必須包含大寫字母和小寫字母"
     },
     "Unable to create location. Try again later.": {
       "zh-TW": "無法建立位置。請稍後再試。"
-    },
-    "Unable to upload file. Try again later.": {
-      "zh-TW": "無法上傳檔案。請稍後再試。"
     },
     "Version": {
       "zh-TW": "版本"

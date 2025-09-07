@@ -52,6 +52,9 @@ export default class NewLocalizer {
     "Artists": {
       "zh-TW": "藝人"
     },
+    "Choose a File": {
+      "zh-TW": "選擇檔案"
+    },
     "Create": {
       "zh-TW": "建立"
     },
@@ -72,6 +75,9 @@ export default class NewLocalizer {
     },
     "Loading...": {
       "zh-TW": "正在載入…"
+    },
+    "New File": {
+      "zh-TW": "新檔案"
     },
     "New Song": {
       "zh-TW": "新歌曲"
@@ -115,6 +121,15 @@ master password.": {
     },
     "Unable to create song. Try again later.": {
       "zh-TW": "無法建立歌曲。請稍後再試。"
+    },
+    "Unable to upload file. Try again later.": {
+      "zh-TW": "無法上傳檔案。請稍後再試。"
+    },
+    "Upload": {
+      "zh-TW": "上傳"
+    },
+    "Uploading...": {
+      "zh-TW": "上傳中…"
     }
   }
 }

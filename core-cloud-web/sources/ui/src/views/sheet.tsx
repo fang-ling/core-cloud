@@ -26,35 +26,42 @@ import Image from "./image"
 /**
  * A view that presents a sheet when a binding to a Boolean value that you
  * provide is true.
- *
- * - Parameters:
- *   - isPresented: A binding to a Boolean value that determines whether to
- *                  present the sheet.
- *   - onDismiss: The closure to execute when dismissing the sheet.
- *   - children: The content of the sheet.
  */
 export default function Sheet({
   isPresented,
   onDismiss,
-  closeButtonActiveBackgroundStyleClassName = "active:bg-appTint/16",
+  closeButtonActiveBackgroundStyleClassName = "",
+  primaryButton,
   children
 }: {
-  isPresented: BoolBinding
+  /**
+   * A binding to a Boolean value that determines whether to present the sheet.
+   */
+  isPresented: BoolBinding,
+  /**
+   * The closure to execute when dismissing the sheet.
+   */
   onDismiss?: () => void,
   closeButtonActiveBackgroundStyleClassName?: string,
+  primaryButton?: {
+    action?: () => Promise<boolean>,
+    label?: () => React.JSX.Element,
+    backgroundStyleClassName?: string,
+    disabled?: boolean
+  },
+  /**
+   * The content of the sheet.
+   */
   children: React.ReactNode
 }) {
   const viewModel = useSheet({
     isPresented: isPresented,
-    onDismiss: onDismiss
+    onDismiss: onDismiss,
+    primaryButtonAction: primaryButton?.action
   })
 
   useEffect(() => {
     viewModel.viewDidAppear()
-
-    return () => {
-      viewModel.viewDidDisappear()
-    }
   }, [])
 
   return createPortal(
@@ -104,6 +111,26 @@ export default function Sheet({
             </div>
             <div className="flex relative items-center p-2.5 flex-col">
               {children}
+
+              {
+                primaryButton && (
+                  <button
+                    className={
+                      "min-w-1/2 text-systemWhite h-9 flex items-center " +
+                        "justify-center rounded-lg mx-auto mb-2.5 " +
+                        "active:text-systemWhite/30 " +
+                        `${primaryButton.backgroundStyleClassName} ` + (
+                          primaryButton.disabled
+                            ? "opacity-30 dark:opacity-40 pointer-events-none"
+                            : "cursor-pointer"
+                        )
+                    }
+                    onClick={() => viewModel.primaryButtonDidClick()}
+                  >
+                    {primaryButton.label?.()}
+                  </button>
+                )
+              }
             </div>
           </div>
         </div>

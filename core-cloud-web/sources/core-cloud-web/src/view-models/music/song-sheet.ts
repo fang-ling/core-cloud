@@ -19,13 +19,10 @@
 
 import SongService from "@/services/song-service"
 import { useState } from "react"
-import { BoolBinding } from "ui/binding"
 
 export default function useSongSheet({
-  isPresented,
   onCreate
 }: {
-  isPresented: BoolBinding,
   onCreate?: () => void
 }) {
   const [title, setTitle] = useState("")
@@ -143,9 +140,10 @@ export default function useSongSheet({
     if (success) {
       setIsError(false)
       onCreate?.()
-      isPresented.toggle()
+      return true
     } else {
       setIsError(true)
+      return false
     }
   }
 

@@ -19,20 +19,16 @@
 
 import { useState } from "react"
 import FileService from "@/services/file-service"
-import { BoolBinding } from "ui/binding"
 
 export default function useUploadSheet({
-  isPresented,
   application,
   locationID,
   onUpload
 }: {
-  isPresented: BoolBinding,
   application: string,
   locationID: string,
   onUpload: () => void
 }) {
-  const [sha512, setSHA512] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const [file, setFile] = useState<File | undefined>(undefined)
@@ -42,14 +38,10 @@ export default function useUploadSheet({
     setFile(newFile)
   }
 
-  function sha512InputDidChange(newSHA512: string) {
-    setSHA512(newSHA512)
-  }
-
   async function uploadButtonDidClick() {
     if (!file) {
       setIsError(true)
-      return
+      return false
     }
 
     let kind= ""
@@ -60,35 +52,42 @@ export default function useUploadSheet({
 
     setIsError(false)
     setIsLoading(true)
+
+    const fileBuffer = await file.arrayBuffer()
+    const digestBuffer = await crypto.subtle.digest("SHA-512", fileBuffer)
+    const digestData = new Uint8Array(digestBuffer)
+    const binaryCharacters: string[] = []
+    digestData.forEach(digestDatum => {
+      binaryCharacters.push(String.fromCharCode(digestDatum))
+    })
+
     const response = await FileService.insertFile({
       request: {
         name: file.name.split(".")[0],
         kind: kind,
         size: `${file.size}`,
-        checksum: sha512,
+        checksum: btoa(binaryCharacters.join("")),
         application: application,
         locationID: locationID
       },
-      /*fileStream: file.stream()*/
       file: file
     })
     if (!response) {
       setIsError(true)
       setIsLoading(false)
+      return false
     } else {
       onUpload()
       setIsLoading(false)
-      isPresented.toggle()
+      return true
     }
   }
 
   return {
-    sha512,
     isLoading,
     isError,
     file,
     fileInputDidChange,
-    sha512InputDidChange,
     uploadButtonDidClick
   }
 }

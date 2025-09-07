@@ -33,24 +33,41 @@ export default function SongSheet({
   onCreate?: () => void
 }) {
   const viewModel = useSongSheet({
-    isPresented: isPresented,
     onCreate: onCreate
   })
 
   return (
     <Sheet
       isPresented={isPresented}
-      closeButtonActiveBackgroundStyleClassName={
-        "active:bg-music-keyColor/16"
-      }
+      closeButtonActiveBackgroundStyleClassName="active:bg-music-keyColor/16"
+      primaryButton={{
+        backgroundStyleClassName: (
+          "bg-music-keyColor hover:bg-[#fb394f] active:bg-[#f90722]"
+        ),
+        action: () => viewModel.createButtonDidClick(),
+        disabled: (
+          viewModel.title.length <= 0 ||
+            viewModel.artist.length <= 0 ||
+            viewModel.genre.length <= 0 ||
+            viewModel.year.length <= 0 ||
+            viewModel.trackNumber.length <= 0 ||
+            viewModel.discNumber.length <= 0 ||
+            viewModel.playCount.length <= 0 ||
+            viewModel.sampleSize.length <= 0 ||
+            viewModel.sampleRate.length <= 0 ||
+            viewModel.fileID.length <= 0 ||
+            viewModel.isLoading
+        ),
+        label: () => (
+          <Text textKey={viewModel.isLoading ? "Loading..." : "Create"} />
+        )
+      }}
     >
       <AsyncImage
         widthClassName="w-9"
         heightClassName="h-9"
         marginClassName="mb-3.5"
-        urls={
-          process.env.NEXT_PUBLIC_MUSIC_ICON_URLS?.split(",") ?? []
-        }
+        urls={process.env.NEXT_PUBLIC_MUSIC_ICON_URLS?.split(",")}
       />
       <Text
         textKey="New Song"
@@ -61,6 +78,7 @@ export default function SongSheet({
         marginClassName="mb-3.5"
         multilineTextAlignmentClassName="text-center"
       />
+
       <VStack
         widthClassName="w-full"
         paddingClassName="px-2.5 pb-2.5"
@@ -109,42 +127,6 @@ export default function SongSheet({
             />
           )
         }
-
-        <VStack widthClassName="w-full">
-          <button
-            className={
-              "min-w-1/2 bg-music-keyColor text-systemWhite h-9 flex " +
-                "items-center justify-center rounded-lg " +
-                "hover:bg-[#fb394f] " +
-                "active:bg-[#f90722] " +
-                "active:text-systemWhite/30 " + (
-                  (
-                    viewModel.title.length <= 0 ||
-                      viewModel.artist.length <= 0 ||
-                      viewModel.genre.length <= 0 ||
-                      viewModel.year.length <= 0 ||
-                      viewModel.trackNumber.length <= 0 ||
-                      viewModel.discNumber.length <= 0 ||
-                      viewModel.playCount.length <= 0 ||
-                      viewModel.sampleSize.length <= 0 ||
-                      viewModel.sampleRate.length <= 0 ||
-                      viewModel.fileID.length <= 0
-                  ) || viewModel.isLoading
-                    ? "opacity-30 dark:opacity-40 pointer-events-none"
-                    : "cursor-pointer"
-                )
-            }
-            onClick={() => viewModel.createButtonDidClick()}
-          >
-            <Text
-              textKey={
-                viewModel.isLoading
-                  ? "Loading..."
-                  : "Create"
-              }
-            />
-          </button>
-        </VStack>
       </VStack>
     </Sheet>
   )

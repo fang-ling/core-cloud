@@ -18,13 +18,12 @@
 //
 
 import useUploadSheet from "@/view-models/drive/upload-sheet"
-import UIImage from "../ui-image"
-import CoreCloudWeb from "@/core-cloud-web"
-import Localizer from "@/localizer"
-import UIProgress from "../ui-progress"
 import { BoolBinding } from "ui/binding"
 import Sheet from "ui/sheet"
-import UISFSymbol from "../ui-sf-symbol"
+import AsyncImage from "ui/async-image"
+import Text from "ui/text"
+import VStack from "ui/v-stack"
+import Image from "ui/image"
 
 export default function UploadSheet({
   isPresented,
@@ -38,80 +37,79 @@ export default function UploadSheet({
   onUpload: () => void
 }) {
   const viewModel = useUploadSheet({
-    isPresented: isPresented,
     application: application,
     locationID: locationID,
     onUpload: onUpload
   })
 
   return (
-    <Sheet isPresented={isPresented}>
-      <UIImage
-        className="size-9 mb-3.5"
-        urls={
-          CoreCloudWeb.APPS.find(a => a.href === "/drive")?.urls ?? []
-        }
+    <Sheet
+      isPresented={isPresented}
+      closeButtonActiveBackgroundStyleClassName="active:bg-appTint/16"
+      primaryButton={{
+        backgroundStyleClassName: (
+          "bg-appTint hover:bg-[rgb(0,93,186)] " +
+            "dark:hover:bg-[rgb(41,169,255)] " +
+            "dark:active:bg-[rgb(82,186,255)] active:bg-[rgb(0,73,145)]"
+        ),
+        action: () => viewModel.uploadButtonDidClick(),
+        disabled: !viewModel.file || viewModel.isLoading,
+        label: () => (
+          <Text textKey={viewModel.isLoading ? "Uploading..." : "Upload"} />
+        )
+      }}
+    >
+      <AsyncImage
+        widthClassName="w-9"
+        heightClassName="h-9"
+        marginClassName="mb-3.5"
+        urls={process.env.NEXT_PUBLIC_DRIVE_ICON_URLS?.split(",")}
       />
-      <h1
-        className={
-          "text-labelPrimary text-[19px] font-semibold leading-5.5 " +
-            "mb-3.5"
-        }
-      >
-        {Localizer.default().localize("New File")}
-      </h1>
-      <div className="px-2.5 pb-2.5 w-full">
-        <label
-          className={
-            "text-labelPrimary text-left w-full text-sm " +
-              "leading-4.25 mb-1.25 block"
-          }
-        >
-          {"SHA-512"}
-        </label>
-        <input
-          className={
-            "w-full h-9 px-2.5 rounded-lg border border-gray3 " +
-              "caret-appTint mb-3.75 hover:bg-fillQuaternary " +
-              "text-sm leading-4.5 text-labelPrimary focus:outline-3 " +
-              "focus:outline-appTint/70 focus:-outline-offset-2 " +
-              "text-ellipsis"
-          }
-          value={viewModel.sha512}
-          onChange={(event) => {
-            viewModel.sha512InputDidChange(event.target.value)
-          }}
-        />
+      <Text
+        textKey="New File"
+        foregroundStyleClassName="text-labelPrimary"
+        fontSizeClassName="text-[19px]"
+        fontWeightClassName="font-semibold"
+        lineHeightClassName="leading-5.5"
+        marginClassName="mb-3.5"
+        multilineTextAlignmentClassName="text-center"
+      />
 
-        <div className="flex items-center justify-center w-full mb-7.5">
+      <VStack
+        widthClassName="w-full"
+        paddingClassName="px-2.5 pb-2.5"
+      >
+        <VStack
+          widthClassName="w-full"
+          marginClassName="mb-7.5"
+          heightClassName="h-24"
+          borderClassName="border border-gray3 border-dashed rounded-lg"
+          backgroundStyleClassName="hover:bg-fillQuaternary"
+        >
           <label
-            htmlFor="dropzone-file"
+            htmlFor="dropbox"
             className={
-              "flex flex-col items-center justify-center w-full h-24 border " +
-                "border-gray3 border-dashed rounded-lg cursor-pointer " +
-                "hover:bg-fillQuaternary"
+              "flex flex-col items-center justify-center size-full " +
+                "cursor-pointer fill-labelTertiary"
             }
           >
-            <div className="flex flex-col items-center justify-center w-full">
-              <UISFSymbol
-                systemName="icloud.and.arrow.up"
-                className="w-8 h-8 fill-labelTertiary"
-              />
-              <p
-                className={
-                  "w-full text-labelTertiary text-sm leading-4.25 mt-1.5 " +
-                    "truncate text-center"
-                }
-              >
-                {
-                  viewModel.file
-                    ? viewModel.file.name
-                    : Localizer.default().localize("Choose a File")
-                }
-              </p>
-            </div>
+            <Image
+              systemName="icloud.and.arrow.up"
+              widthClassName="w-8"
+              heightClassName="h-8"
+            />
+            <Text
+              textKey={viewModel.file ? undefined : "Choose a File"}
+              verbatimContent={viewModel.file ? viewModel.file.name : undefined}
+              foregroundStyleClassName="text-labelTertiary"
+              fontSizeClassName="text-sm"
+              lineHeightClassName="leading-4.25"
+              marginClassName="mt-1.5"
+              multilineTextAlignmentClassName="text-center"
+              truncationClassName="truncate"
+            />
             <input
-              id="dropzone-file"
+              id="dropbox"
               type="file"
               className="hidden"
               accept=".m4a"
@@ -120,59 +118,21 @@ export default function UploadSheet({
               }}
             />
           </label>
-        </div>
+        </VStack>
 
         {
           viewModel.isError && (
-            <p
-              className={
-                "text-[#e30000] dark:text-[#ff3037] text-sm " +
-                  "leading-5 mb-2.5 text-center"
-              }
-            >
-              {
-                Localizer
-                  .default()
-                  .localize(
-                    "Unable to upload file. Try again later."
-                  )
-              }
-            </p>
+            <Text
+              textKey="Unable to upload file. Try again later."
+              foregroundStyleClassName="text-[#e30000] dark:text-[#ff3037]"
+              fontSizeClassName="text-sm"
+              lineHeightClassName="leading-5"
+              marginClassName="mb-2.5"
+              multilineTextAlignmentClassName="text-center"
+            />
           )
         }
-        <div className="w-full flex justify-center">
-          <button
-            className={
-              "min-w-1/2 bg-appTint text-systemWhite h-9 flex " +
-                "items-center justify-center rounded-lg " +
-                "hover:bg-[rgb(0,93,186)] " +
-                "dark:hover:bg-[rgb(41,169,255)] " +
-                "dark:active:bg-[rgb(82,186,255)] " +
-                "active:bg-[rgb(0,73,145)] " +
-                "active:text-systemWhite/30 " + (
-                  (viewModel.sha512.length <= 0 || !viewModel.file)
-                    ? "opacity-30 dark:opacity-40 pointer-events-none"
-                    : "cursor-pointer"
-                )
-            }
-            onClick={() => viewModel.uploadButtonDidClick()}
-          >
-            {Localizer.default().localize("Upload")}
-          </button>
-        </div>
-      </div>
-
-      {/* Loading */}
-      <div
-        className={
-          "bg-backgroundPrimary absolute inset-0 flex items-center " +
-            "justify-center rounded-b-[11px] " + (
-              viewModel.isLoading ? "visible" : "invisible"
-            )
-        }
-      >
-        <UIProgress variant="8" />
-      </div>
+      </VStack>
     </Sheet>
   )
 }

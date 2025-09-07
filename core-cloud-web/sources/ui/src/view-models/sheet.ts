@@ -22,10 +22,12 @@ import { BoolBinding } from "../binding"
 
 export default function useSheet({
   isPresented,
-  onDismiss
+  onDismiss,
+  primaryButtonAction
 }: {
-  isPresented: BoolBinding
-  onDismiss?: () => void
+  isPresented: BoolBinding,
+  onDismiss?: () => void,
+  primaryButtonAction?: () => Promise<boolean>
 }) {
   const [isClosing, setIsClosing] = useState(false)
 
@@ -39,8 +41,11 @@ export default function useSheet({
     await dismissCleanup()
   }
 
-  async function viewDidDisappear() {
-    await dismissCleanup()
+  async function primaryButtonDidClick() {
+    let needClose = await primaryButtonAction?.()
+    if (needClose) {
+      dismissCleanup()
+    }
   }
 
   /* MARK: - Utilities */
@@ -56,6 +61,6 @@ export default function useSheet({
     isClosing,
     viewDidAppear,
     closeButtonDidClick,
-    viewDidDisappear
+    primaryButtonDidClick
   }
 }
