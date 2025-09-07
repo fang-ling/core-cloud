@@ -37,7 +37,8 @@ struct BodyguardMiddleware: AsyncMiddleware {
       /* If not logged in and want to see the protected page */
       if (
         request.url.path.starts(with: "/home") ||
-        request.url.path.starts(with: "/drive")
+        request.url.path.starts(with: "/drive") ||
+        request.url.path.starts(with: "/music")
       ) {
         return request.redirect(to: "/authenticator/#\(request.url.path)")
       }
