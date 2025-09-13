@@ -27,19 +27,16 @@ struct SongController: RouteCollection {
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("song")
       .post(use: insertSongHandler)
 
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("songs")
       .get(use: fetchSongsHandler)
 
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("song")
       .patch(use: modifySongHandler)
   }

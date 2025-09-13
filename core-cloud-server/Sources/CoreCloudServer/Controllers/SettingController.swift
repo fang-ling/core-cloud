@@ -25,13 +25,11 @@ struct SettingController: RouteCollection {
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("setting")
       .get(use: fetchSettingHandler)
 
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("setting")
       .patch(use: modifySettingHandler)
   }

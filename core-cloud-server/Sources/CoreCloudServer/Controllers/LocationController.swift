@@ -25,13 +25,11 @@ struct LocationController: RouteCollection {
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("location")
       .post(use: insertLocationHandler)
 
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("locations")
       .get(use: fetchLocationsHandler)
   }

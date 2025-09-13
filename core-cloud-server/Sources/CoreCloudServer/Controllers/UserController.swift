@@ -26,19 +26,16 @@ struct UserController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("user")
       .on(.HEAD, use: peekUserHandler)
 
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("user")
       .post(use: insertUserHandler)
 
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("user")
       .get(use: fetchUserHandler)
   }

@@ -25,7 +25,6 @@ struct UserTokenController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("user-token")
       .post(use: insertUserTokenHandler)
   }

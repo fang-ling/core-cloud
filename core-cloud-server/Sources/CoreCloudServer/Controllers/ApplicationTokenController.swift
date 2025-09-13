@@ -26,13 +26,11 @@ struct ApplicationTokenController: RouteCollection {
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("application-token")
       .post(use: insertApplicationTokenHandler)
 
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("application-token")
       .on(.HEAD, use: peekApplicationTokenHandler)
   }

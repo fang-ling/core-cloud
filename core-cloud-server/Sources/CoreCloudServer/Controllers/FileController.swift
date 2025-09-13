@@ -16,19 +16,16 @@ struct FileController: RouteCollection {
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("file")
       .on(.POST, body: .stream, use: insertFileHandler)
 
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("file")
       .get(use: fetchFileHandler)
 
     routes
       .grouped("api")
-      .grouped("v1")
       .grouped("files")
       .get(use: fetchFilesHandler)
   }
