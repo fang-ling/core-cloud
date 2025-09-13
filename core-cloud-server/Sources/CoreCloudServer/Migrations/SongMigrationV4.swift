@@ -28,7 +28,7 @@ struct SongMigrationV4: AsyncMigration {
         Song.FieldKeys.isPopular,
         .bool,
         .required,
-        .sql(.default("FALSE"))
+        .sql(.default(false))
       )
       .update()
   }
