@@ -45,6 +45,7 @@ struct FileMigrationV1: AsyncMigration {
       )
       .field(File.FieldKeys.createdAt, .datetime)
       .field(File.FieldKeys.updatedAt, .datetime)
+    /* FIXME: Add UserID */
       .unique(on: File.FieldKeys.checksum)
       .create()
   }

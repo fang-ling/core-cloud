@@ -27,6 +27,8 @@ extension ControllerTests {
   @Test("SongControllerTests")
   func testSongController() async throws {
     try await withApp(configure: CoreCloudServer.configure) { app in
+      try FileManager.default.removeItem(atPath: "/tmp/song-controller-test")
+
       try await app.testing().test(
         .POST,
         "api/v1/song",
@@ -111,13 +113,12 @@ extension ControllerTests {
             Song.Singular.Input.Insertion(
               title: "Por Una Cabeza",
               artist: "Thomas Newman",
-              genre: "Soundtrack",
-              year: 1997,
               trackNumber: 7,
               discNumber: 1,
               playCount: 0,
               sampleSize: 16,
               sampleRate: 44100,
+              isPopular: true,
               fileID: 1
             )
           )
@@ -247,13 +248,12 @@ extension ControllerTests {
             Song.Singular.Input.Insertion(
               title: "Por Una Cabeza",
               artist: "Thomas Newman",
-              genre: "Soundtrack",
-              year: 1997,
               trackNumber: 7,
               discNumber: 1,
               playCount: 0,
               sampleSize: 16,
               sampleRate: 44100,
+              isPopular: true,
               fileID: 1
             )
           )
@@ -308,13 +308,12 @@ extension ControllerTests {
             Song.Singular.Input.Insertion(
               title: "Por Una Cabeza",
               artist: "Thomas Newman",
-              genre: "Soundtrack",
-              year: 1997,
               trackNumber: 7,
               discNumber: 1,
               playCount: 0,
               sampleSize: 16,
               sampleRate: 44100,
+              isPopular: true,
               fileID: 2
             )
           )
@@ -369,13 +368,12 @@ extension ControllerTests {
             Song.Singular.Input.Insertion(
               title: "Por Una Cabeza",
               artist: "Thomas Newman",
-              genre: "Soundtrack",
-              year: 1997,
               trackNumber: 7,
               discNumber: 1,
               playCount: 0,
               sampleSize: 16,
               sampleRate: 44100,
+              isPopular: true,
               fileID: 3
             )
           )
@@ -399,13 +397,12 @@ extension ControllerTests {
             Song.Singular.Input.Insertion(
               title: "Por Una Cabeza",
               artist: "Thomas Newman",
-              genre: "Soundtrack",
-              year: 1997,
               trackNumber: 7,
               discNumber: 1,
               playCount: 0,
               sampleSize: 16,
               sampleRate: 44100,
+              isPopular: true,
               fileID: 3
             )
           )
@@ -468,8 +465,6 @@ extension ControllerTests {
           #expect(songs.first?.id == 1)
           #expect(songs.first?.title == "Por Una Cabeza")
           #expect(songs.first?.artist == "Thomas Newman")
-          #expect(songs.first?.genre == "Soundtrack")
-          #expect(songs.first?.year == 1997)
           #expect(songs.first?.trackNumber == 7)
           #expect(songs.first?.discNumber == 1)
           #expect(songs.first?.playCount == 19358)

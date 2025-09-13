@@ -30,12 +30,6 @@ final class Song: Model, @unchecked Sendable {
   @Field(key: FieldKeys.artist)
   var artist: String
 
-  @Field(key: FieldKeys.genre)
-  var genre: String
-
-  @Field(key: FieldKeys.year)
-  var year: Int64
-
   @Field(key: FieldKeys.trackNumber)
   var trackNumber: Int64
 
@@ -50,6 +44,9 @@ final class Song: Model, @unchecked Sendable {
 
   @Field(key: FieldKeys.sampleRate)
   var sampleRate: Int64
+
+  @Field(key: FieldKeys.isPopular)
+  var isPopular: Bool
 
   @Parent(key: FieldKeys.fileID)
   var file: File
@@ -69,13 +66,12 @@ final class Song: Model, @unchecked Sendable {
     id: Int64? = nil,
     title: String,
     artist: String,
-    genre: String,
-    year: Int64,
     trackNumber: Int64,
     discNumber: Int64,
     playCount: Int64,
     sampleSize: Int64,
     sampleRate: Int64,
+    isPopular: Bool,
     fileID: File.IDValue,
     userID: User.IDValue,
     createdAt: Date? = nil,
@@ -84,13 +80,12 @@ final class Song: Model, @unchecked Sendable {
     self.id = id
     self.title = title
     self.artist = artist
-    self.genre = genre
-    self.year = year
     self.trackNumber = trackNumber
     self.discNumber = discNumber
     self.playCount = playCount
     self.sampleSize = sampleSize
     self.sampleRate = sampleRate
+    self.isPopular = isPopular
     self.$file.id = fileID
     self.$user.id = userID
     self.createdAt = createdAt
@@ -105,17 +100,23 @@ extension Song {
     static let id: FieldKey = "id"
     static let title: FieldKey = "title"
     static let artist: FieldKey = "artist"
-    static let genre: FieldKey = "genre"
-    static let year: FieldKey = "year"
     static let trackNumber: FieldKey = "track_number"
     static let discNumber: FieldKey = "dics_number"
     static let playCount: FieldKey = "play_count"
     static let sampleSize: FieldKey = "sampleSize"
     static let sampleRate: FieldKey = "sampleRate"
+    static let isPopular: FieldKey = "is_popular"
     static let fileID: FieldKey = "file_id"
     static let userID: FieldKey = "user_id"
     static let createdAt: FieldKey = "created_at"
     static let updatedAt: FieldKey = "updated_at"
+  }
+}
+
+extension Song.FieldKeys {
+  enum Removed {
+    static let year: FieldKey = "year"
+    static let genre: FieldKey = "genre"
   }
 }
 
@@ -136,13 +137,12 @@ extension Song.Singular.Input {
   struct Insertion: Codable {
     var title: String
     var artist: String
-    var genre: String
-    var year: Int64
     var trackNumber: Int64
     var discNumber: Int64
     var playCount: Int64
     var sampleSize: Int64
     var sampleRate: Int64
+    var isPopular: Bool
     var fileID: Int64
   }
 
@@ -157,8 +157,6 @@ extension Song.Plural.Output {
     var id: Int64
     var title: String
     var artist: String
-    var genre: String
-    var year: Int64
     var trackNumber: Int64
     var discNumber: Int64
     var playCount: Int64

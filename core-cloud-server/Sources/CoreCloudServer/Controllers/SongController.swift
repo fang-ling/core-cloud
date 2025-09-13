@@ -104,13 +104,12 @@ struct SongController: RouteCollection {
       try await songService.addSong(
         title: insertRequest.title,
         artist: insertRequest.artist,
-        genre: insertRequest.genre,
-        year: insertRequest.year,
         trackNumber: insertRequest.trackNumber,
         discNumber: insertRequest.discNumber,
         playCount: insertRequest.playCount,
         sampleSize: insertRequest.sampleSize,
         sampleRate: insertRequest.sampleRate,
+        isPopular: insertRequest.isPopular,
         with: insertRequest.fileID,
         for: userID,
         on: request.db
@@ -162,8 +161,6 @@ struct SongController: RouteCollection {
                 id: song.id,
                 title: song.title,
                 artist: song.artist,
-                genre: song.genre,
-                year: song.year,
                 trackNumber: song.trackNumber,
                 discNumber: song.discNumber,
                 playCount: song.playCount,

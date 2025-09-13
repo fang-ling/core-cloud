@@ -34,13 +34,12 @@ extension ServiceTests {
           try await songService.addSong(
             title: "Por Una Cabeza",
             artist: "Thomas Newman",
-            genre: "Soundtrack",
-            year: 1992,
             trackNumber: 7,
             discNumber: 1,
             playCount: 0,
             sampleSize: 16,
             sampleRate: 44100,
+            isPopular: true,
             with: 1,
             for: 1,
             on: app.db
@@ -63,13 +62,12 @@ extension ServiceTests {
           try await songService.addSong(
             title: "Por Una Cabeza",
             artist: "Thomas Newman",
-            genre: "Soundtrack",
-            year: 1992,
             trackNumber: 7,
             discNumber: 1,
             playCount: 0,
             sampleSize: 16,
             sampleRate: 44100,
+            isPopular: true,
             with: 1,
             for: eva.requireID(),
             on: app.db
@@ -98,13 +96,12 @@ extension ServiceTests {
         try await songService.addSong(
           title: "Por Una Cabeza",
           artist: "Thomas Newman",
-          genre: "Soundtrack",
-          year: 1992,
           trackNumber: 7,
           discNumber: 1,
           playCount: 0,
           sampleSize: 16,
           sampleRate: 44100,
+          isPopular: true,
           with: file.requireID(),
           for: eva.requireID(),
           on: app.db
@@ -112,11 +109,10 @@ extension ServiceTests {
         let song = try await Song.query(on: app.db).first()
         #expect(song?.title == "Por Una Cabeza")
         #expect(song?.artist == "Thomas Newman")
-        #expect(song?.genre == "Soundtrack")
-        #expect(song?.year == 1992)
         #expect(song?.trackNumber == 7)
         #expect(song?.discNumber == 1)
         #expect(song?.playCount == 0)
+        #expect(song?.isPopular == true)
         #expect(song?.sampleSize == 16)
         #expect(song?.sampleRate == 44100)
 
@@ -124,13 +120,12 @@ extension ServiceTests {
           try await songService.addSong(
             title: "Por Una Cabeza",
             artist: "Thomas Newman",
-            genre: "Soundtrack",
-            year: 1992,
             trackNumber: 7,
             discNumber: 1,
             playCount: 0,
             sampleSize: 16,
             sampleRate: 44100,
+            isPopular: true,
             with: file.requireID(),
             for: eva.requireID(),
             on: app.db
@@ -187,13 +182,12 @@ extension ServiceTests {
         let song = try Song(
           title: "Por Una Cabeza",
           artist: "Thomas Newman",
-          genre: "Soundtrack",
-          year: 1992,
           trackNumber: 7,
           discNumber: 1,
           playCount: 0,
           sampleSize: 16,
           sampleRate: 44100,
+          isPopular: true,
           fileID: file.requireID(),
           userID: eva.requireID()
         )
@@ -207,8 +201,6 @@ extension ServiceTests {
         #expect(songs.first?.id == 1)
         #expect(songs.first?.title == "Por Una Cabeza")
         #expect(songs.first?.artist == "Thomas Newman")
-        #expect(songs.first?.genre == "Soundtrack")
-        #expect(songs.first?.year == 1992)
         #expect(songs.first?.trackNumber == 7)
         #expect(songs.first?.discNumber == 1)
         #expect(songs.first?.playCount == 0)
@@ -256,13 +248,12 @@ extension ServiceTests {
         let song = try Song(
           title: "Por Una Cabeza",
           artist: "Thomas Newman",
-          genre: "Soundtrack",
-          year: 1992,
           trackNumber: 7,
           discNumber: 1,
           playCount: 0,
           sampleSize: 16,
           sampleRate: 44100,
+          isPopular: true,
           fileID: file.requireID(),
           userID: eva.requireID()
         )
@@ -280,8 +271,6 @@ extension ServiceTests {
         #expect(retrievedSong?.id == 1)
         #expect(retrievedSong?.title == "Por Una Cabeza")
         #expect(retrievedSong?.artist == "Thomas Newman")
-        #expect(retrievedSong?.genre == "Soundtrack")
-        #expect(retrievedSong?.year == 1992)
         #expect(retrievedSong?.trackNumber == 7)
         #expect(retrievedSong?.discNumber == 1)
         #expect(retrievedSong?.playCount == 19358)
