@@ -29,7 +29,7 @@ extension ControllerTests {
     try await withApp(configure: CoreCloudServer.configure) { app in
       try await app.testing().test(
         .HEAD,
-        "api/v1/user",
+        "api/user",
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
         }
@@ -37,7 +37,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .HEAD,
-        "api/v1/user?username=tracy%40example.com",
+        "api/user?username=tracy%40example.com",
         afterResponse: { response async throws in
           #expect(response.status == .noContent)
         }
@@ -45,7 +45,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/user",
+        "api/user",
         beforeRequest: { request async throws in
           try request.content.encode(
             User.Singular.Input.Insertion(
@@ -64,7 +64,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .HEAD,
-        "api/v1/user?username=tracy%40example.com",
+        "api/user?username=tracy%40example.com",
         afterResponse: { response async throws in
           #expect(response.status == .ok)
         }
@@ -73,7 +73,7 @@ extension ControllerTests {
       /* TODO: Add Conflict? */
       try await app.testing().test(
         .POST,
-        "api/v1/user",
+        "api/user",
         beforeRequest: { request async throws in
           try request.content.encode(
             User.Singular.Input.Insertion(
@@ -92,7 +92,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/user",
+        "api/user",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -102,7 +102,7 @@ extension ControllerTests {
       var cookie: HTTPCookies.Value?
       try await app.testing().test(
         .POST,
-        "api/v1/user-token",
+        "api/user-token",
         beforeRequest: { request async throws in
           request.headers.basicAuthorization = .init(
             username: "tracy@example.com",
@@ -128,7 +128,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/user",
+        "api/user",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (

@@ -27,7 +27,7 @@ extension ControllerTests {
     try await withApp(configure: CoreCloudServer.configure) { app in
       try await app.testing().test(
         .POST,
-        "api/v1/user",
+        "api/user",
         beforeRequest: { request async throws in
           try request.content.encode(
             User.Singular.Input.Insertion(
@@ -46,7 +46,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/setting",
+        "api/setting",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -55,7 +55,7 @@ extension ControllerTests {
       var cookie: HTTPCookies.Value?
       try await app.testing().test(
         .POST,
-        "api/v1/user-token",
+        "api/user-token",
         beforeRequest: { request async throws in
           request.headers.basicAuthorization = .init(
             username: "tracy@example.com",
@@ -81,7 +81,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/setting",
+        "api/setting",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -97,7 +97,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/setting?key=Tracy",
+        "api/setting?key=Tracy",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -113,7 +113,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/setting?key=homeBackgroundColor",
+        "api/setting?key=homeBackgroundColor",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -134,7 +134,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .PATCH,
-        "api/v1/setting",
+        "api/setting",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -142,7 +142,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .PATCH,
-        "api/v1/setting?key=Tracy",
+        "api/setting?key=Tracy",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -158,7 +158,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .PATCH,
-        "api/v1/setting?key=homeBackgroundColor&value=Tracy",
+        "api/setting?key=homeBackgroundColor&value=Tracy",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -174,7 +174,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .PATCH,
-        "api/v1/setting?key=homeBackgroundColor&value=19342",
+        "api/setting?key=homeBackgroundColor&value=19342",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -190,7 +190,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/setting?key=homeBackgroundColor",
+        "api/setting?key=homeBackgroundColor",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (

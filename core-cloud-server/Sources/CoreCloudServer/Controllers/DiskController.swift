@@ -30,7 +30,7 @@ struct DiskController: RouteCollection {
   }
 
   /**
-   * - URL: GET /api/v1/disks
+   * - URL: GET /api/disks
    *
    * - Response Codes:
    *   - 200 OK: The disks is returned.

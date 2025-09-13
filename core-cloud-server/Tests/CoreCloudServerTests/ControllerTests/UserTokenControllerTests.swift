@@ -29,7 +29,7 @@ extension ControllerTests {
     try await withApp(configure: CoreCloudServer.configure) { app in
       try await app.testing().test(
         .POST,
-        "api/v1/user",
+        "api/user",
         beforeRequest: { request async throws in
           try request.content.encode(
             User.Singular.Input.Insertion(
@@ -48,7 +48,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/user-token",
+        "api/user-token",
         beforeRequest: { request async throws in
           request.headers.basicAuthorization = .init(
             username: "diana@example.com",
@@ -74,7 +74,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/user-token",
+        "api/user-token",
         beforeRequest: { request async throws in
           request.headers.basicAuthorization = .init(
             username: "diana@example.com",
@@ -100,7 +100,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/user-token",
+        "api/user-token",
         beforeRequest: { request async throws in
           request.headers.basicAuthorization = .init(
             username: "diana@example.com",
@@ -114,7 +114,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/user-token",
+        "api/user-token",
         beforeRequest: { request async throws in
           request.headers.basicAuthorization = .init(
             username: "diana@example.com",
@@ -131,7 +131,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/user-token",
+        "api/user-token",
         beforeRequest: { request async throws in
           request.headers.basicAuthorization = .init(
             username: "sue@example.com",

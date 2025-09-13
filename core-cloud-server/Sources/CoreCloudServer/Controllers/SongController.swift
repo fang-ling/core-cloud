@@ -42,7 +42,7 @@ struct SongController: RouteCollection {
   }
 
   /**
-   * - URL: POST /api/v1/song
+   * - URL: POST /api/song
    *
    * - Response Codes:
    *   - 201 Created: The request has been fulfilled, resulting in the creation
@@ -121,7 +121,7 @@ struct SongController: RouteCollection {
   }
 
   /**
-   * - URL: GET /api/v1/songs
+   * - URL: GET /api/songs
    *
    * - Response Codes:
    *   - 200 OK: The locations is returned.
@@ -177,7 +177,7 @@ struct SongController: RouteCollection {
   }
 
   /**
-   * - URL: PATCH /api/v1/song
+   * - URL: PATCH /api/song
    *
    * - Query Parameters:
    *   - id [Int64] (required): The id of the song.

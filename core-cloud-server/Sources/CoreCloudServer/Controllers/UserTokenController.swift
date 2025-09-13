@@ -30,7 +30,7 @@ struct UserTokenController: RouteCollection {
   }
 
   /**
-   * - URL: POST /api/v1/user-token
+   * - URL: POST /api/user-token
    *
    * - Response Codes:
    *   - 201 Created: The request has been fulfilled, resulting in the creation

@@ -29,7 +29,7 @@ extension ControllerTests {
     try await withApp(configure: CoreCloudServer.configure) { app in
       try await app.testing().test(
         .POST,
-        "api/v1/location",
+        "api/location",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -37,7 +37,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/locations",
+        "api/locations",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -45,7 +45,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/user",
+        "api/user",
         beforeRequest: { request async throws in
           try request.content.encode(
             User.Singular.Input.Insertion(
@@ -65,7 +65,7 @@ extension ControllerTests {
       var cookie: HTTPCookies.Value?
       try await app.testing().test(
         .POST,
-        "api/v1/user-token",
+        "api/user-token",
         beforeRequest: { request async throws in
           request.headers.basicAuthorization = .init(
             username: "tracy@example.com",
@@ -91,7 +91,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/location",
+        "api/location",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -113,7 +113,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/locations",
+        "api/locations",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (

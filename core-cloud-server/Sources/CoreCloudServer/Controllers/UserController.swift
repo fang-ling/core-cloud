@@ -41,7 +41,7 @@ struct UserController: RouteCollection {
   }
 
   /**
-   * - URL: HEAD /api/v1/user?username={username}
+   * - URL: HEAD /api/user?username={username}
    *
    * - Query Parameters:
    *   - username [String] (required): The username for the user.
@@ -82,7 +82,7 @@ struct UserController: RouteCollection {
   }
 
   /**
-   * - URL: POST /api/v1/user
+   * - URL: POST /api/user
    *
    * - Response Codes:
    *   - 201 Created: The request has been fulfilled, resulting in the creation
@@ -129,7 +129,7 @@ struct UserController: RouteCollection {
   }
 
   /**
-   * - URL: GET /api/v1/user
+   * - URL: GET /api/user
    *
    * - Response Codes:
    *   - 200 OK: The user detail is returned.

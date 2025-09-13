@@ -35,7 +35,7 @@ struct SettingController: RouteCollection {
   }
 
   /**
-   * - URL: GET /api/v1/setting
+   * - URL: GET /api/setting
    *
    * - Query Parameters:
    *   - key [String] (required): The setting key to fetch.
@@ -103,7 +103,7 @@ struct SettingController: RouteCollection {
   }
 
   /**
-   * - URL: PATCH /api/v1/setting
+   * - URL: PATCH /api/setting
    *
    * - Query Parameters:
    *   - key [String] (required): The setting's key.

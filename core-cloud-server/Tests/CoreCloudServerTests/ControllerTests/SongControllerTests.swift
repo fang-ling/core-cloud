@@ -31,7 +31,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/song",
+        "api/song",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -39,7 +39,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/songs",
+        "api/songs",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -47,7 +47,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .PATCH,
-        "api/v1/song",
+        "api/song",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -55,7 +55,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/user",
+        "api/user",
         beforeRequest: { request async throws in
           try request.content.encode(
             User.Singular.Input.Insertion(
@@ -75,7 +75,7 @@ extension ControllerTests {
       var cookie: HTTPCookies.Value?
       try await app.testing().test(
         .POST,
-        "api/v1/user-token",
+        "api/user-token",
         beforeRequest: { request async throws in
           request.headers.basicAuthorization = .init(
             username: "tracy@example.com",
@@ -101,7 +101,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/song",
+        "api/song",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -130,7 +130,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/songs",
+        "api/songs",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -151,7 +151,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/location",
+        "api/location",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -174,7 +174,7 @@ extension ControllerTests {
       var token: HTTPCookies.Value?
       try await app.testing().test(
         .POST,
-        "api/v1/application-token",
+        "api/application-token",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -210,7 +210,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/file" +
+        "api/file" +
         "?name=byte" +
         "&kind=JPEG%20Image" +
         "&size=2" +
@@ -236,7 +236,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/song",
+        "api/song",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -270,7 +270,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/file" +
+        "api/file" +
         "?name=byte" +
         "&kind=Apple%20MPEG-4%20Audio" +
         "&size=6" +
@@ -296,7 +296,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/song",
+        "api/song",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -330,7 +330,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/file" +
+        "api/file" +
         "?name=byte" +
         "&kind=Apple%20MPEG-4%20Audio" +
         "&size=10" +
@@ -356,7 +356,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/song",
+        "api/song",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -385,7 +385,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/v1/song",
+        "api/song",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -414,7 +414,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .PATCH,
-        "api/v1/song",
+        "api/song",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -430,7 +430,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .PATCH,
-        "api/v1/song?id=1&playCount=19358",
+        "api/song?id=1&playCount=19358",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -446,7 +446,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/v1/songs",
+        "api/songs",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (

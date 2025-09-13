@@ -35,7 +35,7 @@ struct LocationController: RouteCollection {
   }
 
   /**
-   * - URL: POST /api/v1/location
+   * - URL: POST /api/location
    *
    * - Response Codes:
    *   - 201 Created: The request has been fulfilled, resulting in the creation
@@ -90,7 +90,7 @@ struct LocationController: RouteCollection {
   }
 
   /**
-   * - URL: GET /api/v1/locations
+   * - URL: GET /api/locations
    *
    * - Response Codes:
    *   - 200 OK: The locations is returned.

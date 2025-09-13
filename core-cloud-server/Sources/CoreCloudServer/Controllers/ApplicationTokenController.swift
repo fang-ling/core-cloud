@@ -36,7 +36,7 @@ struct ApplicationTokenController: RouteCollection {
   }
 
   /**
-   * - URL: POST /api/v1/application-token
+   * - URL: POST /api/application-token
    *
    * - Response Codes:
    *   - 201 Created: The request has been fulfilled, resulting in the creation
@@ -110,7 +110,7 @@ struct ApplicationTokenController: RouteCollection {
   }
 
   /**
-   * - URL: HEAD /api/v1/application-token
+   * - URL: HEAD /api/application-token
    *
    * - Response Codes:
    *   - 200 OK: The application token exists.
