@@ -30,7 +30,8 @@ namespace Song {
         playCount: number
         sampleSize: number
         sampleRate: number
-        fileID: number
+        fileID: number,
+        albumID: number
       }
 
       export type Modification = {

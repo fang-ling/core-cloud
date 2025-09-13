@@ -56,6 +56,7 @@ export default function SongSheet({
             viewModel.sampleSize.length <= 0 ||
             viewModel.sampleRate.length <= 0 ||
             viewModel.fileID.length <= 0 ||
+            viewModel.albumID.length <= 0 ||
             viewModel.isLoading
         ),
         label: () => (

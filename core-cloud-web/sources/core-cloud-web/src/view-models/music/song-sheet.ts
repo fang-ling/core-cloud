@@ -35,6 +35,7 @@ export default function useSongSheet({
   const [sampleSize, setSampleSize] = useState("")
   const [sampleRate, setSampleRate] = useState("")
   const [fileID, setFileID] = useState("")
+  const [albumID, setAlbumID] = useState("")
   const fields = [{
     label: "Title",
     value: title,
@@ -75,6 +76,10 @@ export default function useSongSheet({
     label: "File ID",
     value: fileID,
     onChange: fileIDDidChange
+  }, {
+    label: "Album ID",
+    value: albumID,
+    onChange: albumIDDidChange
   }]
   const [isError, setIsError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -120,6 +125,10 @@ export default function useSongSheet({
     setFileID(newFileID)
   }
 
+  function albumIDDidChange(newAlbumID: string) {
+    setAlbumID(newAlbumID)
+  }
+
   async function createButtonDidClick() {
     setIsError(false)
     setIsLoading(true)
@@ -134,7 +143,8 @@ export default function useSongSheet({
       playCount: +playCount,
       sampleSize: +sampleSize,
       sampleRate: +sampleRate,
-      fileID: +fileID
+      fileID: +fileID,
+      albumID: +albumID
     })
     setIsLoading(false)
     if (success) {
@@ -158,6 +168,7 @@ export default function useSongSheet({
     sampleSize,
     sampleRate,
     fileID,
+    albumID,
     fields,
     isError,
     isLoading,
