@@ -30,8 +30,6 @@ export default function SongDetailView({
     id: number,
     title: string,
     artist: string,
-    genre: string,
-    year: number,
     trackNumber: number,
     discNumber: number,
     playCount: number,
@@ -43,8 +41,6 @@ export default function SongDetailView({
     id: number,
     title: string,
     artist: string,
-    genre: string,
-    year: number,
     trackNumber: number,
     discNumber: number,
     playCount: number,
@@ -90,8 +86,6 @@ export default function SongDetailView({
           >
             <Text verbatimContent={song.title} />
             <Text verbatimContent={song.artist} />
-            <Text textKey={song.genre} />
-            <Text verbatimContent={`${song.year}`} />
             <Text verbatimContent={`${song.trackNumber}`} />
             <Text verbatimContent={`${song.discNumber}`} />
             <Text verbatimContent={`${song.playCount}`} />

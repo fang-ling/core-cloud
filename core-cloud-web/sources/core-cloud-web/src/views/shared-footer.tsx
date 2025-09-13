@@ -30,7 +30,7 @@ export default function SharedFooter() {
       >
         <p>
           {Localizer.default().localize("Version")}
-          {" 3.0.1"}
+          {" 3.1-beta"}
         </p>
         <p>
           {"Copyright © 2025 "}

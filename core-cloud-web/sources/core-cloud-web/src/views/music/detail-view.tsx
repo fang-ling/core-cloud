@@ -27,19 +27,32 @@ import VStack from "ui/v-stack"
 import ZStack from "ui/z-stack"
 import SongDetailView from "./song-detail-view"
 import { useEffect } from "react"
+import AlbumDetailView from "./album-detail-view"
 
 export default function DetailView({
   selectedSidebarItemKey,
+  albums,
+  setAlbums,
   songs,
   setSongs
 }: {
   selectedSidebarItemKey: string,
+  albums: {
+    id: number,
+    name: string,
+    artist: string,
+    artworkURLs: string
+  }[],
+  setAlbums: React.Dispatch<React.SetStateAction<{
+    id: number,
+    name: string,
+    artist: string,
+    artworkURLs: string
+  }[]>>,
   songs: {
     id: number,
     title: string,
     artist: string,
-    genre: string,
-    year: number,
     trackNumber: number,
     discNumber: number,
     playCount: number,
@@ -51,8 +64,6 @@ export default function DetailView({
     id: number,
     title: string,
     artist: string,
-    genre: string,
-    year: number,
     trackNumber: number,
     discNumber: number,
     playCount: number,
@@ -494,6 +505,14 @@ export default function DetailView({
             songs={songs}
             setSongs={setSongs}
             setCurrentPlayingSong={viewModel.setCurrentPlayingSong}
+          />
+        )
+      }
+      {
+        selectedSidebarItemKey === "albums" && (
+          <AlbumDetailView
+            albums={albums}
+            setAlbums={setAlbums}
           />
         )
       }

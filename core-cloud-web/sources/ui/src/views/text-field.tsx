@@ -1,8 +1,8 @@
 //
-//  secure-field.tsx
+//  text-field.tsx
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/9/7.
+//  Created by Fang Ling on 2025/9/13.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -22,12 +22,10 @@ import InternalTextField from "./internal-text-field"
 import React from "react"
 
 /**
- * A control into which people securely enter private text.
+ * A control that displays an editable text interface.
  */
-export default function SecureField({
+export default function TextField({
   text,
-  prompt,
-  onSubmit,
   onChange,
   marginClassName = "",
   widthClassName = "",
@@ -35,26 +33,16 @@ export default function SecureField({
   paddingClassName = "",
   borderClassName = "",
   foregroundStyleClassName = "",
+  backgroundStyleClassName = "",
   fontSizeClassName = "",
-  promptMultilineTextAlignmentClassName = "",
+  lineHeightClassName = "",
   tintClassName = "",
-  autocorrectionDisabled = false,
-  autocompletionDisabled = false,
-  autocapitalizationDisabled = false
+  disabled
 }: {
   /**
    * A binding to the text that the field displays and edits.
    */
   text: Binding<string>,
-  /**
-   * A text that represents the secure field's prompt. The prompt provides
-   * guidance on what people should type into the secure field.
-   */
-  prompt?: string,
-  /**
-   * An action to perform when the user submits a value.
-   */
-  onSubmit?: () => void,
   /**
    * An action to perform when the text value changes.
    */
@@ -65,19 +53,16 @@ export default function SecureField({
   paddingClassName?: string,
   borderClassName?: string,
   foregroundStyleClassName?: string,
+  backgroundStyleClassName?: string,
   fontSizeClassName?: string,
-  promptMultilineTextAlignmentClassName?: string,
+  lineHeightClassName?: string,
   tintClassName?: string,
-  autocorrectionDisabled?: boolean,
-  autocompletionDisabled?: boolean,
-  autocapitalizationDisabled?: boolean
+  disabled?: boolean
 }) {
   return (
     <InternalTextField
       text={text}
-      type="password"
-      prompt={prompt}
-      onSumbit={onSubmit}
+      type="text"
       onChange={onChange}
       marginClassName={marginClassName}
       widthClassName={widthClassName}
@@ -85,14 +70,11 @@ export default function SecureField({
       paddingClassName={paddingClassName}
       borderClassName={borderClassName}
       foregroundStyleClassName={foregroundStyleClassName}
+      backgroundStyleClassName={backgroundStyleClassName}
       fontSizeClassName={fontSizeClassName}
-      promptMultilineTextAlignmentClassName={
-        promptMultilineTextAlignmentClassName
-      }
+      lineHeightClassName={lineHeightClassName}
       tintClassName={tintClassName}
-      autocorrectionDisabled={autocorrectionDisabled}
-      autocompletionDisabled={autocompletionDisabled}
-      autocapitalizationDisabled={autocapitalizationDisabled}
+      disabled={disabled}
     />
   )
 }

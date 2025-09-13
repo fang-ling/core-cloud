@@ -29,6 +29,7 @@ import HStack from "ui/h-stack"
 import Image from "ui/image"
 import Text from "ui/text"
 import SongSheet from "./song-sheet"
+import AlbumSheet from "./album-sheet"
 
 export default function ContentView() {
   const viewModel = useContentView()
@@ -68,7 +69,13 @@ export default function ContentView() {
                         "active:bg-music-keyColor/16 " +
                         "active:text-music-keyColor/30"
                     }
-                    onClick={() => viewModel.newSongButtonDidClick()}
+                    onClick={() => {
+                      if (viewModel.selectedSidebarItemKey === "albums") {
+                        viewModel.newAlbumButtonDidClick()
+                      } else {
+                        viewModel.newSongButtonDidClick()
+                      }
+                    }}
                   >
                     <HStack
                       widthClassName="w-4.75"
@@ -81,7 +88,11 @@ export default function ContentView() {
                       />
                     </HStack>
                     <Text
-                      textKey="New Song"
+                      textKey={
+                        viewModel.selectedSidebarItemKey === "albums"
+                          ? "New Album"
+                          : "New Song"
+                      }
                       fontSizeClassName="text-[15px]"
                       fontWeightClassName="font-semibold"
                       lineHeightClassName="leading-4.5"
@@ -92,6 +103,8 @@ export default function ContentView() {
             )}
             detail={() => (
               <DetailView
+                albums={viewModel.albums}
+                setAlbums={viewModel.setAlbums}
                 songs={viewModel.songs}
                 setSongs={viewModel.setSongs}
                 selectedSidebarItemKey={viewModel.selectedSidebarItemKey}
@@ -127,6 +140,14 @@ export default function ContentView() {
         )
       }
 
+      {
+        viewModel.isNewAlbumSheetPresented.value && (
+          <AlbumSheet
+            isPresented={viewModel.isNewAlbumSheetPresented}
+            onCreate={() => viewModel.newAlbumDidCreate()}
+          />
+        )
+      }
       {
         viewModel.isNewSongSheetPresented.value && (
           <SongSheet

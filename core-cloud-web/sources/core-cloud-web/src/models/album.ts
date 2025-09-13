@@ -1,8 +1,8 @@
 //
-//  song.ts
+//  album.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/31.
+//  Created by Fang Ling on 2025/9/13.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,24 +17,15 @@
 //  limitations under the License.
 //
 
-namespace Song {
+namespace Album {
   export namespace Singular {
     export namespace Input {
       export type Insertion = {
-        title: string
+        name: string
         artist: string
-        trackNumber: number
-        discNumber: number
-        playCount: number
-        sampleSize: number
-        sampleRate: number
-        fileID: number,
-        albumID: number
-      }
-
-      export type Modification = {
-        id: string
-        playCount: string
+        genre: string
+        year: number
+        artworkURLs: string
       }
     }
   }
@@ -43,18 +34,11 @@ namespace Song {
     export namespace Output {
       export type Retrieval = {
         id: number
-        title: string
+        name: string
         artist: string
-        genre: string
-        year: number
-        trackNumber: number
-        discNumber: number
-        playCount: number
-        sampleSize: number
-        sampleRate: number
-        fileID: number
+        artworkURLs: string
       }
     }
   }
 }
-export default Song
+export default Album

@@ -27,8 +27,6 @@ export default function useSongDetailView({
     id: number,
     title: string,
     artist: string,
-    genre: string,
-    year: number,
     trackNumber: number,
     discNumber: number,
     playCount: number,
@@ -49,19 +47,17 @@ export default function useSongDetailView({
   async function viewDidAppear() {
     let newSongs = await SongService.fetchSongs()
     setSongs(
-      newSongs.map(newSong => {
+      newSongs.map(song => {
         return {
-          id: newSong.id,
-          title: newSong.title,
-          artist: newSong.artist,
-          genre: newSong.genre,
-          year: newSong.year,
-          trackNumber: newSong.trackNumber,
-          discNumber: newSong.discNumber,
-          playCount: newSong.playCount,
-          sampleSize: newSong.sampleSize,
-          sampleRate: newSong.sampleRate,
-          fileID: newSong.fileID
+          id: song.id,
+          title: song.title,
+          artist: song.artist,
+          trackNumber: song.trackNumber,
+          discNumber: song.discNumber,
+          playCount: song.playCount,
+          sampleSize: song.sampleSize,
+          sampleRate: song.sampleRate,
+          fileID: song.fileID
         }
       })
     )

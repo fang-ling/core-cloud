@@ -1,8 +1,8 @@
 //
-//  song-sheet.tsx
+//  album-sheet.tsx
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/31.
+//  Created by Fang Ling on 2025/9/13.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,23 +17,23 @@
 //  limitations under the License.
 //
 
-import useSongSheet from "@/view-models/music/song-sheet"
+import useAlbumSheet from "@/view-models/music/album-sheet"
 import { Fragment } from "react"
 import AsyncImage from "ui/async-image"
 import { BoolBinding } from "ui/binding"
 import Sheet from "ui/sheet"
 import Text from "ui/text"
-import TextField from "ui/text-field"
 import VStack from "ui/v-stack"
+import TextField from "ui/text-field"
 
-export default function SongSheet({
+export default function AlbumSheet({
   isPresented,
   onCreate
 }: {
   isPresented: BoolBinding,
   onCreate?: () => void
 }) {
-  const viewModel = useSongSheet({
+  const viewModel = useAlbumSheet({
     onCreate: onCreate
   })
 
@@ -47,15 +47,11 @@ export default function SongSheet({
         ),
         action: () => viewModel.createButtonDidClick(),
         disabled: (
-          viewModel.title.value.length <= 0 ||
+          viewModel.name.value.length <= 0 ||
             viewModel.artist.value.length <= 0 ||
-            viewModel.trackNumber.value.length <= 0 ||
-            viewModel.discNumber.value.length <= 0 ||
-            viewModel.playCount.value.length <= 0 ||
-            viewModel.sampleSize.value.length <= 0 ||
-            viewModel.sampleRate.value.length <= 0 ||
-            viewModel.fileID.value.length <= 0 ||
-            viewModel.albumID.value.length <= 0 ||
+            viewModel.genre.value.length <= 0 ||
+            viewModel.year.value.length <= 0 ||
+            viewModel.artworkURLs.value.length <= 0 ||
             viewModel.isLoading
         ),
         label: () => (
@@ -70,7 +66,7 @@ export default function SongSheet({
         urls={process.env.NEXT_PUBLIC_MUSIC_ICON_URLS?.split(",")}
       />
       <Text
-        textKey="New Song"
+        textKey="New Album"
         foregroundStyleClassName="text-labelPrimary"
         fontSizeClassName="text-[19px]"
         fontWeightClassName="font-semibold"
@@ -123,7 +119,7 @@ export default function SongSheet({
         {
           viewModel.isError && (
             <Text
-              textKey="Unable to create song. Try again later."
+              textKey="Unable to create album. Try again later."
               foregroundStyleClassName="text-[#e30000] dark:text-[#ff3037]"
               fontSizeClassName="text-sm"
               lineHeightClassName="leading-5"

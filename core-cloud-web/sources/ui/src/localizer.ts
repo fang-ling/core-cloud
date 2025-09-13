@@ -52,6 +52,9 @@ export default class NewLocalizer {
     "Artists": {
       "zh-TW": "藝人"
     },
+    "Artwork URL": {
+      "zh-TW": "插圖連結"
+    },
     "Choose a File": {
       "zh-TW": "選擇檔案"
     },
@@ -75,6 +78,12 @@ export default class NewLocalizer {
     },
     "Loading...": {
       "zh-TW": "正在載入…"
+    },
+    "Name": { /* Duplicate with the old localizer. */
+      "zh-TW": "名稱"
+    },
+    "New Album": {
+      "zh-TW": "新專輯"
     },
     "New File": {
       "zh-TW": "新檔案"
@@ -118,6 +127,9 @@ master password.": {
     },
     "Year": {
       "zh-TW": "年份"
+    },
+    "Unable to create album. Try again later.": {
+      "zh-TW": "無法建立專輯。請稍後再試。"
     },
     "Unable to create song. Try again later.": {
       "zh-TW": "無法建立歌曲。請稍後再試。"

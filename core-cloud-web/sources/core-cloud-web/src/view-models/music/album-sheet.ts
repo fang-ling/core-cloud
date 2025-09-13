@@ -1,8 +1,8 @@
 //
-//  song-sheet.ts
+//  album-sheet.ts
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/31.
+//  Created by Fang Ling on 2025/9/13.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,51 +17,35 @@
 //  limitations under the License.
 //
 
-import SongService from "@/services/song-service"
+import AlbumService from "@/services/album-service"
 import { useState } from "react"
 import { useBinding } from "ui/binding"
 
-export default function useSongSheet({
+export default function useAlbumSheet({
   onCreate
 }: {
   onCreate?: () => void
 }) {
-  const title = useBinding("")
+  const name = useBinding("")
   const artist = useBinding("")
-  const trackNumber = useBinding("")
-  const discNumber = useBinding("")
-  const playCount = useBinding("")
-  const sampleSize = useBinding("")
-  const sampleRate = useBinding("")
-  const fileID = useBinding("")
-  const albumID = useBinding("")
+  const genre = useBinding("")
+  const year = useBinding("")
+  const artworkURLs = useBinding("")
   const fields = [{
-    label: "Title",
-    value: title
-  },{
+    label: "Name",
+    value: name
+  }, {
     label: "Artist",
     value: artist
   }, {
-    label: "Track Number",
-    value: trackNumber
+    label: "Genre",
+    value: genre
   }, {
-    label: "Disc Number",
-    value: discNumber
+    label: "Year",
+    value: year
   }, {
-    label: "Play Count",
-    value: playCount
-  }, {
-    label: "Sample Size",
-    value: sampleSize
-  }, {
-    label: "Sample Rate",
-    value: sampleRate
-  }, {
-    label: "File ID",
-    value: fileID
-  }, {
-    label: "Album ID",
-    value: albumID
+    label: "Artwork URL",
+    value: artworkURLs
   }]
   const [isError, setIsError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -71,16 +55,12 @@ export default function useSongSheet({
     setIsError(false)
     setIsLoading(true)
 
-    const success = await SongService.insertSong({
-      title: title.value,
+    const success = await AlbumService.insertAlbum({
+      name: name.value,
       artist: artist.value,
-      trackNumber: +trackNumber.value,
-      discNumber: +discNumber.value,
-      playCount: +playCount.value,
-      sampleSize: +sampleSize.value,
-      sampleRate: +sampleRate.value,
-      fileID: +fileID.value,
-      albumID: +albumID.value
+      genre: genre.value,
+      year: +year.value,
+      artworkURLs: artworkURLs.value
     })
 
     setIsLoading(false)
@@ -96,15 +76,11 @@ export default function useSongSheet({
   }
 
   return {
-    title,
+    name,
     artist,
-    trackNumber,
-    discNumber,
-    playCount,
-    sampleSize,
-    sampleRate,
-    fileID,
-    albumID,
+    genre,
+    year,
+    artworkURLs,
     fields,
     isError,
     isLoading,

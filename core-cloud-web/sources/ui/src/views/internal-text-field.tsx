@@ -29,7 +29,9 @@ export default function InternalTextField({
   paddingClassName = "",
   borderClassName = "",
   fontSizeClassName = "",
+  lineHeightClassName = "",
   foregroundStyleClassName = "",
+  backgroundStyleClassName = "",
   promptMultilineTextAlignmentClassName = "",
   widthClassName = "",
   heightClassName= "",
@@ -37,17 +39,20 @@ export default function InternalTextField({
   autocorrectionDisabled = false,
   autocompletionDisabled = false,
   autocapitalizationDisabled = false,
+  disabled,
   onSumbit,
   onChange
 }: {
   text: Binding<string>,
   prompt?: string,
-  type: "password",
+  type: "password" | "text",
   marginClassName?: string,
   paddingClassName?: string,
   borderClassName?: string,
   fontSizeClassName?: string,
+  lineHeightClassName?: string,
   foregroundStyleClassName?: string,
+  backgroundStyleClassName?: string,
   promptMultilineTextAlignmentClassName?: string,
   widthClassName?: string,
   heightClassName?: string,
@@ -55,6 +60,7 @@ export default function InternalTextField({
   autocorrectionDisabled?: boolean,
   autocompletionDisabled?: boolean,
   autocapitalizationDisabled?: boolean,
+  disabled?: boolean,
   onSumbit?: () => void,
   onChange?: () => void
 }) {
@@ -64,7 +70,8 @@ export default function InternalTextField({
         `${marginClassName} ${paddingClassName} ${borderClassName} ` +
           `${fontSizeClassName} ${foregroundStyleClassName} ` +
           `${promptMultilineTextAlignmentClassName} ${widthClassName} ` +
-          `${heightClassName} text-ellipsis ${tintClassName}`
+          `${heightClassName} text-ellipsis ${tintClassName} ` +
+          `${backgroundStyleClassName} ${lineHeightClassName}`
       }
       type={type}
       placeholder={prompt ? NewLocalizer.default.localize(prompt) : undefined}
@@ -81,6 +88,7 @@ export default function InternalTextField({
           onSumbit?.()
         }
       }}
+      disabled={disabled}
     />
   )
 }
