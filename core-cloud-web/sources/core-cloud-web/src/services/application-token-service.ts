@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-import ApplicationToken from '@/models/application-token'
+import ApplicationToken from "@/models/application-token"
 
 namespace ApplicationTokenService {
   export async function insertApplicationToken(
@@ -25,11 +25,11 @@ namespace ApplicationTokenService {
   ) {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/application-token`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/application-token`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
           },
           body: JSON.stringify(request)
         }
@@ -49,9 +49,9 @@ namespace ApplicationTokenService {
   export async function peekApplicationToken() {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/application-token`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/application-token`,
         {
-          method: 'HEAD'
+          method: "HEAD"
         }
       )
       if (response.status === 200) {

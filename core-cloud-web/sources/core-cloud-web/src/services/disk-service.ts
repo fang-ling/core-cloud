@@ -17,15 +17,15 @@
 //  limitations under the License.
 //
 
-import Disk from '@/models/disk'
+import Disk from "@/models/disk"
 
 namespace DiskService {
   export async function fetchDisks() {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/disks`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/disks`,
         {
-          method: 'GET'
+          method: "GET"
         }
       )
       if (response.status === 200) {

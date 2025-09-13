@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-import UserToken from '../models/user-token'
+import UserToken from "../models/user-token"
 
 namespace UserTokenService {
   export async function insertUserToken(
@@ -27,12 +27,12 @@ namespace UserTokenService {
   ) {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/user-token`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/user-token`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
-            'Content-Type': 'application/json'
+            "Authorization": `Basic ${btoa(`${username}:${password}`)}`,
+            "Content-Type": "application/json"
           },
           body: JSON.stringify(request)
         }

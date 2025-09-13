@@ -25,11 +25,11 @@ namespace SongService {
   ) {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/song`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/song`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
           },
           body: JSON.stringify(request)
         }
@@ -47,9 +47,9 @@ namespace SongService {
   export async function fetchSongs() {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/songs`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/songs`,
         {
-          method: 'GET'
+          method: "GET"
         }
       )
       if (response.status === 200) {
@@ -69,9 +69,9 @@ namespace SongService {
       const queryString = new URLSearchParams(request).toString()
 
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/song?${queryString}`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/song?${queryString}`,
         {
-          method: 'PATCH'
+          method: "PATCH"
         }
       )
     } catch {

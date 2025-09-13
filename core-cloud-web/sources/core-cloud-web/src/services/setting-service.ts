@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-import Setting from '@/models/setting'
+import Setting from "@/models/setting"
 
 namespace SettingService {
   export async function fetchSetting(
@@ -27,9 +27,9 @@ namespace SettingService {
       const queryString = new URLSearchParams(request).toString()
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/setting?${queryString}`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/setting?${queryString}`,
         {
-          method: 'GET'
+          method: "GET"
         }
       )
       if (response.status === 200) {
@@ -49,9 +49,9 @@ namespace SettingService {
       const queryString = new URLSearchParams(request).toString()
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/setting?${queryString}`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/setting?${queryString}`,
         {
-          method: 'PATCH'
+          method: "PATCH"
         }
       )
       if (response.status === 200) {

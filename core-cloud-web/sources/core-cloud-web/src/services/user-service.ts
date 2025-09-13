@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-import User from '../models/user'
+import User from "../models/user"
 
 namespace UserService {
   export async function insertUser(
@@ -25,10 +25,10 @@ namespace UserService {
   ) {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/user`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/user`,
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(request)
         }
       )
@@ -49,9 +49,9 @@ namespace UserService {
       const queryString = new URLSearchParams(request).toString()
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/user?${queryString}`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/user?${queryString}`,
         {
-          method: 'HEAD'
+          method: "HEAD"
         }
       )
       if (response.status === 200) {
@@ -62,16 +62,16 @@ namespace UserService {
         throw new Error()
       }
     } catch {
-      return 'error'
+      return "error"
     }
   }
 
   export async function fetchUser() {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/user`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/user`,
         {
-          method: 'GET'
+          method: "GET"
         }
       )
       if (response.status === 200) {

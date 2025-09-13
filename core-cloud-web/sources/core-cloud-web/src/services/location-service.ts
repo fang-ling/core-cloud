@@ -17,15 +17,15 @@
 //  limitations under the License.
 //
 
-import Location from '@/models/location'
+import Location from "@/models/location"
 
 namespace LocationService {
   export async function fetchLocations() {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/locations`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/locations`,
         {
-          method: 'GET'
+          method: "GET"
         }
       )
       if (response.status === 200) {
@@ -43,11 +43,11 @@ namespace LocationService {
   ) {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/location`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/location`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
           },
           body: JSON.stringify(request)
         }
