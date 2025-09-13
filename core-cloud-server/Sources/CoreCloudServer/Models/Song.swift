@@ -54,6 +54,9 @@ final class Song: Model, @unchecked Sendable {
   @Parent(key: FieldKeys.userID)
   var user: User
 
+  @OptionalParent(key: FieldKeys.albumID)
+  var album: Album?
+
   @Timestamp(key: FieldKeys.createdAt, on: .create)
   var createdAt: Date?
 
@@ -74,6 +77,7 @@ final class Song: Model, @unchecked Sendable {
     isPopular: Bool,
     fileID: File.IDValue,
     userID: User.IDValue,
+    albumID: Album.IDValue,
     createdAt: Date? = nil,
     updatedAt: Date? = nil
   ) {
@@ -88,6 +92,7 @@ final class Song: Model, @unchecked Sendable {
     self.isPopular = isPopular
     self.$file.id = fileID
     self.$user.id = userID
+    self.$album.id = albumID
     self.createdAt = createdAt
     self.updatedAt = updatedAt
   }
@@ -108,6 +113,7 @@ extension Song {
     static let isPopular: FieldKey = "is_popular"
     static let fileID: FieldKey = "file_id"
     static let userID: FieldKey = "user_id"
+    static let albumID: FieldKey = "album_id"
     static let createdAt: FieldKey = "created_at"
     static let updatedAt: FieldKey = "updated_at"
   }
@@ -144,6 +150,7 @@ extension Song.Singular.Input {
     var sampleRate: Int64
     var isPopular: Bool
     var fileID: Int64
+    var albumID: Int64
   }
 
   struct Modification: Codable {

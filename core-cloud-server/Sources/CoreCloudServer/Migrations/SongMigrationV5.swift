@@ -1,8 +1,8 @@
 //
-//  AlbumError.swift
+//  SongMigrationV5.swift
 //  core-cloud-server
 //
-//  Created by Fang Ling on 2025/9/10.
+//  Created by Fang Ling on 2025/9/13.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,7 +17,24 @@
 //  limitations under the License.
 //
 
-enum AlbumError: Error {
-  case databaseError
-  case noSuchAlbum
+import Fluent
+
+struct SongMigrationV5: AsyncMigration {
+  var name = "SongMigrationV5"
+
+  func prepare(on database: any Database) async throws {
+    try await database.schema(Song.schema)
+      .field(
+        Song.FieldKeys.albumID,
+        .int64,
+        .references(Album.schema, Album.FieldKeys.id)
+      )
+      .update()
+  }
+
+  func revert(on database: any Database) async throws {
+    try await database.schema(Song.schema)
+      .deleteField(Song.FieldKeys.albumID)
+      .update()
+  }
 }

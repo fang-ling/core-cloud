@@ -42,6 +42,7 @@ extension ServiceTests {
             isPopular: true,
             with: 1,
             for: 1,
+            at: 1,
             on: app.db
           )
         }
@@ -70,6 +71,7 @@ extension ServiceTests {
             isPopular: true,
             with: 1,
             for: eva.requireID(),
+            at: 1,
             on: app.db
           )
         }
@@ -93,6 +95,33 @@ extension ServiceTests {
         )
         try await file.save(on: app.db)
 
+        await #expect(throws: SongError.databaseError) {
+          try await songService.addSong(
+            title: "Por Una Cabeza",
+            artist: "Thomas Newman",
+            trackNumber: 7,
+            discNumber: 1,
+            playCount: 0,
+            sampleSize: 16,
+            sampleRate: 44100,
+            isPopular: true,
+            with: file.requireID(),
+            for: eva.requireID(),
+            at: 1,
+            on: app.db
+          )
+        }
+
+        let album = try Album(
+          name: "Scent of a Woman",
+          artist: "Thomas Newman",
+          genre: "Soundtrack",
+          year: 1992,
+          artworkURLs: "https://example.com/1.png",
+          userID: eva.requireID()
+        )
+        try await album.save(on: app.db)
+
         try await songService.addSong(
           title: "Por Una Cabeza",
           artist: "Thomas Newman",
@@ -104,6 +133,7 @@ extension ServiceTests {
           isPopular: true,
           with: file.requireID(),
           for: eva.requireID(),
+          at: album.requireID(),
           on: app.db
         )
         let song = try await Song.query(on: app.db).first()
@@ -128,6 +158,7 @@ extension ServiceTests {
             isPopular: true,
             with: file.requireID(),
             for: eva.requireID(),
+            at: album.requireID(),
             on: app.db
           )
         }
@@ -179,6 +210,16 @@ extension ServiceTests {
         )
         try await file.save(on: app.db)
 
+        let album = try Album(
+          name: "Scent of a Woman",
+          artist: "Thomas Newman",
+          genre: "Soundtrack",
+          year: 1992,
+          artworkURLs: "https://example.com/1.png",
+          userID: eva.requireID()
+        )
+        try await album.save(on: app.db)
+
         let song = try Song(
           title: "Por Una Cabeza",
           artist: "Thomas Newman",
@@ -189,7 +230,8 @@ extension ServiceTests {
           sampleRate: 44100,
           isPopular: true,
           fileID: file.requireID(),
-          userID: eva.requireID()
+          userID: eva.requireID(),
+          albumID: album.requireID()
         )
         try await song.save(on: app.db)
 
@@ -245,6 +287,16 @@ extension ServiceTests {
         )
         try await file.save(on: app.db)
 
+        let album = try Album(
+          name: "Scent of a Woman",
+          artist: "Thomas Newman",
+          genre: "Soundtrack",
+          year: 1992,
+          artworkURLs: "https://example.com/1.png",
+          userID: eva.requireID()
+        )
+        try await album.save(on: app.db)
+
         let song = try Song(
           title: "Por Una Cabeza",
           artist: "Thomas Newman",
@@ -255,7 +307,8 @@ extension ServiceTests {
           sampleRate: 44100,
           isPopular: true,
           fileID: file.requireID(),
-          userID: eva.requireID()
+          userID: eva.requireID(),
+          albumID: album.requireID()
         )
         try await song.save(on: app.db)
 

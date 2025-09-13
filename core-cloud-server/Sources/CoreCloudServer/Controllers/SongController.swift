@@ -20,6 +20,7 @@
 import Vapor
 
 struct SongController: RouteCollection {
+  let albumService = AlbumService()
   let fileService = FileService()
   let songService = SongService()
   let userTokenService = UserTokenService()
@@ -88,13 +89,25 @@ struct SongController: RouteCollection {
     } catch {
       return .badRequest
     }
-
     if fileApplication != "Music" {
       return .badRequest
     }
-
     if fileKind != "Apple MPEG-4 Audio" {
       return .badRequest
+    }
+
+    do {
+      let isExist = try await albumService.containsAlbum(
+        with: insertRequest.albumID,
+        for: userID,
+        on: request.db
+      )
+
+      guard isExist else {
+        return .badRequest
+      }
+    } catch {
+      return .internalServerError
     }
 
     do {
@@ -109,6 +122,7 @@ struct SongController: RouteCollection {
         isPopular: insertRequest.isPopular,
         with: insertRequest.fileID,
         for: userID,
+        at: insertRequest.albumID,
         on: request.db
       )
 

@@ -117,6 +117,7 @@ struct AlbumService {
    * - Throws:
    *   - ``AlbumError/databaseError``: if there is an issue accessing the
    *                                   database.
+   *   - ``AlbumError/noSuchAlbum``: if the album is not found.
    */
   func getAlbum(
     with id: Album.IDValue,
@@ -125,16 +126,52 @@ struct AlbumService {
   ) async throws -> (
     genre: String,
     year: Int64
-  )? {
+  ) {
     do {
-      return try await Album.query(on: database)
+      guard let album = try await Album.query(on: database)
         .filter(\.$user.$id == userID)
         .filter(\.$id == id)
         .first()
-        .map { album in (
-          genre: album.genre,
-          year: album.year
-        )}
+      else {
+        throw AlbumError.noSuchAlbum
+      }
+
+      return (
+        genre: album.genre,
+        year: album.year
+      )
+    } catch AlbumError.noSuchAlbum {
+      throw AlbumError.noSuchAlbum
+    } catch {
+      throw AlbumError.databaseError
+    }
+  }
+
+  /**
+   * Returns a Boolean value indicating whether the database contains the given
+   * album.
+   *
+   * - Parameters:
+   *   - id: The unique identifier for the album to retrieve.
+   *   - userID: The unique identifier for the user requesting the album.
+   *   - database: The database instance used to perform the query.
+   *
+   * - Throws:
+   *   - ``AlbumError/databaseError``: if there is an issue accessing the
+   *                                   database.
+   */
+  func containsAlbum(
+    with id: Album.IDValue,
+    for userID: User.IDValue,
+    on database: Database
+  ) async throws -> Bool {
+    do {
+      let count = try await Album.query(on: database)
+        .filter(\.$user.$id == userID)
+        .filter(\.$id == id)
+        .count()
+
+      return count > 0
     } catch {
       throw AlbumError.databaseError
     }

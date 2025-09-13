@@ -194,12 +194,13 @@ extension ServiceTests {
       let albumService = AlbumService()
 
       try await withApp(configure: CoreCloudServer.configure) { app in
-        var albumDetail = try await albumService.getAlbum(
-          with: 1,
-          for: 1,
-          on: app.db
-        )
-        #expect(albumDetail == nil)
+        await #expect(throws: AlbumError.noSuchAlbum) {
+          try await albumService.getAlbum(
+            with: 1,
+            for: 1,
+            on: app.db
+          )
+        }
 
         let eva = User(
           firstName: "Eva",
@@ -213,12 +214,13 @@ extension ServiceTests {
         )
         try await eva.save(on: app.db)
 
-        albumDetail = try await albumService.getAlbum(
-          with: 1,
-          for: eva.requireID(),
-          on: app.db
-        )
-        #expect(albumDetail == nil)
+        await #expect(throws: AlbumError.noSuchAlbum) {
+          try await albumService.getAlbum(
+            with: 1,
+            for: eva.requireID(),
+            on: app.db
+          )
+        }
 
         let album = try Album(
           name: "1996",
@@ -230,13 +232,13 @@ extension ServiceTests {
         )
         try await album.save(on: app.db)
 
-        albumDetail = try await albumService.getAlbum(
+        let albumDetail = try await albumService.getAlbum(
           with: album.requireID(),
           for: eva.requireID(),
           on: app.db
         )
-        #expect(albumDetail?.genre == "Chamber music")
-        #expect(albumDetail?.year == 1996)
+        #expect(albumDetail.genre == "Chamber music")
+        #expect(albumDetail.year == 1996)
 
         let alice = User(
           firstName: "Alice",
@@ -250,12 +252,81 @@ extension ServiceTests {
         )
         try await alice.save(on: app.db)
 
-        albumDetail = try await albumService.getAlbum(
+        await #expect(throws: AlbumError.noSuchAlbum) {
+          try await albumService.getAlbum(
+            with: album.requireID(),
+            for: alice.requireID(),
+            on: app.db
+          )
+        }
+      }
+    }
+
+    func testContainsAlbum() async throws {
+      let albumService = AlbumService()
+
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        var isExist = try await albumService.containsAlbum(
+          with: 1,
+          for: 1,
+          on: app.db
+        )
+        #expect(!isExist)
+
+        let eva = User(
+          firstName: "Eva",
+          lastName: "Chan",
+          username: "eva@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await eva.save(on: app.db)
+
+        isExist = try await albumService.containsAlbum(
+          with: 1,
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(!isExist)
+
+        let album = try Album(
+          name: "1996",
+          artist: "Ryuichi Sakamoto",
+          genre: "Chamber music",
+          year: 1996,
+          artworkURLs: "https://example.com/1.png",
+          userID: eva.requireID()
+        )
+        try await album.save(on: app.db)
+
+        isExist = try await albumService.containsAlbum(
+          with: album.requireID(),
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(isExist)
+
+        let alice = User(
+          firstName: "Alice",
+          lastName: "Ou",
+          username: "alice@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await alice.save(on: app.db)
+
+        isExist = try await albumService.containsAlbum(
           with: album.requireID(),
           for: alice.requireID(),
           on: app.db
         )
-        #expect(albumDetail == nil)
+        #expect(!isExist)
       }
     }
   }

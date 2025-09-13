@@ -183,13 +183,11 @@ struct AlbumController: RouteCollection {
     }
 
     do {
-      guard let album = try await albumService.getAlbum(
+      let album = try await albumService.getAlbum(
         with: fetchRequest.id,
         for: userID,
         on: request.db
-      ) else {
-        return Response(status: .notFound)
-      }
+      )
 
       return try Response(
         status: .ok,
@@ -203,6 +201,8 @@ struct AlbumController: RouteCollection {
           )
         )
       )
+    } catch AlbumError.noSuchAlbum {
+      return Response(status: .notFound)
     } catch AlbumError.databaseError {
       return Response(status: .serviceUnavailable)
     } catch {

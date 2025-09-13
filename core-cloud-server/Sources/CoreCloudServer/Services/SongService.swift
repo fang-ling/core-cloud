@@ -34,6 +34,7 @@ struct SongService {
    *   - sampleRate: The audio sample rate.
    *   - fileID: An identifier for the audio file.
    *   - userID: An identifier for the user adding the song.
+   *   - albumID: An identifier for the album of the song.
    *   - database: The database instance where the song will be added.
    *
    * - Throws:
@@ -51,6 +52,7 @@ struct SongService {
     isPopular: Bool,
     with fileID: File.IDValue,
     for userID: User.IDValue,
+    at albumID: Album.IDValue,
     on database: Database
   ) async throws {
     let song = Song(
@@ -63,7 +65,8 @@ struct SongService {
       sampleRate: sampleRate,
       isPopular: isPopular,
       fileID: fileID,
-      userID: userID
+      userID: userID,
+      albumID: albumID
     )
 
     do {

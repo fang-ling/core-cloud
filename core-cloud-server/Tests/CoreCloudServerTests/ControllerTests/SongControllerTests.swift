@@ -119,7 +119,8 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
-              fileID: 1
+              fileID: 1,
+              albumID: 1
             )
           )
         },
@@ -254,7 +255,8 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
-              fileID: 1
+              fileID: 1,
+              albumID: 1
             )
           )
         },
@@ -314,7 +316,8 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
-              fileID: 2
+              fileID: 2,
+              albumID: 1
             )
           )
         },
@@ -374,7 +377,34 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
-              fileID: 3
+              fileID: 3,
+              albumID: 1
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .badRequest)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/album",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+
+          try request.content.encode(
+            Album.Singular.Input.Insertion(
+              name: "Scent of a Woman",
+              artist: "Thomas Newman",
+              genre: "Soundtrack",
+              year: 1992,
+              artworkURLs: "https://example.com/1.png"
             )
           )
         },
@@ -403,7 +433,38 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
-              fileID: 3
+              fileID: 3,
+              albumID: 1
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/song",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            Song.Singular.Input.Insertion(
+              title: "Por Una Cabeza",
+              artist: "Thomas Newman",
+              trackNumber: 7,
+              discNumber: 1,
+              playCount: 0,
+              sampleSize: 16,
+              sampleRate: 44100,
+              isPopular: true,
+              fileID: 3,
+              albumID: 1
             )
           )
         },
