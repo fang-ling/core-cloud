@@ -129,6 +129,7 @@ struct CoreCloudServer {
     try app.routes.register(collection: ApplicationTokenController())
     try app.routes.register(collection: FileController())
     try app.routes.register(collection: SongController())
+    try app.routes.register(collection: AlbumController())
   }
 }
 

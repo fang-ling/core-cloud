@@ -88,3 +88,47 @@ extension Album {
     static let updatedAt: FieldKey = "updated_at"
   }
 }
+
+extension Album {
+  enum Singular { }
+  enum Plural { }
+}
+
+extension Album.Singular {
+  enum Input { }
+  enum Output { }
+}
+
+extension Album.Plural {
+  enum Output { }
+}
+
+extension Album.Singular.Input {
+  struct Insertion: Codable {
+    var name: String
+    var artist: String
+    var genre: String
+    var year: Int64
+    var artworkURLs: String
+  }
+
+  struct Retrieval: Codable {
+    var id: Int64
+  }
+}
+
+extension Album.Singular.Output {
+  struct Retrieval: Codable {
+    var genre: String
+    var year: Int64
+  }
+}
+
+extension Album.Plural.Output {
+  struct Retrieval: Codable {
+    var id: Int64
+    var name: String
+    var artist: String
+    var artworkURLs: String
+  }
+}
