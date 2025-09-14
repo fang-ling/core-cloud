@@ -28,7 +28,8 @@ export default function Toggle({
   isOn,
   children,
   style = "checkbox",
-  tintClassName = ""
+  tintClassName = "",
+  marginClassName = ""
 }: {
   /**
    * A binding to a property that indicates whether the toggle is on or off.
@@ -42,11 +43,14 @@ export default function Toggle({
    * The appearance and behavior of a toggle.
    */
   style?: "checkbox",
-  tintClassName?: string
+  tintClassName?: string,
+  marginClassName?: string
 }) {
   return (
     <div
-      className="flex items-center"
+      className={
+        `flex items-center ${marginClassName}`
+      }
       onClick={() => isOn.toggle()}
     >
       <div className="relative flex items-center justify-center mr-2.5">

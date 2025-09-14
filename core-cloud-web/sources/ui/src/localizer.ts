@@ -64,6 +64,9 @@ export default class NewLocalizer {
     "Disc Number": {
       "zh-TW": "光碟編號"
     },
+    "Duration": {
+      "zh-TW": "時長"
+    },
     "Enter Master Password": {
       "zh-TW": "輸入主密碼"
     },
@@ -103,6 +106,9 @@ export default class NewLocalizer {
     "Play Count": {
       "zh-TW": "播放次數"
     },
+    "Popular": {
+      "zh-TW": "熱門"
+    },
     "Sample Rate": {
       "zh-TW": "取樣頻率"
     },
@@ -114,6 +120,9 @@ export default class NewLocalizer {
     },
     "Soundtrack": {
       "zh-TW": "原聲帶"
+    },
+    "The song is popular on this album": {
+      "zh-TW": "歌曲在專輯中受歡迎"
     },
     "Title": {
       "zh-TW": "名稱"

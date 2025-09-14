@@ -21,9 +21,13 @@ import useSongSheet from "@/view-models/music/song-sheet"
 import { Fragment } from "react"
 import AsyncImage from "ui/async-image"
 import { BoolBinding } from "ui/binding"
+import Grid from "ui/grid"
+import HStack from "ui/h-stack"
 import Sheet from "ui/sheet"
+import Spacer from "ui/spacer"
 import Text from "ui/text"
 import TextField from "ui/text-field"
+import Toggle from "ui/toggle"
 import VStack from "ui/v-stack"
 
 export default function SongSheet({
@@ -79,60 +83,87 @@ export default function SongSheet({
         multilineTextAlignmentClassName="text-center"
       />
 
-      <VStack
+      <Grid
         widthClassName="w-full"
+        gridTemplateClassName="grid-cols-[auto_1fr]"
         paddingClassName="px-2.5 pb-2.5"
       >
         {
           viewModel.fields.map((field, index) => (
             <Fragment key={index}>
-              <Text
-                textKey={field.label}
-                foregroundStyleClassName="text-labelPrimary"
-                fontSizeClassName="text-sm"
-                lineHeightClassName="leading-4.25"
-                marginClassName="mb-1.25"
-                multilineTextAlignmentClassName="text-left"
-              />
-              <TextField
-                text={field.value}
-                widthClassName="w-full"
-                heightClassName="h-9"
-                paddingClassName="px-2.5"
-                borderClassName={
-                  "rounded-lg border border-gray3 focus:outline-3 " +
-                    "focus:outline-music-keyColor/70 focus:-outline-offset-2"
-                }
-                tintClassName="caret-music-keyColor"
-                marginClassName="mb-3.75"
-                backgroundStyleClassName={
-                  "hover:bg-fillQuaternary disabled:bg-fillQuaternary"
-                }
-                fontSizeClassName="text-sm"
-                lineHeightClassName="leading-4.5"
-                foregroundStyleClassName={
-                  "text-labelPrimary disabled:opacity-30 " +
-                    "dark:disabled:opacity-40"
-                }
-                disabled={viewModel.isLoading}
-              />
+              <HStack
+                heightClassName="h-full"
+                marginClassName="mb-3.75 mr-1"
+              >
+                <Text
+                  textKey={field.label}
+                  foregroundStyleClassName="text-labelPrimary"
+                  fontSizeClassName="text-sm"
+                  lineHeightClassName="leading-4.25"
+                  multilineTextAlignmentClassName="text-right"
+                />
+              </HStack>
+              {
+                typeof field.value.value === "boolean" && (
+                  <Toggle
+                    isOn={field.value}
+                    tintClassName={
+                      "checked:bg-music-keyColor " +
+                        "checked:border-music-keyColor"
+                    }
+                    marginClassName="mb-3.75"
+                  >
+                    <Text
+                      textKey={field.caption}
+                      foregroundStyleClassName="text-labelSecondary"
+                      fontSizeClassName="text-sm"
+                    />
+                  </Toggle>
+                )
+              }
+              {
+                typeof field.value.value !== "boolean" && (
+                  <TextField
+                    text={field.value}
+                    widthClassName="w-full"
+                    heightClassName="h-9"
+                    paddingClassName="px-2.5"
+                    borderClassName={
+                      "rounded-lg border border-gray3 focus:outline-3 " +
+                        "focus:outline-music-keyColor/70 " +
+                        "focus:-outline-offset-2"
+                    }
+                    tintClassName="caret-music-keyColor"
+                    marginClassName="mb-3.75"
+                    backgroundStyleClassName={
+                      "hover:bg-fillQuaternary disabled:bg-fillQuaternary"
+                    }
+                    fontSizeClassName="text-sm"
+                    lineHeightClassName="leading-4.5"
+                    foregroundStyleClassName={
+                      "text-labelPrimary disabled:opacity-30 " +
+                        "dark:disabled:opacity-40"
+                    }
+                    disabled={viewModel.isLoading}
+                  />
+                )
+              }
             </Fragment>
           ))
         }
-
-        {
-          viewModel.isError && (
-            <Text
-              textKey="Unable to create song. Try again later."
-              foregroundStyleClassName="text-[#e30000] dark:text-[#ff3037]"
-              fontSizeClassName="text-sm"
-              lineHeightClassName="leading-5"
-              marginClassName="mb-2.5"
-              multilineTextAlignmentClassName="text-center"
-            />
-          )
-        }
-      </VStack>
+      </Grid>
+      {
+        viewModel.isError && (
+          <Text
+            textKey="Unable to create song. Try again later."
+            foregroundStyleClassName="text-[#e30000] dark:text-[#ff3037]"
+            fontSizeClassName="text-sm"
+            lineHeightClassName="leading-5"
+            marginClassName="mb-5"
+            multilineTextAlignmentClassName="text-center"
+          />
+        )
+      }
     </Sheet>
   )
 }

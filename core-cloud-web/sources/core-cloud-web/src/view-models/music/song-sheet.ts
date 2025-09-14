@@ -33,6 +33,8 @@ export default function useSongSheet({
   const playCount = useBinding("")
   const sampleSize = useBinding("")
   const sampleRate = useBinding("")
+  const duration = useBinding("")
+  const isPopular = useBinding(false)
   const fileID = useBinding("")
   const albumID = useBinding("")
   const fields = [{
@@ -57,6 +59,13 @@ export default function useSongSheet({
     label: "Sample Rate",
     value: sampleRate
   }, {
+    label: "Duration",
+    value: duration
+  }, {
+    label: "Popular",
+    value: isPopular,
+    caption: "The song is popular on this album"
+  }, {
     label: "File ID",
     value: fileID
   }, {
@@ -79,6 +88,8 @@ export default function useSongSheet({
       playCount: +playCount.value,
       sampleSize: +sampleSize.value,
       sampleRate: +sampleRate.value,
+      duration: +duration.value,
+      isPopular: isPopular.value,
       fileID: +fileID.value,
       albumID: +albumID.value
     })

@@ -28,6 +28,8 @@ namespace Song {
         playCount: number
         sampleSize: number
         sampleRate: number
+        isPopular: boolean
+        duration: number
         fileID: number,
         albumID: number
       }
