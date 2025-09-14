@@ -16,6 +16,7 @@
     "./spacer": "./src/views/spacer.tsx",
     "./text": "./src/views/text.tsx",
     "./text-field": "./src/views/text-field.tsx",
+    "./toggle": "./src/views/toggle.tsx",
     "./v-stack": "./src/views/v-stack.tsx",
     "./z-stack": "./src/views/z-stack.tsx"
   }

@@ -82,6 +82,37 @@ export default function Image({
         )
       }
 
+    case "checkmark": {
+      switch (weight) {
+        case "semibold": return (
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 14.4783 14.0325"
+            className={className}
+            preserveAspectRatio={preserveAspectRatio}
+          >
+            <g>
+              <rect height="14.0325" opacity="0" width="14.4783" x="0" y="0" />
+              <path
+                d={
+                  "M5.42913 14.0325C5.88929 14.0325 6.2518 13.8468 6.50141 13" +
+                    ".4683L13.8147 2.15635C13.9975 1.87513 14.0721 1.62624 14" +
+                    ".0721 1.38942C14.0721 0.768436 13.6194 0.32819 12.9885 0" +
+                    ".32819C12.5468 0.32819 12.283 0.479439 12.0135 0.90053L5" +
+                    ".39788 11.3846L2.00817 7.091C1.75572 6.76788 1.4834 6.62" +
+                    "869 1.10277 6.62869C0.458715 6.62869 0 7.08492 0 7.70839" +
+                    "C0 7.98 0.0930309 8.23778 0.323451 8.51223L4.36572 13.49" +
+                    "99C4.6622 13.8617 4.99134 14.0325 5.42913 14.0325Z"
+                }
+              />
+            </g>
+          </svg>
+        )
+      }
+    }
+
     case "corecloud.applemusic":
       switch (weight) {
         case "regular": return (

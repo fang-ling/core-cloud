@@ -17,24 +17,25 @@
 //  limitations under the License.
 //
 
-'use client'
+"use client"
 
-import { useState } from 'react'
-import UserTokenService from '../../services/user-token-service'
-import { useRouter } from 'next/navigation'
-import Localizer from '@/localizer'
+import { useState } from "react"
+import UserTokenService from "../../services/user-token-service"
+import { useRouter } from "next/navigation"
+import Localizer from "@/localizer"
+import { useBinding } from "ui/binding"
 
 export default function useLoginForm() {
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState("")
   const [isUsernameFocused, setIsUsernameFocused] = useState(false)
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState("")
   const [isPasswordFocused, setIsPasswordFocused] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [stage, setStage] = useState<'username' | 'password'>('username')
+  const [stage, setStage] = useState<"username" | "password">("username")
   const [isRegisterFormPresented, setIsRegisterFormPresented] = useState(false)
-  const [isRememberMe, setIsRememberMe] = useState(false)
+  const isRememberMe = useBinding(false)
   const [isPasswordPresented, setIsPasswordPresented] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState("")
   const router = useRouter()
 
   /* MARK: Event handlers */
@@ -45,7 +46,7 @@ export default function useLoginForm() {
       /* Wait 1s unconditionally. */
       await new Promise(resolve => setTimeout(resolve, 1000))
 
-      setStage('password')
+      setStage("password")
       setIsPasswordPresented(true)
       setIsLoading(false)
     } else {
@@ -54,11 +55,11 @@ export default function useLoginForm() {
       const isSuccess = await UserTokenService.insertUserToken(
         username,
         password,
-        { rememberMe: isRememberMe }
+        { rememberMe: isRememberMe.value }
       )
       if (isSuccess) {
-        if (window.location.hash === '') {
-          router.push('/home')
+        if (window.location.hash === "") {
+          router.push("/home")
         } else {
           router.push(window.location.hash.substring(1))
         }
@@ -67,10 +68,10 @@ export default function useLoginForm() {
           Localizer
             .default()
             .localize(
-              'Check the account information you entered and try again.'
+              "Check the account information you entered and try again."
             )
         )
-        setPassword('')
+        setPassword("")
       }
 
       setIsLoading(false)
@@ -78,26 +79,22 @@ export default function useLoginForm() {
   }
 
   function handleRegisterButtonClick() {
-    document.body.style.setProperty('overflow', 'hidden')
+    document.body.style.setProperty("overflow", "hidden")
     setIsRegisterFormPresented(true)
   }
 
-  function handleIsRememberMeChange(newValue: boolean) {
-    setIsRememberMe(newValue)
-  }
-
   async function handleUsernameChange() {
-    setStage('username')
-    setErrorMessage('')
+    setStage("username")
+    setErrorMessage("")
 
     /* Wait 400ms for transition. */
     await new Promise(resolve => setTimeout(resolve, 400))
     setIsPasswordPresented(false)
-    setPassword('')
+    setPassword("")
   }
 
   function handlePasswordChange() {
-    setErrorMessage('')
+    setErrorMessage("")
   }
 
   return {
@@ -118,7 +115,6 @@ export default function useLoginForm() {
     errorMessage,
     handleContinueButtonClick,
     handleRegisterButtonClick,
-    handleIsRememberMeChange,
     handleUsernameChange,
     handlePasswordChange
   }

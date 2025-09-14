@@ -156,9 +156,6 @@ export default class Localizer {
     "Forgot password?": {
       "zh-TW": "忘記密碼？"
     },
-    "Keep me signed in": {
-      "zh-TW": "讓我保持登入"
-    },
     "Kind": {
       "zh-TW": "種類"
     },

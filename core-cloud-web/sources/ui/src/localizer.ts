@@ -73,6 +73,9 @@ export default class NewLocalizer {
     "Genre": {
       "zh-TW": "類型"
     },
+    "Keep me signed in": {
+      "zh-TW": "讓我保持登入"
+    },
     "Library": {
       "zh-TW": "資料庫"
     },
