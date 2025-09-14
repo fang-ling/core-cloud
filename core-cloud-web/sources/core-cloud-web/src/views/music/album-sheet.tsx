@@ -23,8 +23,9 @@ import AsyncImage from "ui/async-image"
 import { BoolBinding } from "ui/binding"
 import Sheet from "ui/sheet"
 import Text from "ui/text"
-import VStack from "ui/v-stack"
 import TextField from "ui/text-field"
+import Grid from "ui/grid"
+import HStack from "ui/h-stack"
 
 export default function AlbumSheet({
   isPresented,
@@ -75,21 +76,27 @@ export default function AlbumSheet({
         multilineTextAlignmentClassName="text-center"
       />
 
-      <VStack
+      <Grid
         widthClassName="w-full"
+        gridTemplateClassName="grid-cols-[auto_1fr]"
         paddingClassName="px-2.5 pb-2.5"
       >
         {
           viewModel.fields.map((field, index) => (
             <Fragment key={index}>
-              <Text
-                textKey={field.label}
-                foregroundStyleClassName="text-labelPrimary"
-                fontSizeClassName="text-sm"
-                lineHeightClassName="leading-4.25"
-                marginClassName="mb-1.25"
-                multilineTextAlignmentClassName="text-left"
-              />
+              <HStack
+                heightClassName="h-full"
+                marginClassName="mb-3.75 mr-1"
+              >
+                <Text
+                  textKey={field.label}
+                  foregroundStyleClassName="text-labelPrimary"
+                  fontSizeClassName="text-sm"
+                  lineHeightClassName="leading-4.25"
+                  marginClassName="mb-1.25"
+                  multilineTextAlignmentClassName="text-right"
+                />
+              </HStack>
               <TextField
                 text={field.value}
                 widthClassName="w-full"
@@ -115,20 +122,20 @@ export default function AlbumSheet({
             </Fragment>
           ))
         }
+      </Grid>
 
-        {
-          viewModel.isError && (
-            <Text
-              textKey="Unable to create album. Try again later."
-              foregroundStyleClassName="text-[#e30000] dark:text-[#ff3037]"
-              fontSizeClassName="text-sm"
-              lineHeightClassName="leading-5"
-              marginClassName="mb-2.5"
-              multilineTextAlignmentClassName="text-center"
-            />
-          )
-        }
-      </VStack>
+      {
+        viewModel.isError && (
+          <Text
+            textKey="Unable to create album. Try again later."
+            foregroundStyleClassName="text-[#e30000] dark:text-[#ff3037]"
+            fontSizeClassName="text-sm"
+            lineHeightClassName="leading-5"
+            marginClassName="mb-5"
+            multilineTextAlignmentClassName="text-center"
+          />
+        )
+      }
     </Sheet>
   )
 }

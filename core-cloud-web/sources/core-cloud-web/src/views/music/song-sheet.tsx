@@ -24,11 +24,9 @@ import { BoolBinding } from "ui/binding"
 import Grid from "ui/grid"
 import HStack from "ui/h-stack"
 import Sheet from "ui/sheet"
-import Spacer from "ui/spacer"
 import Text from "ui/text"
 import TextField from "ui/text-field"
 import Toggle from "ui/toggle"
-import VStack from "ui/v-stack"
 
 export default function SongSheet({
   isPresented,
