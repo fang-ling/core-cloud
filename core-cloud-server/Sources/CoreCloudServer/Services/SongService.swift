@@ -32,6 +32,8 @@ struct SongService {
    *   - playCount: A number indicating how many times the song has been played.
    *   - sampleSize: The size of the audio sample.
    *   - sampleRate: The audio sample rate.
+   *   - isPopular: Whether the song is popular.
+   *   - duration: The duration of the audio.
    *   - fileID: An identifier for the audio file.
    *   - userID: An identifier for the user adding the song.
    *   - albumID: An identifier for the album of the song.
@@ -50,6 +52,7 @@ struct SongService {
     sampleSize: Int64,
     sampleRate: Int64,
     isPopular: Bool,
+    duration: Int64,
     with fileID: File.IDValue,
     for userID: User.IDValue,
     at albumID: Album.IDValue,
@@ -64,6 +67,7 @@ struct SongService {
       sampleSize: sampleSize,
       sampleRate: sampleRate,
       isPopular: isPopular,
+      duration: duration,
       fileID: fileID,
       userID: userID,
       albumID: albumID

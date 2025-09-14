@@ -119,6 +119,7 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
+              duration: 58,
               fileID: 1,
               albumID: 1
             )
@@ -255,6 +256,7 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
+              duration: 58,
               fileID: 1,
               albumID: 1
             )
@@ -316,6 +318,7 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
+              duration: 58,
               fileID: 2,
               albumID: 1
             )
@@ -377,6 +380,7 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
+              duration: 58,
               fileID: 3,
               albumID: 1
             )
@@ -433,6 +437,7 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
+              duration: 58,
               fileID: 3,
               albumID: 1
             )
@@ -463,6 +468,7 @@ extension ControllerTests {
               sampleSize: 16,
               sampleRate: 44100,
               isPopular: true,
+              duration: 58,
               fileID: 3,
               albumID: 1
             )

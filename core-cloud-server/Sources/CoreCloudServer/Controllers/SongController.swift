@@ -120,6 +120,7 @@ struct SongController: RouteCollection {
         sampleSize: insertRequest.sampleSize,
         sampleRate: insertRequest.sampleRate,
         isPopular: insertRequest.isPopular,
+        duration: insertRequest.duration,
         with: insertRequest.fileID,
         for: userID,
         at: insertRequest.albumID,

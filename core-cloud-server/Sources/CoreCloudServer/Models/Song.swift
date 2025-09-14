@@ -48,6 +48,9 @@ final class Song: Model, @unchecked Sendable {
   @Field(key: FieldKeys.isPopular)
   var isPopular: Bool
 
+  @Field(key: FieldKeys.duration)
+  var duration: Int64
+
   @Parent(key: FieldKeys.fileID)
   var file: File
 
@@ -75,6 +78,7 @@ final class Song: Model, @unchecked Sendable {
     sampleSize: Int64,
     sampleRate: Int64,
     isPopular: Bool,
+    duration: Int64,
     fileID: File.IDValue,
     userID: User.IDValue,
     albumID: Album.IDValue,
@@ -90,6 +94,7 @@ final class Song: Model, @unchecked Sendable {
     self.sampleSize = sampleSize
     self.sampleRate = sampleRate
     self.isPopular = isPopular
+    self.duration = duration
     self.$file.id = fileID
     self.$user.id = userID
     self.$album.id = albumID
@@ -111,6 +116,7 @@ extension Song {
     static let sampleSize: FieldKey = "sampleSize"
     static let sampleRate: FieldKey = "sampleRate"
     static let isPopular: FieldKey = "is_popular"
+    static let duration: FieldKey = "duration"
     static let fileID: FieldKey = "file_id"
     static let userID: FieldKey = "user_id"
     static let albumID: FieldKey = "album_id"
@@ -149,6 +155,7 @@ extension Song.Singular.Input {
     var sampleSize: Int64
     var sampleRate: Int64
     var isPopular: Bool
+    var duration: Int64
     var fileID: Int64
     var albumID: Int64
   }

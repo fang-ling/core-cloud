@@ -119,6 +119,7 @@ struct CoreCloudServer {
     app.migrations.add(SongMigrationV4())
     app.migrations.add(AlbumMigrationV1())
     app.migrations.add(SongMigrationV5())
+    app.migrations.add(SongMigrationV6())
     try await app.autoMigrate()
 
     /* Routes */
