@@ -34,6 +34,7 @@ export default function VStack({
   borderClassName = "",
   shadowClassName = "",
   pointerStyleClassname = "",
+  overflowClassName = "",
   children
 }: {
   /**
@@ -55,6 +56,7 @@ export default function VStack({
   borderClassName?: string,
   shadowClassName?: string,
   pointerStyleClassname?: string,
+  overflowClassName?: string,
   /**
    * A view builder that creates the content of this stack.
    */
@@ -66,7 +68,8 @@ export default function VStack({
         `flex flex-col ${alignment.className} ${heightClassName} ` +
           `${widthClassName} ${marginClassName} ${paddingClassName} ` +
           `${positionClassName} ${backgroundStyleClassName} ` +
-          `${borderClassName} ${shadowClassName} ${pointerStyleClassname}`
+          `${borderClassName} ${shadowClassName} ${pointerStyleClassname} ` +
+          `${overflowClassName}`
       }
     >
       {children}

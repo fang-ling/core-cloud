@@ -6,6 +6,7 @@
     "./binding": "./src/binding.ts",
     "./content-mode": "./src/views/content-mode.ts",
     "./grid": "./src/views/grid.tsx",
+    "./grid-row": "./src/views/grid-row.tsx",
     "./h-stack": "./src/views/h-stack.tsx",
     "./image": "./src/views/image.tsx",
     "./localizer": "./src/localizer.ts",

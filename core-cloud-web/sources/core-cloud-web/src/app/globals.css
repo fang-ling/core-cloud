@@ -26,6 +26,7 @@
   /* COLORS */
   --music-joeColor: rgba(0, 0, 0, .14);
   --music-keyColor: rgb(250, 35, 59);
+  --music-labelDivider: rgba(0, 0, 0, .15);
   --music-lcd-primary-text-color: rgba(0, 0, 0, 0.85);
   --music-lcd-secondary-text-color: rgba(0, 0, 0, 0.5);
   --music-miniPlayerBackground: hsla(0, 0, 100, 0.9);
@@ -37,9 +38,12 @@
   --music-playerMissingArtworkIcon: rgb(220, 220, 220);
   --music-playerScrubberFill: rgba(0, 0, 0, .5);
   --music-playerScrubberTrack: rgba(0, 0, 0, .1);
+  --music-selectionColor: rgb(221, 31, 52);
+  --music-systemPrimary: rgba(0, 0, 0, 0.85);
   --music-systemPrimary-vibrant: rgb(76, 76, 76);
   --music-systemSecondary: rgba(0, 0, 0, 0.5);
   --music-systemTertiary: rgba(0, 0, 0, 0.25);
+  --music-trackBackgroundEven: rgba(0, 0, 0, .02);
   --sk-body-link-color: #06c;
   --sk-body-text-color: #1d1d1f;
   --sk-button-background: #0071e3;
@@ -91,6 +95,7 @@
     /* COLORS */
     --music-joeColor: rgba(255, 255, 255, .05);
     --music-keyColor: rgb(250, 45, 72);
+    --music-labelDivider: rgba(255, 255, 255, .1);
     --music-lcd-primary-text-color: rgba(255, 255, 255, 0.85);
     --music-lcd-secondary-text-color: rgba(255, 255, 255, 0.55);
     --music-miniPlayerBackground: rgba(37, 37, 37, 0.9);
@@ -102,9 +107,12 @@
     --music-playerMissingArtworkIcon: rgb(67, 67, 67);
     --music-playerScrubberFill: rgba(255, 255, 255, 0.6);
     --music-playerScrubberTrack: rgba(255, 255, 255, .1);
+    --music-selectionColor: rgb(193, 27, 46);
+    --music-systemPrimary: rgba(255, 255, 255, 0.85);
     --music-systemPrimary-vibrant: rgb(229, 229, 229);
     --music-systemSecondary: rgba(255, 255, 255, 0.55);
     --music-systemTertiary: rgba(255, 255, 255, 0.25);
+    --music-trackBackgroundEven: rgba(255, 255, 255, .05);
     --sk-body-link-color: #2997ff;
     --sk-body-text-color: #f5f5f7;
     --sk-button-background: #0071e3;
@@ -192,6 +200,7 @@
 
   --color-music-joeColor: var(--music-joeColor);
   --color-music-keyColor: var(--music-keyColor);
+  --color-music-labelDivider: var(--music-labelDivider);
   --color-music-lcd-primary-text-color: var(--music-lcd-primary-text-color);
   --color-music-lcd-secondary-text-color: var(--music-lcd-secondary-text-color);
   --color-music-miniPlayerBackground: var(--music-miniPlayerBackground);
@@ -203,9 +212,12 @@
   --color-music-playerMissingArtworkIcon: var(--music-playerMissingArtworkIcon);
   --color-music-playerScrubberFill: var(--music-playerScrubberFill);
   --color-music-playerScrubberTrack: var(--music-playerScrubberTrack);
+  --color-music-selectionColor: var(--music-selectionColor);
+  --color-music-systemPrimary: var(--music-systemPrimary);
   --color-music-systemPrimary-vibrant: var(--music-systemPrimary-vibrant);
   --color-music-systemSecondary: var(--music-systemSecondary);
   --color-music-systemTertiary: var(--music-systemTertiary);
+  --color-music-trackBackgroundEven: var(--music-trackBackgroundEven);
 
   --color-sk-body-link-color: var(--sk-body-link-color);
   --color-sk-body-text-color: var(--sk-body-text-color);

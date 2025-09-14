@@ -29,6 +29,7 @@ export default function Image({
   heightClassName = "",
   marginClassName = "",
   weight = "regular",
+  foregroundStyleClassName = "",
   contentMode
 }: {
   /**
@@ -40,10 +41,12 @@ export default function Image({
   heightClassName?: string,
   marginClassName?: string
   weight?: "regular" | "semibold",
+  foregroundStyleClassName?: string,
   contentMode?: ContentMode
 }) {
   const className = (
-    `${widthClassName} ${heightClassName} overflow-visible ${marginClassName}`
+    `${widthClassName} ${heightClassName} overflow-visible ` +
+      `${marginClassName} ${foregroundStyleClassName}`
   )
   const preserveAspectRatio = contentMode ? "xMidYMid meet" : undefined
 

@@ -89,7 +89,7 @@ export default function DetailView({
   }, [viewModel.currentPlayingSong])
 
   return (
-    <VStack>
+    <VStack heightClassName="h-full">
       {/* Player, >= md */}
       <HStack
         widthClassName="w-full"
@@ -303,6 +303,7 @@ export default function DetailView({
                               foregroundStyleClassName={
                                 "text-music-lcd-secondary-text-color"
                               }
+                              truncationClassName="truncate"
                             />
                           </HStack>
                         </>
@@ -456,6 +457,7 @@ export default function DetailView({
           fontWeightClassName="font-medium"
           lineHeightClassName="leading-5"
           foregroundStyleClassName="text-music-lcd-primary-text-color"
+          truncationClassName="truncate"
         />
 
         <HStack>

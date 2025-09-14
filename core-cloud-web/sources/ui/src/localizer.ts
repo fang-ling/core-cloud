@@ -43,6 +43,12 @@ export default class NewLocalizer {
       Record<string, string>
     >
   > = {
+    "Add Music to Your Library": {
+      "zh-TW": "將音樂加入資料庫"
+    },
+    "Album": {
+      "zh-TW": "專輯"
+    },
     "Albums": {
       "zh-TW": "專輯"
     },
@@ -54,6 +60,9 @@ export default class NewLocalizer {
     },
     "Artwork URL": {
       "zh-TW": "插圖連結"
+    },
+    "Browse millions of songs and collect your favorites here.": {
+      "zh-TW": "瀏覽上億首歌曲，並將你的喜好項目收藏於此。"
     },
     "Choose a File": {
       "zh-TW": "選擇檔案"

@@ -32,8 +32,11 @@ export default function Grid({
   backgroundStyleClassName = "",
   positionClassName = "",
   style = undefined,
-  paddingClassName = "",
   isGroup,
+  paddingClassName = "",
+  marginClassName = "",
+  overflowClassName = "",
+  visibilityClassName = "",
   children
 }: {
   /**
@@ -50,6 +53,9 @@ export default function Grid({
   style?: React.CSSProperties,
   isGroup?: boolean,
   paddingClassName?: string,
+  marginClassName?: string,
+  overflowClassName?: string,
+  visibilityClassName?: string,
   children: React.ReactNode
 }) {
   return (
@@ -58,7 +64,8 @@ export default function Grid({
         `grid ${alignment.className} ${gridTemplateClassName} ` +
           `${widthClassName} ${heightClassName} ${borderClassName} ` +
           `${backgroundStyleClassName} ${positionClassName} ` +
-          `${paddingClassName} ` + (
+          `${paddingClassName} ${marginClassName} ${overflowClassName} ` +
+          `${visibilityClassName} `+ (
             isGroup ? "group" : ""
           )
       }

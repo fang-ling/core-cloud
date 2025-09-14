@@ -39,6 +39,7 @@ export default function HStack({
   opacityClassName = "",
   transitionClassName = "",
   transformationClassName = "",
+  overflowClassName = "",
   children
 }: {
   /**
@@ -65,6 +66,7 @@ export default function HStack({
   opacityClassName?: string,
   transitionClassName?: string,
   transformationClassName?: string,
+  overflowClassName?: string,
   /**
    * A view builder that creates the content of this stack.
    */
@@ -78,7 +80,7 @@ export default function HStack({
           `${paddingClassName} ${foregroundStyleClassName} ` +
           `${positionClassName} ${borderClassName} ${visibilityClassName} ` +
           `${opacityClassName} ${transitionClassName} ` +
-          `${transformationClassName}`
+          `${transformationClassName} ${overflowClassName}`
       }
       style={style}
     >

@@ -18,6 +18,7 @@
 //
 
 import SongService from "@/services/song-service"
+import { useState } from "react"
 
 export default function useSongDetailView({
   setSongs,
@@ -41,6 +42,8 @@ export default function useSongDetailView({
     album: string
   } | undefined>>
 }) {
+  const [selectedSongID, setSelectedSongID] = useState<number | undefined>()
+
   /* MARK: Event handlers */
   async function viewDidAppear() {
     let newSongs = await SongService.fetchSongs()
@@ -72,8 +75,14 @@ export default function useSongDetailView({
     setCurrentPlayingSong(clickedItem)
   }
 
+  function songListItemDidClick(id: number) {
+    setSelectedSongID(id)
+  }
+
   return {
     viewDidAppear,
-    songListItemDidDoubleClick
+    selectedSongID,
+    songListItemDidDoubleClick,
+    songListItemDidClick
   }
 }
