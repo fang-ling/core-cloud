@@ -38,6 +38,16 @@ namespace Song {
         id: string
         playCount: string
       }
+
+      export type Retrieval = {
+        id: string
+      }
+    }
+
+    export namespace Output {
+      export type Retrieval = {
+        playCount: number
+      }
     }
   }
 
@@ -47,13 +57,9 @@ namespace Song {
         id: number
         title: string
         artist: string
-        genre: string
-        year: number
-        trackNumber: number
-        discNumber: number
-        playCount: number
-        sampleSize: number
-        sampleRate: number
+        albumName?: string
+        artworkURLs?: string
+        duration: number
         fileID: number
       }
     }

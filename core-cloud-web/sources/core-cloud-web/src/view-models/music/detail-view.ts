@@ -20,33 +20,7 @@
 import SongService from "@/services/song-service"
 import { useRef, useState } from "react"
 
-export default function useDetailView({
-  songs,
-  setSongs
-}: {
-  songs: {
-    id: number,
-    title: string,
-    artist: string,
-    trackNumber: number,
-    discNumber: number,
-    playCount: number,
-    sampleSize: number,
-    sampleRate: number,
-    fileID: number
-  }[],
-  setSongs: React.Dispatch<React.SetStateAction<{
-    id: number,
-    title: string,
-    artist: string,
-    trackNumber: number,
-    discNumber: number,
-    playCount: number,
-    sampleSize: number,
-    sampleRate: number,
-    fileID: number
-  }[]>>
-}) {
+export default function useDetailView() {
   const [isShuffleEnabled, setIsShuffleEnabled] = useState(false)
   /**
    * 0: none
@@ -104,20 +78,18 @@ export default function useDetailView({
       ) {
         playedRef.current = true
         if (currentPlayingSong) {
-          let i = 0;
-          const newSongs = songs.slice()
-          for (; i < newSongs.length; i += 1) {
-            if (newSongs[i].id === currentPlayingSong.id) {
-              newSongs[i].playCount += 1
-              break
-            }
-          }
-          setSongs(newSongs)
-
-          SongService.modifySong({
-            id: `${currentPlayingSong.id}`,
-            playCount: `${newSongs[i].playCount}`
-          })
+          SongService
+            .fetchSong({
+              id: currentPlayingSong.id + ""
+            })
+            .then(response => {
+              if (response) {
+                SongService.modifySong({
+                  id: `${currentPlayingSong.id}`,
+                  playCount: `${response.playCount + 1}`
+                })
+              }
+            })
         }
       }
     }
@@ -141,7 +113,7 @@ export default function useDetailView({
     setIsPlaying(false)
 
     audioRef.current = new Audio(
-      `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/file` +
+      `${process.env.NEXT_PUBLIC_API_HOST}/api/file` +
         `?id=${currentPlayingSong?.fileID}&application=Music`
     )
 

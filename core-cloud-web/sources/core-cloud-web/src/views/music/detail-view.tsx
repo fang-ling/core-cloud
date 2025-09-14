@@ -53,29 +53,22 @@ export default function DetailView({
     id: number,
     title: string,
     artist: string,
-    trackNumber: number,
-    discNumber: number,
-    playCount: number,
-    sampleSize: number,
-    sampleRate: number,
+    albumName?: string,
+    artworkURLs?: string,
+    duration: number,
     fileID: number
   }[],
   setSongs: React.Dispatch<React.SetStateAction<{
     id: number,
     title: string,
     artist: string,
-    trackNumber: number,
-    discNumber: number,
-    playCount: number,
-    sampleSize: number,
-    sampleRate: number,
+    albumName?: string,
+    artworkURLs?: string,
+    duration: number,
     fileID: number
   }[]>>
 }) {
-  const viewModel = useDetailView({
-    songs: songs,
-    setSongs: setSongs
-  })
+  const viewModel = useDetailView()
 
   const PLAYER_OUTER_BUTTON_STYLE = (
     "w-7.5 h-8 flex items-center justify-center transition-colors " +

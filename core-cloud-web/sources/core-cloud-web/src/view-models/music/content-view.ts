@@ -49,11 +49,9 @@ export default function useContentView() {
     id: number,
     title: string,
     artist: string,
-    trackNumber: number,
-    discNumber: number,
-    playCount: number,
-    sampleSize: number,
-    sampleRate: number,
+    albumName?: string,
+    artworkURLs?: string,
+    duration: number,
     fileID: number
   }[]>([])
   const [albums, setAlbums] = useState<{
@@ -106,11 +104,9 @@ export default function useContentView() {
           id: song.id,
           title: song.title,
           artist: song.artist,
-          trackNumber: song.trackNumber,
-          discNumber: song.discNumber,
-          playCount: song.playCount,
-          sampleSize: song.sampleSize,
-          sampleRate: song.sampleRate,
+          albumName: song.albumName,
+          artworkURLs: song.artworkURLs,
+          duration: song.duration,
           fileID: song.fileID
         }
       })

@@ -30,22 +30,18 @@ export default function SongDetailView({
     id: number,
     title: string,
     artist: string,
-    trackNumber: number,
-    discNumber: number,
-    playCount: number,
-    sampleSize: number,
-    sampleRate: number,
+    albumName?: string,
+    artworkURLs?: string,
+    duration: number,
     fileID: number
   }[],
   setSongs: React.Dispatch<React.SetStateAction<{
     id: number,
     title: string,
     artist: string,
-    trackNumber: number,
-    discNumber: number,
-    playCount: number,
-    sampleSize: number,
-    sampleRate: number,
+    albumName?: string,
+    artworkURLs?: string,
+    duration: number,
     fileID: number
   }[]>>,
   setCurrentPlayingSong: React.Dispatch<React.SetStateAction<{
@@ -86,11 +82,6 @@ export default function SongDetailView({
           >
             <Text verbatimContent={song.title} />
             <Text verbatimContent={song.artist} />
-            <Text verbatimContent={`${song.trackNumber}`} />
-            <Text verbatimContent={`${song.discNumber}`} />
-            <Text verbatimContent={`${song.playCount}`} />
-            <Text verbatimContent={`${song.sampleSize}`} />
-            <Text verbatimContent={`${song.sampleRate}`} />
           </div>
         ))
       }

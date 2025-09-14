@@ -62,6 +62,28 @@ namespace SongService {
     }
   }
 
+  export async function fetchSong(
+    request: Song.Singular.Input.Retrieval
+  ) {
+    try {
+      const queryString = new URLSearchParams(request).toString()
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/song?${queryString}`,
+        {
+          method: "GET"
+        }
+      )
+      if (response.status === 200) {
+        return (await response.json()) as (Song.Singular.Output.Retrieval)
+      } else {
+        throw new Error()
+      }
+    } catch {
+      return undefined
+    }
+  }
+
   export async function modifySong(
     request: Song.Singular.Input.Modification
   ) {

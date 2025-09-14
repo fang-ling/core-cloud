@@ -27,11 +27,9 @@ export default function useSongDetailView({
     id: number,
     title: string,
     artist: string,
-    trackNumber: number,
-    discNumber: number,
-    playCount: number,
-    sampleSize: number,
-    sampleRate: number,
+    albumName?: string,
+    artworkURLs?: string,
+    duration: number,
     fileID: number
   }[]>>,
   setCurrentPlayingSong: React.Dispatch<React.SetStateAction<{
@@ -52,11 +50,9 @@ export default function useSongDetailView({
           id: song.id,
           title: song.title,
           artist: song.artist,
-          trackNumber: song.trackNumber,
-          discNumber: song.discNumber,
-          playCount: song.playCount,
-          sampleSize: song.sampleSize,
-          sampleRate: song.sampleRate,
+          albumName: song.albumName,
+          artworkURLs: song.artworkURLs,
+          duration: song.duration,
           fileID: song.fileID
         }
       })
