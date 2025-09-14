@@ -103,32 +103,32 @@ struct SongService {
    *                                  database.
    */
   func getSongs(
+    options: GetSongsOptions,
     for userID: User.IDValue,
     on database: Database
   ) async throws -> [(
     id: Int64,
     title: String,
     artist: String,
-    trackNumber: Int64,
-    discNumber: Int64,
-    playCount: Int64,
-    sampleSize: Int64,
-    sampleRate: Int64,
+    albumName: String?,
+    artworkURLs: String?,
+    duration: Int64,
     fileID: Int64
   )] {
     do {
       return try await Song.query(on: database)
         .filter(\.$user.$id == userID)
+        .with(\.$album)
         .all()
         .map { song in (
           id: try song.requireID(),
           title: song.title,
           artist: song.artist,
-          trackNumber: song.trackNumber,
-          discNumber: song.discNumber,
-          playCount: song.playCount,
-          sampleSize: song.sampleSize,
-          sampleRate: song.sampleRate,
+          albumName: options.contains(.withAlbumName) ? song.album?.name : nil,
+          artworkURLs: (
+            options.contains(.withArtworkURLs) ? song.album?.artworkURLs : nil
+          ),
+          duration: song.duration,
           fileID: song.$file.id
         )}
     } catch {
@@ -169,5 +169,14 @@ struct SongService {
     } catch {
       throw SongError.databaseError
     }
+  }
+}
+
+extension SongService {
+  struct GetSongsOptions: OptionSet {
+    let rawValue: UInt
+
+    static let withAlbumName = Self(rawValue: 1 << 0)
+    static let withArtworkURLs = Self(rawValue: 1 << 1)
   }
 }

@@ -161,7 +161,12 @@ struct SongController: RouteCollection {
     }
 
     do {
-      let songs = try await songService.getSongs(for: userID, on: request.db)
+      /* TODO: Add query parameter. */
+      let songs = try await songService.getSongs(
+        options: [.withAlbumName, .withArtworkURLs],
+        for: userID,
+        on: request.db
+      )
 
       return try Response(
         status: .ok,
@@ -173,11 +178,9 @@ struct SongController: RouteCollection {
                 id: song.id,
                 title: song.title,
                 artist: song.artist,
-                trackNumber: song.trackNumber,
-                discNumber: song.discNumber,
-                playCount: song.playCount,
-                sampleSize: song.sampleSize,
-                sampleRate: song.sampleRate,
+                albumName: song.albumName,
+                artworkURLs: song.artworkURLs,
+                duration: song.duration,
                 fileID: song.fileID
               )
             }

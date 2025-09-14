@@ -171,11 +171,9 @@ extension Song.Plural.Output {
     var id: Int64
     var title: String
     var artist: String
-    var trackNumber: Int64
-    var discNumber: Int64
-    var playCount: Int64
-    var sampleSize: Int64
-    var sampleRate: Int64
+    var albumName: String?
+    var artworkURLs: String?
+    var duration: Int64
     var fileID: Int64
   }
 }

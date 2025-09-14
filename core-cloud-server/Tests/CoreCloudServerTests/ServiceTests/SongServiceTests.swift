@@ -175,7 +175,11 @@ extension ServiceTests {
       let songService = SongService()
 
       try await withApp(configure: CoreCloudServer.configure) { app in
-        let empty1 = try await songService.getSongs(for: 1, on: app.db)
+        let empty1 = try await songService.getSongs(
+          options: [],
+          for: 1,
+          on: app.db
+        )
         #expect(empty1.isEmpty)
 
         let eva = User(
@@ -191,6 +195,7 @@ extension ServiceTests {
         try await eva.save(on: app.db)
 
         let empty2 = try await songService.getSongs(
+          options: [],
           for: eva.requireID(),
           on: app.db
         )
@@ -241,7 +246,8 @@ extension ServiceTests {
         )
         try await song.save(on: app.db)
 
-        let songs = try await songService.getSongs(
+        var songs = try await songService.getSongs(
+          options: [],
           for: eva.requireID(),
           on: app.db
         )
@@ -249,11 +255,22 @@ extension ServiceTests {
         #expect(songs.first?.id == 1)
         #expect(songs.first?.title == "Por Una Cabeza")
         #expect(songs.first?.artist == "Thomas Newman")
-        #expect(songs.first?.trackNumber == 7)
-        #expect(songs.first?.discNumber == 1)
-        #expect(songs.first?.playCount == 0)
-        #expect(songs.first?.sampleSize == 16)
-        #expect(songs.first?.sampleRate == 44100)
+        #expect(songs.first?.albumName == nil)
+        #expect(songs.first?.artworkURLs == nil)
+        #expect(songs.first?.duration == 58)
+
+        songs = try await songService.getSongs(
+          options: [.withAlbumName, .withArtworkURLs],
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(songs.count > 0)
+        #expect(songs.first?.id == 1)
+        #expect(songs.first?.title == "Por Una Cabeza")
+        #expect(songs.first?.artist == "Thomas Newman")
+        #expect(songs.first?.albumName == "Scent of a Woman")
+        #expect(songs.first?.artworkURLs == "https://example.com/1.png")
+        #expect(songs.first?.duration == 58)
       }
     }
 
