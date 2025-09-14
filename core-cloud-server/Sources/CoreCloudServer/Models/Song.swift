@@ -139,6 +139,7 @@ extension Song {
 
 extension Song.Singular {
   enum Input { }
+  enum Output { }
 }
 
 extension Song.Plural {
@@ -160,9 +161,19 @@ extension Song.Singular.Input {
     var albumID: Int64
   }
 
+  struct Retrieval: Codable {
+    var id: Int64
+  }
+
   struct Modification: Codable {
     var id: Int64
     var playCount: Int64?
+  }
+}
+
+extension Song.Singular.Output {
+  struct Retrieval: Codable {
+    var playCount: Int64
   }
 }
 

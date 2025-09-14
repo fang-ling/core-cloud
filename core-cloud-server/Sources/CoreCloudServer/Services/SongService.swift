@@ -137,6 +137,47 @@ struct SongService {
   }
 
   /**
+   * Returns the detail of the given song.
+   *
+   * - Parameters:
+   *   - id: The unique identifier for the song to retrieve.
+   *   - userID: An identifier for the user whose songs are being retrieved.
+   *   - database: The database instance from which the songs will be fetched.
+   *
+   * - Returns: A tuple containing the detail of the song.
+   *
+   * - Throws:
+   *   - ``SongError/databaseError``: if there is an issue accessing the
+   *                                  database.
+   *   - ``SongError/noSuchSong``: if the album is not found.
+   */
+  func getSong(
+    with id: Song.IDValue,
+    for userID: User.IDValue,
+    on database: Database
+  ) async throws -> (
+    /*playCount: */Int64
+  ) {
+    do {
+      guard let song = try await Song.query(on: database)
+        .filter(\.$user.$id == userID)
+        .filter(\.$id == id)
+        .first()
+      else {
+        throw SongError.noSuchSong
+      }
+
+      return (
+        /*playCount: */song.playCount
+      )
+    } catch SongError.noSuchSong {
+      throw SongError.noSuchSong
+    } catch {
+      throw SongError.databaseError
+    }
+  }
+
+  /**
    * Updates the info of a song for a specified user.
    *
    * - Parameters:

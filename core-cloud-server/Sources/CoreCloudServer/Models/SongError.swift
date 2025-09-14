@@ -19,4 +19,5 @@
 
 enum SongError: Error {
   case databaseError
+  case noSuchSong
 }

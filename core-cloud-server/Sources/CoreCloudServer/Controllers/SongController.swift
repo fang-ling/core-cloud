@@ -39,6 +39,11 @@ struct SongController: RouteCollection {
     routes
       .grouped("api")
       .grouped("song")
+      .get(use: fetchSongHandler)
+
+    routes
+      .grouped("api")
+      .grouped("song")
       .patch(use: modifySongHandler)
   }
 
@@ -187,6 +192,68 @@ struct SongController: RouteCollection {
           )
         )
       )
+    } catch SongError.databaseError {
+      return Response(status: .serviceUnavailable)
+    } catch {
+      return Response(status: .internalServerError)
+    }
+  }
+
+  /**
+   * - URL: GET /api/song
+   *
+   * - Response Codes:
+   *   - 200 OK: The song is returned.
+   *   - 401 Unauthorized: The authentication is required and has failed.
+   *   - 404 Not Found: The song is not found.
+   *   - 500 Internal Server Error: A response indicating an error occurred on
+   *                                the server.
+   *   - 503 Service Unavailable: A response indicating that the server is not
+   *                              ready to handle the request.
+   */
+  func fetchSongHandler(request: Request) async -> Response {
+    let userID: User.IDValue
+    do {
+      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let id = try await userTokenService.verifyUserToken(
+        from: jwt ?? ""
+      ) { token in
+        try await request.jwt.verify(token)
+      }
+      userID = id
+    } catch {
+      return Response(status: .unauthorized)
+    }
+
+    let fetchRequest: Song.Singular.Input.Retrieval
+    do {
+      fetchRequest = try request.query.decode(
+        Song.Singular.Input.Retrieval.self
+      )
+    } catch {
+      return Response(status: .badRequest)
+    }
+
+    do {
+      let song = try await songService.getSong(
+        with: fetchRequest.id,
+        for: userID,
+        on: request.db
+      )
+
+      return try Response(
+        status: .ok,
+        headers: .init([("Content-Type", "application/json")]),
+        body: .init(
+          data: CoreCloudServer.encoder.encode(
+            Song.Singular.Output.Retrieval(
+              playCount: song/*.playCount*/
+            )
+          )
+        )
+      )
+    } catch SongError.noSuchSong {
+      return Response(status: .notFound)
     } catch SongError.databaseError {
       return Response(status: .serviceUnavailable)
     } catch {

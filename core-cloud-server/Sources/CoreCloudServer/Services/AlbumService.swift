@@ -111,8 +111,7 @@ struct AlbumService {
    *   - userID: The unique identifier for the user requesting the album.
    *   - database: The database instance used to perform the query.
    *
-   * - Returns: A tuple containing the genre and year of the album, or `nil`
-   *            if the album is not found.
+   * - Returns: A tuple containing the genre and year of the album.
    *
    * - Throws:
    *   - ``AlbumError/databaseError``: if there is an issue accessing the

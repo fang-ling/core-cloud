@@ -513,6 +513,27 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
+        "api/song?id=1",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .ok)
+
+          let song = try response.content.decode(
+            Song.Singular.Output.Retrieval.self
+          )
+          #expect(song.playCount == 19358)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
         "api/songs",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
@@ -536,6 +557,67 @@ extension ControllerTests {
           #expect(songs.first?.artworkURLs == "https://example.com/1.png")
           #expect(songs.first?.duration == 58)
           #expect(songs.first?.fileID == 3)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/user",
+        beforeRequest: { request async throws in
+          try request.content.encode(
+            User.Singular.Input.Insertion(
+              firstName: "Alice",
+              lastName: "Ou",
+              username: "alice@example.com",
+              password: "12333Top-Secret",
+              masterPassword: "Top--1-Secret"
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/user-token",
+        beforeRequest: { request async throws in
+          request.headers.basicAuthorization = .init(
+            username: "alice@example.com",
+            password: "12333Top-Secret"
+          )
+          try request.content.encode(
+            UserToken.Singular.Input.Insertion(rememberMe: false)
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+
+          cookie = response
+            .headers
+            .setCookie?
+            .all[CoreCloudServer.COOKIE_NAME]
+          #expect(cookie?.string != nil)
+          #expect(cookie?.path == "/")
+          #expect(cookie?.maxAge == nil)
+          #expect(cookie?.isHTTPOnly == true)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/song?id=1",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .notFound)
         }
       )
     }

@@ -275,6 +275,113 @@ extension ServiceTests {
     }
 
     @Test
+    func testGetSong() async throws {
+      let songService = SongService()
+
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        await #expect(throws: SongError.noSuchSong) {
+          try await songService.getSong(
+            with: 1,
+            for: 1,
+            on: app.db
+          )
+        }
+
+        let eva = User(
+          firstName: "Eva",
+          lastName: "Chan",
+          username: "eva@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await eva.save(on: app.db)
+
+        await #expect(throws: SongError.noSuchSong) {
+          try await songService.getSong(
+            with: 1,
+            for: eva.requireID(),
+            on: app.db
+          )
+        }
+
+        let location = try Location(
+          name: "Tank",
+          path: "/mnt/tank1",
+          userID: eva.requireID()
+        )
+        try await location.save(on: app.db)
+
+        let file = try File(
+          name: "Por Una Cabeza",
+          kind: "Apple MPEG-4 Audio",
+          size: 123,
+          checksum: Data(),
+          application: "Music",
+          decryptionKeySealedBox: Data(),
+          locationID: 1,
+          userID: eva.requireID()
+        )
+        try await file.save(on: app.db)
+
+        let album = try Album(
+          name: "Scent of a Woman",
+          artist: "Thomas Newman",
+          genre: "Soundtrack",
+          year: 1992,
+          artworkURLs: "https://example.com/1.png",
+          userID: eva.requireID()
+        )
+        try await album.save(on: app.db)
+
+        let song = try Song(
+          title: "Por Una Cabeza",
+          artist: "Thomas Newman",
+          trackNumber: 7,
+          discNumber: 1,
+          playCount: 0,
+          sampleSize: 16,
+          sampleRate: 44100,
+          isPopular: true,
+          duration: 58,
+          fileID: file.requireID(),
+          userID: eva.requireID(),
+          albumID: album.requireID()
+        )
+        try await song.save(on: app.db)
+
+        let songDetail = try await songService.getSong(
+          with: song.requireID(),
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(songDetail/*.playCount*/ == 0)
+
+        let alice = User(
+          firstName: "Alice",
+          lastName: "Ou",
+          username: "alice@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await alice.save(on: app.db)
+
+        await #expect(throws: SongError.noSuchSong) {
+          try await songService.getSong(
+            with: song.requireID(),
+            for: alice.requireID(),
+            on: app.db
+          )
+        }
+      }
+    }
+
+    @Test
     func testUpdateSong() async throws {
       let songService = SongService()
 
