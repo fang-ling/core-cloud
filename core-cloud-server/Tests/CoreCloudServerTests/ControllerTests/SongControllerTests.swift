@@ -513,7 +513,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/song?id=1",
+        "api/song?id=1&fields=playCount%2CsampleSize",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -529,6 +529,8 @@ extension ControllerTests {
             Song.Singular.Output.Retrieval.self
           )
           #expect(song.playCount == 19358)
+          #expect(song.sampleSize == 16)
+          #expect(song.isPopular == nil)
         }
       )
 
@@ -607,7 +609,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/song?id=1",
+        "api/song?id=1&fields=playCount",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (

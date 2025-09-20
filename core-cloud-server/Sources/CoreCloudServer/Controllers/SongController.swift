@@ -237,6 +237,7 @@ struct SongController: RouteCollection {
     do {
       let song = try await songService.getSong(
         with: fetchRequest.id,
+        fields: fetchRequest.fields.components(separatedBy: ","),
         for: userID,
         on: request.db
       )
@@ -247,7 +248,12 @@ struct SongController: RouteCollection {
         body: .init(
           data: CoreCloudServer.encoder.encode(
             Song.Singular.Output.Retrieval(
-              playCount: song/*.playCount*/
+              playCount: song.playCount,
+              trackNumber: song.trackNumber,
+              discNumber: song.discNumber,
+              sampleSize: song.sampleSize,
+              sampleRate: song.sampleRate,
+              isPopular: song.isPopular
             )
           )
         )

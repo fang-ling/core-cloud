@@ -282,6 +282,7 @@ extension ServiceTests {
         await #expect(throws: SongError.noSuchSong) {
           try await songService.getSong(
             with: 1,
+            fields: ["playCount"],
             for: 1,
             on: app.db
           )
@@ -302,6 +303,7 @@ extension ServiceTests {
         await #expect(throws: SongError.noSuchSong) {
           try await songService.getSong(
             with: 1,
+            fields: ["playCount"],
             for: eva.requireID(),
             on: app.db
           )
@@ -354,10 +356,13 @@ extension ServiceTests {
 
         let songDetail = try await songService.getSong(
           with: song.requireID(),
+          fields: ["playCount", "isPopular"],
           for: eva.requireID(),
           on: app.db
         )
-        #expect(songDetail/*.playCount*/ == 0)
+        #expect(songDetail.playCount == 0)
+        #expect(songDetail.isPopular == true)
+        #expect(songDetail.sampleRate == nil)
 
         let alice = User(
           firstName: "Alice",
@@ -374,6 +379,7 @@ extension ServiceTests {
         await #expect(throws: SongError.noSuchSong) {
           try await songService.getSong(
             with: song.requireID(),
+            fields: ["playCount"],
             for: alice.requireID(),
             on: app.db
           )

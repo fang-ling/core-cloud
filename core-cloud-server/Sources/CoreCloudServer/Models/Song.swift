@@ -163,6 +163,7 @@ extension Song.Singular.Input {
 
   struct Retrieval: Codable {
     var id: Int64
+    var fields: String
   }
 
   struct Modification: Codable {
@@ -173,7 +174,12 @@ extension Song.Singular.Input {
 
 extension Song.Singular.Output {
   struct Retrieval: Codable {
-    var playCount: Int64
+    var playCount: Int64?
+    var trackNumber: Int64?
+    var discNumber: Int64?
+    var sampleSize: Int64?
+    var sampleRate: Int64?
+    var isPopular: Bool?
   }
 }
 

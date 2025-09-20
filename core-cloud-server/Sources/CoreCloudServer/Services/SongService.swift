@@ -153,10 +153,16 @@ struct SongService {
    */
   func getSong(
     with id: Song.IDValue,
+    fields: [String],
     for userID: User.IDValue,
     on database: Database
   ) async throws -> (
-    /*playCount: */Int64
+    playCount: Int64?,
+    trackNumber: Int64?,
+    discNumber: Int64?,
+    sampleSize: Int64?,
+    sampleRate: Int64?,
+    isPopular: Bool?
   ) {
     do {
       guard let song = try await Song.query(on: database)
@@ -168,7 +174,12 @@ struct SongService {
       }
 
       return (
-        /*playCount: */song.playCount
+        playCount: fields.contains("playCount") ? song.playCount : nil,
+        trackNumber: fields.contains("trackNumber") ? song.trackNumber : nil,
+        discNumber: fields.contains("discNumber") ? song.discNumber : nil,
+        sampleSize: fields.contains("sampleSize") ? song.sampleSize : nil,
+        sampleRate: fields.contains("sampleRate") ? song.sampleRate : nil,
+        isPopular: fields.contains("isPopular") ? song.isPopular : nil
       )
     } catch SongError.noSuchSong {
       throw SongError.noSuchSong
