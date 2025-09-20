@@ -180,6 +180,7 @@ extension Song.Singular.Output {
     var sampleSize: Int64?
     var sampleRate: Int64?
     var isPopular: Bool?
+    var albumID: Int64?
   }
 }
 

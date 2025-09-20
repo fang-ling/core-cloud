@@ -253,7 +253,8 @@ struct SongController: RouteCollection {
               discNumber: song.discNumber,
               sampleSize: song.sampleSize,
               sampleRate: song.sampleRate,
-              isPopular: song.isPopular
+              isPopular: song.isPopular,
+              albumID: song.albumID
             )
           )
         )

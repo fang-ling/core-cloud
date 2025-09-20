@@ -162,7 +162,8 @@ struct SongService {
     discNumber: Int64?,
     sampleSize: Int64?,
     sampleRate: Int64?,
-    isPopular: Bool?
+    isPopular: Bool?,
+    albumID: Int64?
   ) {
     do {
       guard let song = try await Song.query(on: database)
@@ -179,7 +180,8 @@ struct SongService {
         discNumber: fields.contains("discNumber") ? song.discNumber : nil,
         sampleSize: fields.contains("sampleSize") ? song.sampleSize : nil,
         sampleRate: fields.contains("sampleRate") ? song.sampleRate : nil,
-        isPopular: fields.contains("isPopular") ? song.isPopular : nil
+        isPopular: fields.contains("isPopular") ? song.isPopular : nil,
+        albumID: fields.contains("albumID") ? song.$album.id : nil
       )
     } catch SongError.noSuchSong {
       throw SongError.noSuchSong
