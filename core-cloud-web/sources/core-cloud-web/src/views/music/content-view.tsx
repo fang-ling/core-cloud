@@ -153,6 +153,7 @@ export default function ContentView() {
           <SongSheet
             isPresented={viewModel.isNewSongSheetPresented}
             onCreate={() => viewModel.newSongDidCreate()}
+            mode="creation"
           />
         )
       }

@@ -4,6 +4,7 @@
   "exports": {
     "./async-image": "./src/views/async-image.tsx",
     "./binding": "./src/binding.ts",
+    "./button": "./src/views/button.tsx",
     "./content-mode": "./src/views/content-mode.ts",
     "./grid": "./src/views/grid.tsx",
     "./grid-row": "./src/views/grid-row.tsx",

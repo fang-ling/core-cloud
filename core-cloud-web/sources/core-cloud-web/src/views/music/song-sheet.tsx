@@ -18,7 +18,7 @@
 //
 
 import useSongSheet from "@/view-models/music/song-sheet"
-import { Fragment } from "react"
+import { Fragment, useEffect } from "react"
 import AsyncImage from "ui/async-image"
 import { BoolBinding } from "ui/binding"
 import Grid from "ui/grid"
@@ -30,49 +30,75 @@ import Toggle from "ui/toggle"
 
 export default function SongSheet({
   isPresented,
-  onCreate
+  mode,
+  onCreate,
+  detail
 }: {
   isPresented: BoolBinding,
-  onCreate?: () => void
+  mode: "creation" | "modification",
+  onCreate?: () => void,
+  detail?: {
+    id?: number,
+    artworkURLs?: string,
+    title?: string,
+    artist?: string,
+    fileID?: number,
+    duration?: number
+  }
 }) {
   const viewModel = useSongSheet({
-    onCreate: onCreate
+    onCreate: onCreate,
+    detail: detail
   })
+
+  useEffect(() => {
+    if (mode === "modification" && detail?.id !== undefined) {
+      viewModel.viewDidAppear()
+    }
+  }, [])
 
   return (
     <Sheet
       isPresented={isPresented}
       closeButtonActiveBackgroundStyleClassName="active:bg-music-keyColor/16"
-      primaryButton={{
-        backgroundStyleClassName: (
-          "bg-music-keyColor hover:bg-[#fb394f] active:bg-[#f90722]"
-        ),
-        action: () => viewModel.createButtonDidClick(),
-        disabled: (
-          viewModel.title.value.length <= 0 ||
-            viewModel.artist.value.length <= 0 ||
-            viewModel.trackNumber.value.length <= 0 ||
-            viewModel.discNumber.value.length <= 0 ||
-            viewModel.playCount.value.length <= 0 ||
-            viewModel.sampleSize.value.length <= 0 ||
-            viewModel.sampleRate.value.length <= 0 ||
-            viewModel.fileID.value.length <= 0 ||
-            viewModel.albumID.value.length <= 0 ||
-            viewModel.isLoading
-        ),
-        label: () => (
-          <Text textKey={viewModel.isLoading ? "Loading..." : "Create"} />
-        )
-      }}
+      primaryButton={
+        mode === "creation"
+          ? {
+            backgroundStyleClassName: (
+              "bg-music-keyColor hover:bg-[#fb394f] active:bg-[#f90722]"
+            ),
+            action: () => viewModel.createButtonDidClick(),
+            disabled: (
+              viewModel.title.value.length <= 0 ||
+                viewModel.artist.value.length <= 0 ||
+                viewModel.trackNumber.value.length <= 0 ||
+                viewModel.discNumber.value.length <= 0 ||
+                viewModel.playCount.value.length <= 0 ||
+                viewModel.sampleSize.value.length <= 0 ||
+                viewModel.sampleRate.value.length <= 0 ||
+                viewModel.fileID.value.length <= 0 ||
+                viewModel.albumID.value.length <= 0 ||
+                viewModel.isLoading
+            ),
+            label: () => (
+              <Text textKey={viewModel.isLoading ? "Loading..." : "Create"} />
+            )
+          }
+          : undefined
+      }
     >
       <AsyncImage
         widthClassName="w-9"
         heightClassName="h-9"
         marginClassName="mb-3.5"
-        urls={process.env.NEXT_PUBLIC_MUSIC_ICON_URLS?.split(",")}
+        urls={
+          mode === "creation"
+            ? process.env.NEXT_PUBLIC_MUSIC_ICON_URLS?.split(",")
+            : detail?.artworkURLs?.split(",")
+        }
       />
       <Text
-        textKey="New Song"
+        textKey={mode === "creation" ? "New Song" : "Details"}
         foregroundStyleClassName="text-labelPrimary"
         fontSizeClassName="text-[19px]"
         fontWeightClassName="font-semibold"

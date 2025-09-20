@@ -35,6 +35,7 @@ export default function VStack({
   shadowClassName = "",
   pointerStyleClassname = "",
   overflowClassName = "",
+  style = undefined,
   children
 }: {
   /**
@@ -57,6 +58,7 @@ export default function VStack({
   shadowClassName?: string,
   pointerStyleClassname?: string,
   overflowClassName?: string,
+  style?: React.CSSProperties,
   /**
    * A view builder that creates the content of this stack.
    */
@@ -71,6 +73,7 @@ export default function VStack({
           `${borderClassName} ${shadowClassName} ${pointerStyleClassname} ` +
           `${overflowClassName}`
       }
+      style={style}
     >
       {children}
     </div>

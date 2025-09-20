@@ -22,20 +22,29 @@ import { useState } from "react"
 import { useBinding } from "ui/binding"
 
 export default function useSongSheet({
-  onCreate
+  onCreate,
+  detail
 }: {
-  onCreate?: () => void
+  onCreate?: () => void,
+  detail?: {
+    id?: number,
+    artworkURLs?: string,
+    title?: string,
+    artist?: string,
+    fileID?: number,
+    duration?: number
+  }
 }) {
-  const title = useBinding("")
-  const artist = useBinding("")
+  const title = useBinding(detail?.title ?? "")
+  const artist = useBinding(detail?.artist ?? "")
   const trackNumber = useBinding("")
   const discNumber = useBinding("")
   const playCount = useBinding("")
   const sampleSize = useBinding("")
   const sampleRate = useBinding("")
-  const duration = useBinding("")
+  const duration = useBinding(detail?.duration?.toString() ?? "")
   const isPopular = useBinding(false)
-  const fileID = useBinding("")
+  const fileID = useBinding(detail?.fileID?.toString() ?? "")
   const albumID = useBinding("")
   const fields = [{
     label: "Title",
@@ -106,6 +115,40 @@ export default function useSongSheet({
     return success
   }
 
+  async function viewDidAppear() {
+    /* TODO: Use this loading state. */
+    setIsLoading(true)
+
+    const song = await SongService.fetchSong({
+      /*
+       * It is actually guaranteed that detail.id is not undefined, but we can
+       * be conservative here.
+       */
+      id: detail?.id?.toString() ?? "-1",
+      fields: [
+        "playCount",
+        "trackNumber",
+        "discNumber",
+        "sampleSize",
+        "sampleRate",
+        "isPopular",
+        "albumID"
+      ].join(",")
+    })
+
+    setIsLoading(false)
+
+    if (song) {
+      playCount.setValue(song.playCount?.toString() ?? "")
+      trackNumber.setValue(song.trackNumber?.toString() ?? "")
+      discNumber.setValue(song.discNumber?.toString() ?? "")
+      sampleSize.setValue(song.sampleSize?.toString() ?? "")
+      sampleRate.setValue(song.sampleRate?.toString() ?? "")
+      isPopular.setValue(song.isPopular ?? false)
+      albumID.setValue(song.albumID?.toString() ?? "")
+    }
+  }
+
   return {
     title,
     artist,
@@ -119,6 +162,7 @@ export default function useSongSheet({
     fields,
     isError,
     isLoading,
-    createButtonDidClick
+    createButtonDidClick,
+    viewDidAppear
   }
 }

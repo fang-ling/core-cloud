@@ -19,6 +19,7 @@
 
 import SongService from "@/services/song-service"
 import { useState } from "react"
+import { useBinding } from "ui/binding"
 
 export default function useSongDetailView({
   setSongs,
@@ -43,6 +44,12 @@ export default function useSongDetailView({
   } | undefined>>
 }) {
   const [selectedSongID, setSelectedSongID] = useState<number | undefined>()
+  const isContextMenuPresented = useBinding(false)
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    x: 0,
+    y: 0
+  })
+  const isSongSheetPresented = useBinding(false)
 
   /* MARK: Event handlers */
   async function viewDidAppear() {
@@ -79,10 +86,34 @@ export default function useSongDetailView({
     setSelectedSongID(id)
   }
 
+  function moreOptionsButtonDidClick(
+    clickPosition: { x: number, y: number },
+    isMobile: boolean
+  ) {
+    if (isMobile) {
+      setContextMenuPosition({
+        x: clickPosition.x - 180,
+        y: clickPosition.y
+      })
+    } else {
+      setContextMenuPosition(clickPosition)
+    }
+    isContextMenuPresented.toggle()
+  }
+
+  function getInfoButtonDidClick() {
+    isSongSheetPresented.toggle()
+  }
+
   return {
     viewDidAppear,
     selectedSongID,
+    isContextMenuPresented,
+    contextMenuPosition,
+    isSongSheetPresented,
     songListItemDidDoubleClick,
-    songListItemDidClick
+    songListItemDidClick,
+    moreOptionsButtonDidClick,
+    getInfoButtonDidClick
   }
 }

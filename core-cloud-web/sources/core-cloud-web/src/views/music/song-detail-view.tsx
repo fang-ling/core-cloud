@@ -27,11 +27,16 @@ import Image from "ui/image"
 import Spacer from "ui/spacer"
 import Text from "ui/text"
 import VStack from "ui/v-stack"
+import Button from "ui/button"
+import ContextMenu from "./context-menu"
+import SongSheet from "./song-sheet"
 
 export default function SongDetailView({
   songs,
   setSongs,
-  setCurrentPlayingSong
+  currentPlayingSong,
+  setCurrentPlayingSong,
+  isPlaying
 }: {
   songs: {
     id: number,
@@ -51,6 +56,14 @@ export default function SongDetailView({
     duration: number,
     fileID: number
   }[]>>,
+  currentPlayingSong: {
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string
+  } | undefined,
   setCurrentPlayingSong: React.Dispatch<React.SetStateAction<{
     id: number,
     artworkURLs: string[],
@@ -58,7 +71,8 @@ export default function SongDetailView({
     title: string,
     artist: string,
     album: string
-  } | undefined>>
+  } | undefined>>,
+  isPlaying: boolean
 }) {
   const viewModel = useSongDetailView({
     setSongs: setSongs,
@@ -153,7 +167,26 @@ export default function SongDetailView({
                       ? "bg-music-selectionColor"
                       : index % 2 === 0 ? "bg-music-trackBackgroundEven" : ""
                   }
-                />
+                  foregroundStyleClassName={
+                    song.id === viewModel.selectedSongID
+                      ? "fill-white"
+                      : "fill-systemBlue"
+                  }
+                >
+                  {
+                    currentPlayingSong?.id === song.id && (
+                      <Image
+                        systemName={
+                          isPlaying
+                            ? "speaker.wave.2.fill"
+                            : "speaker.fill"
+                        }
+                        heightClassName="h-3"
+                        marginClassName="mx-auto"
+                      />
+                    )
+                  }
+                </HStack>
                 <HStack
                   heightClassName="h-11"
                   overflowClassName="overflow-hidden"
@@ -182,6 +215,30 @@ export default function SongDetailView({
                     multilineTextAlignmentClassName="text-left"
                     truncationClassName="truncate"
                   />
+                  <Spacer />
+                  <Button
+                    action={(clickPosition) => {
+                      if (!clickPosition) {
+                        return
+                      }
+                      viewModel.moreOptionsButtonDidClick(clickPosition, false)
+                    }}
+                  >
+                    <HStack
+                      widthClassName="w-7"
+                      heightClassName="h-7"
+                      foregroundStyleClassName={
+                        song.id === viewModel.selectedSongID
+                          ? "fill-white"
+                          : "fill-music-keyColor"
+                      }
+                    >
+                      <Image
+                        systemName="ellipsis"
+                        widthClassName="w-3.75"
+                      />
+                    </HStack>
+                  </Button>
                 </HStack>
                 {
                   [song.artist, song.albumName].map(detail => (
@@ -206,7 +263,7 @@ export default function SongDetailView({
                             ? "text-white"
                             : "text-music-systemPrimary"
                         }
-                        marginClassName="mr-2.25"
+                        marginClassName="mx-2.25"
                         multilineTextAlignmentClassName="text-left"
                         truncationClassName="truncate"
                       />
@@ -312,7 +369,26 @@ export default function SongDetailView({
                       ? "bg-music-selectionColor"
                       : index % 2 === 0 ? "bg-music-trackBackgroundEven" : ""
                   }
-                />
+                  foregroundStyleClassName={
+                    song.id === viewModel.selectedSongID
+                      ? "fill-white"
+                      : "fill-systemBlue"
+                  }
+                >
+                  {
+                    currentPlayingSong?.id === song.id && (
+                      <Image
+                        systemName={
+                          isPlaying
+                            ? "speaker.wave.2.fill"
+                            : "speaker.fill"
+                        }
+                        heightClassName="h-3"
+                        marginClassName="mx-auto"
+                      />
+                    )
+                  }
+                </HStack>
                 <HStack
                   heightClassName="h-11"
                   overflowClassName="overflow-hidden"
@@ -341,6 +417,30 @@ export default function SongDetailView({
                     multilineTextAlignmentClassName="text-left"
                     truncationClassName="truncate"
                   />
+                  <Spacer />
+                  <Button
+                    action={(clickPosition) => {
+                      if (!clickPosition) {
+                        return
+                      }
+                      viewModel.moreOptionsButtonDidClick(clickPosition, true)
+                    }}
+                  >
+                    <HStack
+                      widthClassName="w-7"
+                      heightClassName="h-7"
+                      foregroundStyleClassName={
+                        song.id === viewModel.selectedSongID
+                          ? "fill-white"
+                          : "fill-music-keyColor"
+                      }
+                    >
+                      <Image
+                        systemName="ellipsis"
+                        widthClassName="w-3.75"
+                      />
+                    </HStack>
+                  </Button>
                 </HStack>
                 <HStack
                   overflowClassName="overflow-hidden"
@@ -408,6 +508,26 @@ export default function SongDetailView({
 
             <Spacer />
           </VStack>
+        )
+      }
+
+      {
+        viewModel.isContextMenuPresented.value && (
+          <ContextMenu
+            isPresented={viewModel.isContextMenuPresented}
+            position={viewModel.contextMenuPosition}
+            action={() => viewModel.getInfoButtonDidClick()}
+          />
+        )
+      }
+
+      {
+        viewModel.isSongSheetPresented.value && (
+          <SongSheet
+            isPresented={viewModel.isSongSheetPresented}
+            mode="modification"
+            detail={songs.find(s => s.id === viewModel.selectedSongID)}
+          />
         )
       }
     </>

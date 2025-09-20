@@ -41,12 +41,19 @@ namespace Song {
 
       export type Retrieval = {
         id: string
+        fields: string
       }
     }
 
     export namespace Output {
       export type Retrieval = {
-        playCount: number
+        playCount?: number
+        trackNumber?: number
+        discNumber?: number
+        sampleSize?: number
+        sampleRate?: number
+        isPopular?: boolean
+        albumID?: number
       }
     }
   }

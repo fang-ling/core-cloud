@@ -70,6 +70,9 @@ export default class NewLocalizer {
     "Create": {
       "zh-TW": "建立"
     },
+    "Details": {
+      "zh-TW": "詳細資訊"
+    },
     "Disc Number": {
       "zh-TW": "光碟編號"
     },
@@ -84,6 +87,9 @@ export default class NewLocalizer {
     },
     "Genre": {
       "zh-TW": "類型"
+    },
+    "Get Info": {
+      "zh-TW": "取得資訊"
     },
     "Keep me signed in": {
       "zh-TW": "讓我保持登入"

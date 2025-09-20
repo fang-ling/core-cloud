@@ -499,7 +499,9 @@ export default function DetailView({
           <SongDetailView
             songs={songs}
             setSongs={setSongs}
+            currentPlayingSong={viewModel.currentPlayingSong}
             setCurrentPlayingSong={viewModel.setCurrentPlayingSong}
+            isPlaying={viewModel.isPlaying}
           />
         )
       }

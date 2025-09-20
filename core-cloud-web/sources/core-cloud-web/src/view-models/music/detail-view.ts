@@ -80,13 +80,14 @@ export default function useDetailView() {
         if (currentPlayingSong) {
           SongService
             .fetchSong({
-              id: currentPlayingSong.id + ""
+              id: currentPlayingSong.id.toString(),
+              fields: "playCount"
             })
             .then(response => {
-              if (response) {
+              if (response?.playCount !== undefined) {
                 SongService.modifySong({
-                  id: `${currentPlayingSong.id}`,
-                  playCount: `${response.playCount + 1}`
+                  id: currentPlayingSong.id.toString(),
+                  playCount: (response.playCount + 1).toString()
                 })
               }
             })
