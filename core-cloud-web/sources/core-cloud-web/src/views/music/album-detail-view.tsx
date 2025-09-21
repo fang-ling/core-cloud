@@ -20,7 +20,13 @@
 import useAlbumDetailView from "@/view-models/music/album-detail-view"
 import { useEffect } from "react"
 import AsyncImage from "ui/async-image"
+import ContentMode from "ui/content-mode"
+import Grid from "ui/grid"
+import HStack from "ui/h-stack"
 import Text from "ui/text"
+import VStack from "ui/v-stack"
+import Alignment from "ui/alignment"
+import EmptyDetailView from "./empty-detail-view"
 
 export default function AlbumDetailView({
   albums,
@@ -50,20 +56,72 @@ export default function AlbumDetailView({
   return (
     <>
       {
-        albums.map(album => (
-          <div
-            className="w-full flex"
-            key={album.id}
+        albums.length > 0 && (
+          <VStack
+            widthClassName="w-full"
+            heightClassName="h-full"
+            overflowClassName="overflow-hidden"
           >
-            <AsyncImage
-              widthClassName="w-5"
-              heightClassName="h-5"
-              urls={album.artworkURLs.split(",")}
-            />
-            <Text verbatimContent={album.name} />
-            <Text verbatimContent={album.artist} />
-          </div>
-        ))
+            <HStack
+              marginClassName="mt-2.5"
+              paddingClassName="pb-3"
+            >
+              <Text
+                textKey="Albums"
+                fontSizeClassName="text-[15px]"
+                fontWeightClassName="font-semibold"
+                lineHeightClassName="leading-5"
+                foregroundStyleClassName="text-music-systemPrimary"
+                multilineTextAlignmentClassName="text-center"
+              />
+            </HStack>
+            <Grid
+              alignment={Alignment.top}
+              widthClassName="w-full"
+              gridTemplateClassName={
+                "grid-cols-[repeat(2,1fr)] md:grid-cols-[repeat(3,1fr)] " +
+                  "lg:grid-cols-[repeat(4,1fr)] xl:grid-cols-[repeat(5,1fr)]"
+              }
+              overflowClassName="overflow-y-auto"
+              paddingClassName="px-6.25 lg:px-10 pb-3.75"
+              horizontalSpacingClassName="gap-x-2.5 lg:gap-x-5"
+              verticalSpacingClassName="gap-y-6.25"
+            >
+              {
+                albums.map(album => (
+                  <VStack key={album.id}>
+                    <AsyncImage
+                      widthClassName="w-full"
+                      urls={album.artworkURLs.split(",")}
+                      contentMode={ContentMode.fit}
+                      borderClassName="rounded-lg"
+                    />
+                    <Text
+                      verbatimContent={album.name}
+                      marginClassName="mt-1"
+                      fontSizeClassName="text-xs"
+                      lineHeightClassName="leading-3.75"
+                      wrapClassName="text-wrap"
+                      foregroundStyleClassName="text-music-systemPrimary"
+                    />
+                    <Text
+                      verbatimContent={album.artist}
+                      fontSizeClassName="text-xs"
+                      lineHeightClassName="leading-3.75"
+                      wrapClassName="text-wrap"
+                      foregroundStyleClassName="text-music-systemSecondary"
+                    />
+                  </VStack>
+                ))
+              }
+            </Grid>
+          </VStack>
+        )
+      }
+
+      {/* Empty */}
+      {
+        albums.length <= 0 && <EmptyDetailView />
       }
     </>
   )

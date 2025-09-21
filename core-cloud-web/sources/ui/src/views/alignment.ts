@@ -31,4 +31,9 @@ export default class Alignment {
    * A guide that marks the center of the view.
    */
   public static readonly center = new Alignment("items-center justify-center")
+
+  /**
+   * A guide that marks the top edge of the view.
+   */
+  public static readonly top = new Alignment("items-start justify-center")
 }

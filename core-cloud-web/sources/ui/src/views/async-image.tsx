@@ -18,6 +18,7 @@
 //
 
 import React from "react"
+import ContentMode from "./content-mode"
 
 /**
  * A view that asynchronously loads and displays an image.
@@ -26,7 +27,9 @@ export default function AsyncImage({
   urls = [],
   widthClassName = "",
   heightClassName = "",
-  marginClassName = ""
+  marginClassName = "",
+  contentMode,
+  borderClassName = ""
 }: {
   /**
    * The URL of the image to display.
@@ -34,7 +37,9 @@ export default function AsyncImage({
   urls?: string[],
   widthClassName?: string,
   heightClassName?: string,
-  marginClassName?: string
+  marginClassName?: string,
+  contentMode?: ContentMode,
+  borderClassName?: string
 }) {
   return (
     <picture>
@@ -49,7 +54,12 @@ export default function AsyncImage({
       }
       <img
         src={urls[urls.length - 1]}
-        className={`${widthClassName} ${heightClassName} ${marginClassName}`}
+        className={
+          `${widthClassName} ${heightClassName} ${marginClassName} ` +
+            `${borderClassName} ` + (
+              contentMode === ContentMode.fit ? "object-contain" : ""
+            )
+        }
       />
     </picture>
   )

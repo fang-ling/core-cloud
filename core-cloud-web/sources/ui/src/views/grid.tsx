@@ -37,6 +37,8 @@ export default function Grid({
   marginClassName = "",
   overflowClassName = "",
   visibilityClassName = "",
+  horizontalSpacingClassName = "",
+  verticalSpacingClassName = "",
   children
 }: {
   /**
@@ -56,6 +58,14 @@ export default function Grid({
   marginClassName?: string,
   overflowClassName?: string,
   visibilityClassName?: string,
+  /**
+   * The horizontal distance between each cell.
+   */
+  horizontalSpacingClassName?: string,
+  /**
+   * The vertical distance between each cell.
+   */
+  verticalSpacingClassName?: string,
   children: React.ReactNode
 }) {
   return (
@@ -65,7 +75,8 @@ export default function Grid({
           `${widthClassName} ${heightClassName} ${borderClassName} ` +
           `${backgroundStyleClassName} ${positionClassName} ` +
           `${paddingClassName} ${marginClassName} ${overflowClassName} ` +
-          `${visibilityClassName} `+ (
+          `${visibilityClassName} ${horizontalSpacingClassName} ` +
+          `${verticalSpacingClassName} ` + (
             isGroup ? "group" : ""
           )
       }

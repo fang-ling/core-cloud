@@ -2,6 +2,7 @@
   "name": "ui",
   "private": true,
   "exports": {
+    "./alignment": "./src/views/alignment.ts",
     "./async-image": "./src/views/async-image.tsx",
     "./binding": "./src/binding.ts",
     "./button": "./src/views/button.tsx",
