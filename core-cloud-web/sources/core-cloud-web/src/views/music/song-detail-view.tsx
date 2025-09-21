@@ -134,7 +134,6 @@ export default function SongDetailView({
         )
       }
 
-
       {/* Empty */}
       {
         songs.length <= 0 && <EmptyDetailView />
