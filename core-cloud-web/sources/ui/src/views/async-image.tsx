@@ -56,7 +56,7 @@ export default function AsyncImage({
         src={urls[urls.length - 1]}
         className={
           `${widthClassName} ${heightClassName} ${marginClassName} ` +
-            `${borderClassName} ` + (
+            `${borderClassName} select-none ` + (
               contentMode === ContentMode.fit ? "object-contain" : ""
             )
         }
