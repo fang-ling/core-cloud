@@ -26,7 +26,7 @@ extension ControllerTests {
   @Test("FileControllerTests")
   func testFileController() async throws {
     try await withApp(configure: CoreCloudServer.configure) { app in
-      try FileManager.default.removeItem(atPath: "/tmp/tank1")
+      try? FileManager.default.removeItem(atPath: "/tmp/tank1")
 
       try await app.testing().test(
         .POST,

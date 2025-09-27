@@ -84,6 +84,7 @@ struct SongService {
    * Returns a list of songs for a specified user.
    *
    * - Parameters:
+   *   - fields: The fields of each song to retrieve.
    *   - userID: An identifier for the user whose songs are being retrieved.
    *   - database: The database instance from which the songs will be fetched.
    *
@@ -103,17 +104,17 @@ struct SongService {
    *                                  database.
    */
   func getSongs(
-    options: GetSongsOptions,
+    fields: [String],
     for userID: User.IDValue,
     on database: Database
   ) async throws -> [(
     id: Int64,
-    title: String,
-    artist: String,
+    title: String?,
+    artist: String?,
     albumName: String?,
     artworkURLs: String?,
-    duration: Int64,
-    fileID: Int64
+    duration: Int64?,
+    fileID: Int64?
   )] {
     do {
       return try await Song.query(on: database)
@@ -122,14 +123,14 @@ struct SongService {
         .all()
         .map { song in (
           id: try song.requireID(),
-          title: song.title,
-          artist: song.artist,
-          albumName: options.contains(.withAlbumName) ? song.album?.name : nil,
+          title: fields.contains("title") ? song.title : nil,
+          artist: fields.contains("artist") ? song.artist : nil,
+          albumName: fields.contains("albumName") ? song.album?.name : nil,
           artworkURLs: (
-            options.contains(.withArtworkURLs) ? song.album?.artworkURLs : nil
+            fields.contains("artworkURLs") ? song.album?.artworkURLs : nil
           ),
-          duration: song.duration,
-          fileID: song.$file.id
+          duration: fields.contains("duration") ? song.duration : nil,
+          fileID: fields.contains("fileID") ? song.$file.id : nil
         )}
     } catch {
       throw SongError.databaseError
@@ -141,6 +142,7 @@ struct SongService {
    *
    * - Parameters:
    *   - id: The unique identifier for the song to retrieve.
+   *   - fields: The fields of the song to retrieve.
    *   - userID: An identifier for the user whose songs are being retrieved.
    *   - database: The database instance from which the songs will be fetched.
    *
@@ -223,14 +225,5 @@ struct SongService {
     } catch {
       throw SongError.databaseError
     }
-  }
-}
-
-extension SongService {
-  struct GetSongsOptions: OptionSet {
-    let rawValue: UInt
-
-    static let withAlbumName = Self(rawValue: 1 << 0)
-    static let withArtworkURLs = Self(rawValue: 1 << 1)
   }
 }

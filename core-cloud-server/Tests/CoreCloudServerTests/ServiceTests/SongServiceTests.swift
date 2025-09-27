@@ -176,7 +176,7 @@ extension ServiceTests {
 
       try await withApp(configure: CoreCloudServer.configure) { app in
         let empty1 = try await songService.getSongs(
-          options: [],
+          fields: [],
           for: 1,
           on: app.db
         )
@@ -195,7 +195,7 @@ extension ServiceTests {
         try await eva.save(on: app.db)
 
         let empty2 = try await songService.getSongs(
-          options: [],
+          fields: [],
           for: eva.requireID(),
           on: app.db
         )
@@ -247,7 +247,7 @@ extension ServiceTests {
         try await song.save(on: app.db)
 
         var songs = try await songService.getSongs(
-          options: [],
+          fields: ["title", "artist", "duration"],
           for: eva.requireID(),
           on: app.db
         )
@@ -260,7 +260,7 @@ extension ServiceTests {
         #expect(songs.first?.duration == 58)
 
         songs = try await songService.getSongs(
-          options: [.withAlbumName, .withArtworkURLs],
+          fields: ["title", "artist", "albumName", "artworkURLs", "duration"],
           for: eva.requireID(),
           on: app.db
         )

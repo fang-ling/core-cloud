@@ -165,10 +165,16 @@ struct SongController: RouteCollection {
       return Response(status: .unauthorized)
     }
 
+    let fetchRequest: Song.Plural.Input.Retrieval
     do {
-      /* TODO: Add query parameter. */
+      fetchRequest = try request.query.decode(Song.Plural.Input.Retrieval.self)
+    } catch {
+      return Response(status: .badRequest)
+    }
+
+    do {
       let songs = try await songService.getSongs(
-        options: [.withAlbumName, .withArtworkURLs],
+        fields: fetchRequest.fields.components(separatedBy: ","),
         for: userID,
         on: request.db
       )

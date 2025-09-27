@@ -27,7 +27,7 @@ extension ControllerTests {
   @Test("SongControllerTests")
   func testSongController() async throws {
     try await withApp(configure: CoreCloudServer.configure) { app in
-      try FileManager.default.removeItem(atPath: "/tmp/song-controller-test")
+      try? FileManager.default.removeItem(atPath: "/tmp/song-controller-test")
 
       try await app.testing().test(
         .POST,
@@ -132,7 +132,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/songs",
+        "api/songs?fields=title",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -536,7 +536,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/songs",
+        "api/songs?fields=title,artist,albumName,artworkURLs,duration,fileID",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
