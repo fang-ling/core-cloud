@@ -59,15 +59,21 @@ namespace Song {
   }
 
   export namespace Plural {
+    export namespace Input {
+      export type Retrieval = {
+        fields: string
+      }
+    }
+
     export namespace Output {
       export type Retrieval = {
         id: number
-        title: string
-        artist: string
+        title?: string
+        artist?: string
         albumName?: string
         artworkURLs?: string
-        duration: number
-        fileID: number
+        duration?: number
+        fileID?: number
       }
     }
   }

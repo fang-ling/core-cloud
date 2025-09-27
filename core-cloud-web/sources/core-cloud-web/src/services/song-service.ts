@@ -44,10 +44,14 @@ namespace SongService {
     }
   }
 
-  export async function fetchSongs() {
+  export async function fetchSongs(
+    request: Song.Plural.Input.Retrieval
+  ) {
     try {
+      const queryString = new URLSearchParams(request).toString()
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/songs`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/songs?${queryString}`,
         {
           method: "GET"
         }

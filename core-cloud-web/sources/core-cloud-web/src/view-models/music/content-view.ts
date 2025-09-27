@@ -97,17 +97,19 @@ export default function useContentView() {
       return
     }
 
-    let newSongs = await SongService.fetchSongs()
+    let newSongs = await SongService.fetchSongs({
+      fields: "title,artist,albumName,artworkURLs,duration,fileID"
+    })
     setSongs(
       newSongs.map(song => {
         return {
           id: song.id,
-          title: song.title,
-          artist: song.artist,
+          title: song.title ?? "",
+          artist: song.artist ?? "",
           albumName: song.albumName,
           artworkURLs: song.artworkURLs,
-          duration: song.duration,
-          fileID: song.fileID
+          duration: song.duration ?? 0,
+          fileID: song.fileID ?? 0
         }
       })
     )
