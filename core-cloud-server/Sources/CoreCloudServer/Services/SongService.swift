@@ -85,19 +85,11 @@ struct SongService {
    *
    * - Parameters:
    *   - fields: The fields of each song to retrieve.
+   *   - filters: The filter rules to apply during the retrieval query.
    *   - userID: An identifier for the user whose songs are being retrieved.
    *   - database: The database instance from which the songs will be fetched.
    *
-   * - Returns: An array of tuples, each containing the song details:
-   *   - id: The identifier of the song.
-   *   - title: The title of the song.
-   *   - artist: The artist of the song.
-   *   - trackNumber: The track number in the album.
-   *   - discNumber: The disc number for multi-disc albums.
-   *   - playCount: The number of times the song has been played.
-   *   - sampleSize: The size of the audio sample.
-   *   - sampleRate: The audio sample rate.
-   *   - fileID: The identifier for the audio file.
+   * - Returns: An array of tuples, each containing the song details.
    *
    * - Throws:
    *   - ``SongError/databaseError``: if there is an issue accessing the
@@ -105,6 +97,7 @@ struct SongService {
    */
   func getSongs(
     fields: [String],
+    filters: [String],
     for userID: User.IDValue,
     on database: Database
   ) async throws -> [(
@@ -117,8 +110,22 @@ struct SongService {
     fileID: Int64?
   )] {
     do {
-      return try await Song.query(on: database)
-        .filter(\.$user.$id == userID)
+      var query = Song.query(on: database).filter(\.$user.$id == userID)
+
+      for filter in filters {
+        if filter.contains("_EQUALS_") {
+          let entry = filter.components(separatedBy: "_EQUALS_")
+          if entry.count < 2 {
+            continue
+          }
+
+          if entry[0] == "albumID" && Int64(entry[1]) != nil {
+            query = query.filter(\.$album.$id == Int64(entry[1]))
+          }
+        }
+      }
+
+      return try await query
         .with(\.$album)
         .all()
         .map { song in (

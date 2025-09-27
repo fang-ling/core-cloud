@@ -175,6 +175,7 @@ struct SongController: RouteCollection {
     do {
       let songs = try await songService.getSongs(
         fields: fetchRequest.fields.components(separatedBy: ","),
+        filters: fetchRequest.filters?.components(separatedBy: ",") ?? [],
         for: userID,
         on: request.db
       )

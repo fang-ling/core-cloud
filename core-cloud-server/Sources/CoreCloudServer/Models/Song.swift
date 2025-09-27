@@ -188,6 +188,7 @@ extension Song.Singular.Output {
 extension Song.Plural.Input {
   struct Retrieval: Codable {
     var fields: String
+    var filters: String?
   }
 }
 

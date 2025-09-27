@@ -177,6 +177,7 @@ extension ServiceTests {
       try await withApp(configure: CoreCloudServer.configure) { app in
         let empty1 = try await songService.getSongs(
           fields: [],
+          filters: [],
           for: 1,
           on: app.db
         )
@@ -196,6 +197,7 @@ extension ServiceTests {
 
         let empty2 = try await songService.getSongs(
           fields: [],
+          filters: [],
           for: eva.requireID(),
           on: app.db
         )
@@ -248,6 +250,7 @@ extension ServiceTests {
 
         var songs = try await songService.getSongs(
           fields: ["title", "artist", "duration"],
+          filters: [],
           for: eva.requireID(),
           on: app.db
         )
@@ -261,6 +264,7 @@ extension ServiceTests {
 
         songs = try await songService.getSongs(
           fields: ["title", "artist", "albumName", "artworkURLs", "duration"],
+          filters: [],
           for: eva.requireID(),
           on: app.db
         )
@@ -271,6 +275,22 @@ extension ServiceTests {
         #expect(songs.first?.albumName == "Scent of a Woman")
         #expect(songs.first?.artworkURLs == "https://example.com/1.png")
         #expect(songs.first?.duration == 58)
+
+        songs = try await songService.getSongs(
+          fields: ["title", "artist", "albumName", "artworkURLs", "duration"],
+          filters: ["albumID_EQUALS_19358"],
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(songs.isEmpty)
+
+        songs = try await songService.getSongs(
+          fields: ["title", "artist", "albumName", "artworkURLs", "duration"],
+          filters: ["albumID_EQUALS_\(album.requireID())"],
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(songs.count > 0)
       }
     }
 
