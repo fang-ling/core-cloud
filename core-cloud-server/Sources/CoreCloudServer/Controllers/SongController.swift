@@ -193,7 +193,8 @@ struct SongController: RouteCollection {
                 albumName: song.albumName,
                 artworkURLs: song.artworkURLs,
                 duration: song.duration,
-                fileID: song.fileID
+                fileID: song.fileID,
+                isPopular: song.isPopular
               )
             }
           )

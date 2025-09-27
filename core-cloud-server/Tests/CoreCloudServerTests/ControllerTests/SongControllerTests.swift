@@ -564,6 +564,30 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
+        "api/songs?fields=title,isPopular",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .ok)
+
+          let songs = try response.content.decode(
+            [Song.Plural.Output.Retrieval].self
+          )
+          #expect(songs.count == 1)
+          #expect(songs.first?.id == 1)
+          #expect(songs.first?.title == "Por Una Cabeza")
+          #expect(songs.first?.isPopular != nil)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
         "api/songs?fields=title&filters=albumID_EQUALS_19358",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(

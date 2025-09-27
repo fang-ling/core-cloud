@@ -107,7 +107,8 @@ struct SongService {
     albumName: String?,
     artworkURLs: String?,
     duration: Int64?,
-    fileID: Int64?
+    fileID: Int64?,
+    isPopular: Bool?
   )] {
     do {
       var query = Song.query(on: database).filter(\.$user.$id == userID)
@@ -137,7 +138,8 @@ struct SongService {
             fields.contains("artworkURLs") ? song.album?.artworkURLs : nil
           ),
           duration: fields.contains("duration") ? song.duration : nil,
-          fileID: fields.contains("fileID") ? song.$file.id : nil
+          fileID: fields.contains("fileID") ? song.$file.id : nil,
+          isPopular: fields.contains("isPopular") ? song.isPopular : nil
         )}
     } catch {
       throw SongError.databaseError

@@ -201,5 +201,6 @@ extension Song.Plural.Output {
     var artworkURLs: String?
     var duration: Int64?
     var fileID: Int64?
+    var isPopular: Bool?
   }
 }
