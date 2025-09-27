@@ -29,7 +29,9 @@ export default function AsyncImage({
   heightClassName = "",
   marginClassName = "",
   contentMode,
-  borderClassName = ""
+  borderClassName = "",
+  shadowClassName = "",
+  positionClassName = ""
 }: {
   /**
    * The URL of the image to display.
@@ -39,7 +41,9 @@ export default function AsyncImage({
   heightClassName?: string,
   marginClassName?: string,
   contentMode?: ContentMode,
-  borderClassName?: string
+  borderClassName?: string,
+  shadowClassName?: string,
+  positionClassName?: string
 }) {
   return (
     <picture>
@@ -56,7 +60,8 @@ export default function AsyncImage({
         src={urls[urls.length - 1]}
         className={
           `${widthClassName} ${heightClassName} ${marginClassName} ` +
-            `${borderClassName} select-none ` + (
+            `${borderClassName} select-none ${shadowClassName} ` +
+            `${positionClassName} ` + (
               contentMode === ContentMode.fit ? "object-contain" : ""
             )
         }

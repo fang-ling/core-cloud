@@ -25,9 +25,9 @@ import Image from "ui/image"
 import Text from "ui/text"
 import VStack from "ui/v-stack"
 import ZStack from "ui/z-stack"
-import SongDetailView from "./song-detail-view"
 import { useEffect } from "react"
-import AlbumDetailView from "./album-detail-view"
+import AlbumListView from "./album-list-view"
+import SongListView from "./song-list-view"
 
 export default function DetailView({
   selectedSidebarItemKey,
@@ -496,7 +496,7 @@ export default function DetailView({
 
       {
         selectedSidebarItemKey === "songs" && (
-          <SongDetailView
+          <SongListView
             songs={songs}
             setSongs={setSongs}
             currentPlayingSong={viewModel.currentPlayingSong}
@@ -507,7 +507,7 @@ export default function DetailView({
       }
       {
         selectedSidebarItemKey === "albums" && (
-          <AlbumDetailView
+          <AlbumListView
             albums={albums}
             setAlbums={setAlbums}
           />

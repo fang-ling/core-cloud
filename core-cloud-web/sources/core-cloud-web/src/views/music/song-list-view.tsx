@@ -1,5 +1,5 @@
 //
-//  song-detail-view.tsx
+//  song-list-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/31.
@@ -17,18 +17,18 @@
 //  limitations under the License.
 //
 
-import useSongDetailView from "@/view-models/music/song-detail-view"
 import { useEffect } from "react"
 import HStack from "ui/h-stack"
 import Text from "ui/text"
 import VStack from "ui/v-stack"
 import ContextMenu from "./context-menu"
 import SongSheet from "./song-sheet"
-import EmptyDetailView from "./empty-detail-view"
-import SongDetailHeader from "./song-detail-header"
-import SongDetailContent from "./song-detail-content"
+import EmptyView from "./empty-view"
+import useSongListView from "@/view-models/music/song-list-view"
+import SongListHeader from "./song-list-header"
+import SongListContent from "./song-list-content"
 
-export default function SongDetailView({
+export default function SongListView({
   songs,
   setSongs,
   currentPlayingSong,
@@ -71,7 +71,7 @@ export default function SongDetailView({
   } | undefined>>,
   isPlaying: boolean
 }) {
-  const viewModel = useSongDetailView({
+  const viewModel = useSongListView({
     setSongs: setSongs,
     setCurrentPlayingSong: setCurrentPlayingSong
   })
@@ -101,10 +101,10 @@ export default function SongDetailView({
             </HStack>
 
             {/* Table header, >= md */}
-            <SongDetailHeader isMobile={false} />
+            <SongListHeader isMobile={false} />
 
             {/* Table content, >= md */}
-            <SongDetailContent
+            <SongListContent
               isMobile={false}
               songs={songs}
               listItemOnClick={viewModel.songListItemDidClick}
@@ -116,10 +116,10 @@ export default function SongDetailView({
             />
 
             {/* Table header, < md */}
-            <SongDetailHeader isMobile={true} />
+            <SongListHeader isMobile={true} />
 
             {/* Table content, < md */}
-            <SongDetailContent
+            <SongListContent
               isMobile={true}
               songs={songs}
               listItemOnClick={viewModel.songListItemDidClick}
@@ -136,7 +136,7 @@ export default function SongDetailView({
 
       {/* Empty */}
       {
-        songs.length <= 0 && <EmptyDetailView />
+        songs.length <= 0 && <EmptyView />
       }
 
       {

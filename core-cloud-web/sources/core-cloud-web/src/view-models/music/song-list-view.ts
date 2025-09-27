@@ -1,5 +1,5 @@
 //
-//  song-detail-view.ts
+//  song-list-view.ts
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/8/31.
@@ -21,7 +21,7 @@ import SongService from "@/services/song-service"
 import { useState } from "react"
 import { useBinding } from "ui/binding"
 
-export default function useSongDetailView({
+export default function useSongListView({
   setSongs,
   setCurrentPlayingSong
 }: {

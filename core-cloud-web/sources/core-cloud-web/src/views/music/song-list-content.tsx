@@ -1,5 +1,5 @@
 //
-//  song-detail-content.tsx
+//  song-list-content.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/9/21.
@@ -26,7 +26,7 @@ import Image from "ui/image"
 import Spacer from "ui/spacer"
 import Text from "ui/text"
 
-export default function SongDetailContent({
+export default function SongListContent({
   isMobile,
   songs,
   listItemOnClick,

@@ -36,6 +36,7 @@ export default function VStack({
   pointerStyleClassname = "",
   overflowClassName = "",
   style = undefined,
+  isGroup,
   children
 }: {
   /**
@@ -59,6 +60,7 @@ export default function VStack({
   pointerStyleClassname?: string,
   overflowClassName?: string,
   style?: React.CSSProperties,
+  isGroup?: boolean,
   /**
    * A view builder that creates the content of this stack.
    */
@@ -71,7 +73,7 @@ export default function VStack({
           `${widthClassName} ${marginClassName} ${paddingClassName} ` +
           `${positionClassName} ${backgroundStyleClassName} ` +
           `${borderClassName} ${shadowClassName} ${pointerStyleClassname} ` +
-          `${overflowClassName}`
+          `${overflowClassName} ${isGroup ? "group" : ""}`
       }
       style={style}
     >

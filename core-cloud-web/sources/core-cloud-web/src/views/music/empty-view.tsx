@@ -1,5 +1,5 @@
 //
-//  empty-detail-view.tsx
+//  empty-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/9/21.
@@ -22,7 +22,7 @@ import Spacer from "ui/spacer"
 import Text from "ui/text"
 import VStack from "ui/v-stack"
 
-export default function EmptyDetailView() {
+export default function EmptyView() {
   return (
     <VStack heightClassName="h-full">
       <Spacer />

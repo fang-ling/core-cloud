@@ -1,5 +1,5 @@
 //
-//  album-detail-view.ts
+//  album-list-view.ts
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/9/13.
@@ -19,7 +19,7 @@
 
 import AlbumService from "@/services/album-service"
 
-export default function useAlbumDetailView({
+export default function useAlbumListView({
   setAlbums
 }: {
   setAlbums: React.Dispatch<React.SetStateAction<{

@@ -1,5 +1,5 @@
 //
-//  song-detail-header.tsx
+//  song-list-header.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/9/21.
@@ -22,7 +22,7 @@ import Grid from "ui/grid"
 import HStack from "ui/h-stack"
 import Text from "ui/text"
 
-export default function SongDetailHeader({
+export default function SongListHeader({
   isMobile
 }: {
   isMobile: boolean

@@ -1,5 +1,5 @@
 //
-//  album-detail-view.tsx
+//  album-list-view.tsx
 //  core-cloud-web
 //
 //  Created by Fang Ling on 2025/9/13.
@@ -17,7 +17,6 @@
 //  limitations under the License.
 //
 
-import useAlbumDetailView from "@/view-models/music/album-detail-view"
 import { useEffect } from "react"
 import AsyncImage from "ui/async-image"
 import ContentMode from "ui/content-mode"
@@ -26,9 +25,13 @@ import HStack from "ui/h-stack"
 import Text from "ui/text"
 import VStack from "ui/v-stack"
 import Alignment from "ui/alignment"
-import EmptyDetailView from "./empty-detail-view"
+import EmptyView from "./empty-view"
+import useAlbumListView from "@/view-models/music/album-list-view"
+import ZStack from "ui/z-stack"
+import Button from "ui/button"
+import Image from "ui/image"
 
-export default function AlbumDetailView({
+export default function AlbumListView({
   albums,
   setAlbums
 }: {
@@ -45,7 +48,7 @@ export default function AlbumDetailView({
     artworkURLs: string
   }[]>>
 }) {
-  const viewModel = useAlbumDetailView({
+  const viewModel = useAlbumListView({
     setAlbums: setAlbums
   })
 
@@ -89,13 +92,58 @@ export default function AlbumDetailView({
             >
               {
                 albums.map(album => (
-                  <VStack key={album.id}>
-                    <AsyncImage
+                  <VStack
+                    key={album.id}
+                    pointerStyleClassname="hover:cursor-pointer"
+                    isGroup={true}
+                  >
+                    <ZStack
                       widthClassName="w-full"
-                      urls={album.artworkURLs.split(",")}
-                      contentMode={ContentMode.fit}
-                      borderClassName="rounded-lg"
-                    />
+                      heightClassName="aspect-square"
+                    >
+                      <AsyncImage
+                        urls={album.artworkURLs.split(",")}
+                        contentMode={ContentMode.fit}
+                        borderClassName="rounded-lg"
+                        shadowClassName={
+                          "shadow-md shadow-black/10 dark:shadow-black/60"
+                        }
+                        positionClassName="absolute inset-0"
+                      />
+                      {/* Overlay */}
+                      <HStack
+                        positionClassName={
+                          "absolute inset-0 opacity-100 " +
+                            "not-group-hover:opacity-0"
+                        }
+                        backgroundStyleClassName="bg-[#3333334d]"
+                        borderClassName="rounded-lg"
+                        transitionClassName={
+                          "transition-opacity duration-100 ease-[ease-in]"
+                        }
+                      >
+                        {/* Play button */}
+                        <Button
+                          widthClassName="w-7.5"
+                          heightClassName="h-7.5"
+                          backgroundStyleClassName={
+                            "bg-music-systemStandardThinMaterialSover " +
+                              "hover:bg-music-keyColor " +
+                              "dark:backdrop-saturate-180 " +
+                              "backdrop-saturate-190 backdrop-blur-[60px]"
+                          }
+                          borderClassName="rounded-full"
+                          positionClassName="absolute bottom-2.5 left-2.5"
+                          action={() => {}}
+                        >
+                          <Image
+                            systemName="play.fill"
+                            widthClassName="w-3"
+                            foregroundStyleClassName="fill-white"
+                          />
+                        </Button>
+                      </HStack>
+                    </ZStack>
                     <Text
                       verbatimContent={album.name}
                       marginClassName="mt-1"
@@ -121,7 +169,7 @@ export default function AlbumDetailView({
 
       {/* Empty */}
       {
-        albums.length <= 0 && <EmptyDetailView />
+        albums.length <= 0 && <EmptyView />
       }
     </>
   )

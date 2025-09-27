@@ -76,9 +76,7 @@ export default function Grid({
           `${backgroundStyleClassName} ${positionClassName} ` +
           `${paddingClassName} ${marginClassName} ${overflowClassName} ` +
           `${visibilityClassName} ${horizontalSpacingClassName} ` +
-          `${verticalSpacingClassName} ` + (
-            isGroup ? "group" : ""
-          )
+          `${verticalSpacingClassName} ${isGroup ? "group" : ""}`
       }
       style={style}
     >

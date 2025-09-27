@@ -25,6 +25,10 @@ import React from "react"
 export default function Button({
   action,
   widthClassName = "",
+  heightClassName = "",
+  backgroundStyleClassName = "",
+  borderClassName = "",
+  positionClassName = "",
   children
 }: {
   /**
@@ -32,6 +36,10 @@ export default function Button({
    */
   action: (clickPosition?: { x: number, y: number }) => void,
   widthClassName?: string,
+  heightClassName?: string,
+  backgroundStyleClassName?: string,
+  borderClassName?: string,
+  positionClassName?: string,
   /**
    * A view that describes the purpose of the button's action.
    */
@@ -40,7 +48,9 @@ export default function Button({
   return (
     <button
       className={
-        `cursor-pointer ${widthClassName}`
+        `cursor-pointer flex items-center justify-center ${widthClassName} ` +
+          `${heightClassName} ${backgroundStyleClassName} ${borderClassName} ` +
+          `${positionClassName}`
       }
       onClick={(event) => {
         action({
