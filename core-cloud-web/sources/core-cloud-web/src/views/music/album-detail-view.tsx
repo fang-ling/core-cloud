@@ -62,6 +62,7 @@ export default function AlbumDetailView({
       widthClassName="w-full"
       heightClassName="h-full"
       overflowClassName="overflow-y-auto"
+      paddingClassName="not-md:pb-16"
     >
       <HStack widthClassName="w-full">
         {/* Back Button */}
