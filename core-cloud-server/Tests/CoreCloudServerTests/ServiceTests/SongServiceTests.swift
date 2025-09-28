@@ -285,13 +285,16 @@ extension ServiceTests {
         #expect(songs.isEmpty)
 
         songs = try await songService.getSongs(
-          fields: ["title", "artist", "albumName", "artworkURLs", "isPopular"],
+          fields: ["trackNumber", "discNumber", "isPopular"],
           filters: ["albumID_EQUALS_\(album.requireID())"],
           for: eva.requireID(),
           on: app.db
         )
         #expect(songs.count > 0)
-        #expect(songs.first?.isPopular != nil)
+        #expect(songs.first?.isPopular == true)
+        #expect(songs.first?.title == nil)
+        #expect(songs.first?.trackNumber == 7)
+        #expect(songs.first?.discNumber == 1)
       }
     }
 

@@ -202,5 +202,7 @@ extension Song.Plural.Output {
     var duration: Int64?
     var fileID: Int64?
     var isPopular: Bool?
+    var trackNumber: Int64?
+    var discNumber: Int64?
   }
 }

@@ -194,7 +194,9 @@ struct SongController: RouteCollection {
                 artworkURLs: song.artworkURLs,
                 duration: song.duration,
                 fileID: song.fileID,
-                isPopular: song.isPopular
+                isPopular: song.isPopular,
+                trackNumber: song.trackNumber,
+                discNumber: song.discNumber
               )
             }
           )

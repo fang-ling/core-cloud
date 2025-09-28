@@ -534,9 +534,19 @@ extension ControllerTests {
         }
       )
 
+      let fields = [
+        "title",
+        "artist",
+        "albumName",
+        "artworkURLs",
+        "duration",
+        "fileID",
+        "trackNumber",
+        "discNumber"
+      ]
       try await app.testing().test(
         .GET,
-        "api/songs?fields=title,artist,albumName,artworkURLs,duration,fileID",
+        "api/songs?fields=\(fields.joined(separator: ","))",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -559,6 +569,8 @@ extension ControllerTests {
           #expect(songs.first?.artworkURLs == "https://example.com/1.png")
           #expect(songs.first?.duration == 58)
           #expect(songs.first?.fileID == 3)
+          #expect(songs.first?.trackNumber == 7)
+          #expect(songs.first?.discNumber == 1)
         }
       )
 
