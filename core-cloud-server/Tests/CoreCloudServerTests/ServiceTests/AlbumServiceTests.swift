@@ -113,7 +113,11 @@ extension ServiceTests {
       let albumService = AlbumService()
 
       try await withApp(configure: CoreCloudServer.configure) { app in
-        var albums = try await albumService.getAlbums(for: 1, on: app.db)
+        var albums = try await albumService.getAlbums(
+          for: 1,
+          fields: [],
+          on: app.db
+        )
         #expect(albums.isEmpty)
 
         let eva = User(
@@ -130,6 +134,7 @@ extension ServiceTests {
 
         albums = try await albumService.getAlbums(
           for: eva.requireID(),
+          fields: [],
           on: app.db
         )
         #expect(albums.isEmpty)
@@ -146,6 +151,7 @@ extension ServiceTests {
 
         albums = try await albumService.getAlbums(
           for: eva.requireID(),
+          fields: ["name", "artist", "artworkURLs"],
           on: app.db
         )
         #expect(albums.count == 1)
@@ -177,15 +183,27 @@ extension ServiceTests {
 
         albums = try await albumService.getAlbums(
           for: eva.requireID(),
+          fields: [],
           on: app.db
         )
         #expect(albums.count == 1)
 
         albums = try await albumService.getAlbums(
           for: alice.requireID(),
+          fields: [],
           on: app.db
         )
         #expect(albums.count == 1)
+
+        albums = try await albumService.getAlbums(
+          for: alice.requireID(),
+          fields: ["year", "genre"],
+          on: app.db
+        )
+        #expect(albums.count == 1)
+        #expect(albums.first?.year == 1996)
+        #expect(albums.first?.genre == "Chamber music")
+        #expect(albums.first?.name == nil)
       }
     }
 

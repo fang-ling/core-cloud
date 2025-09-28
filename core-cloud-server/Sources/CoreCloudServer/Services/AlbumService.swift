@@ -67,13 +67,10 @@ struct AlbumService {
    *
    * - Parameters:
    *   - userID: An identifier for the user whose albums are being retrieved.
+   *   - fields: The fields of the album to retrieve.
    *   - database: The database instance from which the albums will be fetched.
    *
-   * - Returns: An array of tuples, each containing the album details:
-   *   - id: The identifier of the album.
-   *   - name: The name of the album.
-   *   - artist: The artist of the album.
-   *   - artworkURLs: The artwork urls of the album.
+   * - Returns: An array of tuples, each containing the album details.
    *
    * - Throws:
    *   - ``AlbumError/databaseError``: if there is an issue accessing the
@@ -81,12 +78,15 @@ struct AlbumService {
    */
   func getAlbums(
     for userID: User.IDValue,
+    fields: [String],
     on database: Database
   ) async throws -> [(
     id: Int64,
-    name: String,
-    artist: String,
-    artworkURLs: String
+    name: String?,
+    artist: String?,
+    artworkURLs: String?,
+    genre: String?,
+    year: Int64?
   )] {
     do {
       return try await Album.query(on: database)
@@ -94,9 +94,11 @@ struct AlbumService {
         .all()
         .map { album in (
           id: try album.requireID(),
-          name: album.name,
-          artist: album.artist,
-          artworkURLs: album.artworkURLs
+          name: fields.contains("name") ? album.name : nil,
+          artist: fields.contains("artist") ? album.artist : nil,
+          artworkURLs: fields.contains("artworkURLs") ? album.artworkURLs : nil,
+          genre: fields.contains("genre") ? album.genre : nil,
+          year: fields.contains("year") ? album.year : nil
         )}
     } catch {
       throw AlbumError.databaseError

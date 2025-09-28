@@ -121,8 +121,21 @@ struct AlbumController: RouteCollection {
       return Response(status: .unauthorized)
     }
 
+    let fetchRequest: Album.Plural.Input.Retrieval
     do {
-      let albums = try await albumService.getAlbums(for: userID, on: request.db)
+      fetchRequest = try request.query.decode(
+        Album.Plural.Input.Retrieval.self
+      )
+    } catch {
+      return Response(status: .badRequest)
+    }
+
+    do {
+      let albums = try await albumService.getAlbums(
+        for: userID,
+        fields: fetchRequest.fields.components(separatedBy: ","),
+        on: request.db
+      )
 
       return try Response(
         status: .ok,
@@ -134,7 +147,9 @@ struct AlbumController: RouteCollection {
                 id: album.id,
                 name: album.name,
                 artist: album.artist,
-                artworkURLs: album.artworkURLs
+                artworkURLs: album.artworkURLs,
+                genre: album.genre,
+                year: album.year
               )
             }
           )

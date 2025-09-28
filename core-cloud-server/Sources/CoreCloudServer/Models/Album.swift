@@ -100,6 +100,7 @@ extension Album.Singular {
 }
 
 extension Album.Plural {
+  enum Input { }
   enum Output { }
 }
 
@@ -124,11 +125,19 @@ extension Album.Singular.Output {
   }
 }
 
+extension Album.Plural.Input {
+  struct Retrieval: Codable {
+    var fields: String
+  }
+}
+
 extension Album.Plural.Output {
   struct Retrieval: Codable {
     var id: Int64
-    var name: String
-    var artist: String
-    var artworkURLs: String
+    var name: String?
+    var artist: String?
+    var artworkURLs: String?
+    var genre: String?
+    var year: Int64?
   }
 }

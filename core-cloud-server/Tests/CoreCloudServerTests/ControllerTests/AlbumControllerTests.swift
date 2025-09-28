@@ -125,7 +125,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/albums",
+        "api/albums?fields=name,artist,artworkURLs,genre,year",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -145,6 +145,8 @@ extension ControllerTests {
           #expect(albums.first?.name == "1996")
           #expect(albums.first?.artist == "Ryuichi Sakamoto")
           #expect(albums.first?.artworkURLs == "https://example.com/1.png")
+          #expect(albums.first?.genre == "Chamber music")
+          #expect(albums.first?.year == 1996)
         }
       )
 
@@ -217,7 +219,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/albums",
+        "api/albums?fields=name",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
