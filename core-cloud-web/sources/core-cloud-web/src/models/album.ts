@@ -27,6 +27,17 @@ namespace Album {
         year: number
         artworkURLs: string
       }
+
+      export type Retrieval = {
+        id: string
+      }
+    }
+
+    export namespace Output {
+      export type Retrieval = {
+        genre: string
+        year: number
+      }
     }
   }
 

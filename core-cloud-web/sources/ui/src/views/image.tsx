@@ -116,6 +116,37 @@ export default function Image({
       }
     }
 
+    case "chevron.left.circle.fill":
+      switch (weight) {
+        case "regular": return (
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 16.3438 15.9453"
+            className={className}
+            preserveAspectRatio={preserveAspectRatio}
+          >
+            <g>
+              <rect height="15.9453" opacity="0" width="16.3438" x="0" y="0" />
+              <path
+                d={
+                  "M15.9375 7.96875C15.9375 12.3594 12.3672 15.9375 7.96875 1" +
+                    "5.9375C3.57812 15.9375 0 12.3594 0 7.96875C0 3.57031 3.5" +
+                    "7812 0 7.96875 0C12.3672 0 15.9375 3.57031 15.9375 7.968" +
+                    "75ZM8.6875 4.14062L5.4375 7.21094C4.99219 7.61719 4.9921" +
+                    "9 8.33594 5.4375 8.74219L8.6875 11.8125C8.90625 12.0156 " +
+                    "9.3125 12.0312 9.51562 11.8359C9.75781 11.5938 9.75 11.2" +
+                    "188 9.52344 11L6.3125 7.96875L9.52344 4.95312C9.75781 4." +
+                    "73438 9.75 4.34375 9.50781 4.11719C9.28906 3.90625 8.929" +
+                    "69 3.91406 8.6875 4.14062Z"
+                }
+              />
+            </g>
+          </svg>
+        )
+      }
+
     case "corecloud.applemusic":
       switch (weight) {
         case "regular": return (

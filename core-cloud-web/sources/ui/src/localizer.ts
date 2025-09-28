@@ -121,6 +121,9 @@ export default class NewLocalizer {
     "Play Count": {
       "zh-TW": "播放次數"
     },
+    "Pop": {
+      "zh-TW": "流行樂"
+    },
     "Popular": {
       "zh-TW": "熱門"
     },

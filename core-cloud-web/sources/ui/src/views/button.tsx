@@ -29,6 +29,7 @@ export default function Button({
   backgroundStyleClassName = "",
   borderClassName = "",
   positionClassName = "",
+  marginClassName = "",
   children
 }: {
   /**
@@ -40,6 +41,7 @@ export default function Button({
   backgroundStyleClassName?: string,
   borderClassName?: string,
   positionClassName?: string,
+  marginClassName?: string,
   /**
    * A view that describes the purpose of the button's action.
    */
@@ -50,7 +52,7 @@ export default function Button({
       className={
         `cursor-pointer flex items-center justify-center ${widthClassName} ` +
           `${heightClassName} ${backgroundStyleClassName} ${borderClassName} ` +
-          `${positionClassName}`
+          `${positionClassName} ${marginClassName}`
       }
       onClick={(event) => {
         action({

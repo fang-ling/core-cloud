@@ -33,7 +33,8 @@ import Image from "ui/image"
 
 export default function AlbumListView({
   albums,
-  setAlbums
+  setAlbums,
+  setSelectedAlbum
 }: {
   albums: {
     id: number,
@@ -46,10 +47,19 @@ export default function AlbumListView({
     name: string,
     artist: string,
     artworkURLs: string
-  }[]>>
+  }[]>>,
+  setSelectedAlbum: React.Dispatch<React.SetStateAction<{
+    id: number,
+    name: string,
+    artist: string,
+    artworkURLs: string,
+    genre?: string,
+    year?: number
+  } | undefined>>
 }) {
   const viewModel = useAlbumListView({
-    setAlbums: setAlbums
+    setAlbums: setAlbums,
+    setSelectedAlbum: setSelectedAlbum
   })
 
   useEffect(() => {
@@ -96,6 +106,14 @@ export default function AlbumListView({
                     key={album.id}
                     pointerStyleClassname="hover:cursor-pointer"
                     isGroup={true}
+                    onClick={() => {
+                      viewModel.albumDidSelect({
+                        id: album.id,
+                        name: album.name,
+                        artist: album.artist,
+                        artworkURLs: album.artworkURLs
+                      })
+                    }}
                   >
                     <ZStack
                       widthClassName="w-full"

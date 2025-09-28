@@ -37,6 +37,7 @@ export default function VStack({
   overflowClassName = "",
   style = undefined,
   isGroup,
+  onClick,
   children
 }: {
   /**
@@ -61,6 +62,7 @@ export default function VStack({
   overflowClassName?: string,
   style?: React.CSSProperties,
   isGroup?: boolean,
+  onClick?: () => void,
   /**
    * A view builder that creates the content of this stack.
    */
@@ -76,6 +78,7 @@ export default function VStack({
           `${overflowClassName} ${isGroup ? "group" : ""}`
       }
       style={style}
+      onClick={onClick}
     >
       {children}
     </div>

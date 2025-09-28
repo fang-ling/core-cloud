@@ -26,7 +26,7 @@ import Text from "ui/text"
 import VStack from "ui/v-stack"
 import ZStack from "ui/z-stack"
 import { useEffect } from "react"
-import AlbumListView from "./album-list-view"
+import AlbumContentView from "./album-content-view"
 import SongListView from "./song-list-view"
 
 export default function DetailView({
@@ -507,7 +507,7 @@ export default function DetailView({
       }
       {
         selectedSidebarItemKey === "albums" && (
-          <AlbumListView
+          <AlbumContentView
             albums={albums}
             setAlbums={setAlbums}
           />

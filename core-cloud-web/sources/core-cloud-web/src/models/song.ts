@@ -62,6 +62,7 @@ namespace Song {
     export namespace Input {
       export type Retrieval = {
         fields: string
+        filters?: string
       }
     }
 
@@ -74,6 +75,9 @@ namespace Song {
         artworkURLs?: string
         duration?: number
         fileID?: number
+        isPopular?: boolean
+        trackNumber?: number
+        discNumber?: number
       }
     }
   }

@@ -65,5 +65,27 @@ namespace AlbumService {
       return []
     }
   }
+
+  export async function fetchAlbum(
+    request: Album.Singular.Input.Retrieval
+  ) {
+    try {
+      const queryString = new URLSearchParams(request).toString()
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/album?${queryString}`,
+        {
+          method: "GET"
+        }
+      )
+      if (response.status === 200) {
+        return (await response.json()) as (Album.Singular.Output.Retrieval)
+      } else {
+        throw new Error()
+      }
+    } catch {
+      return undefined
+    }
+  }
 }
 export default AlbumService

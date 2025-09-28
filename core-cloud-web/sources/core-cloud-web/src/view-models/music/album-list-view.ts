@@ -20,14 +20,23 @@
 import AlbumService from "@/services/album-service"
 
 export default function useAlbumListView({
-  setAlbums
+  setAlbums,
+  setSelectedAlbum
 }: {
   setAlbums: React.Dispatch<React.SetStateAction<{
     id: number,
     name: string,
     artist: string,
     artworkURLs: string
-  }[]>>
+  }[]>>,
+  setSelectedAlbum: React.Dispatch<React.SetStateAction<{
+    id: number,
+    name: string,
+    artist: string,
+    artworkURLs: string,
+    genre?: string,
+    year?: number
+  } | undefined>>
 }) {
   /* MARK: Event handlers */
   async function viewDidAppear() {
@@ -46,7 +55,17 @@ export default function useAlbumListView({
     )
   }
 
+  function albumDidSelect(selectedAlbum: {
+    id: number,
+    name: string,
+    artist: string,
+    artworkURLs: string
+  }) {
+    setSelectedAlbum(selectedAlbum)
+  }
+
   return {
-    viewDidAppear
+    viewDidAppear,
+    albumDidSelect
   }
 }
