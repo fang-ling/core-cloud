@@ -31,14 +31,16 @@ export default function useAlbumListView({
 }) {
   /* MARK: Event handlers */
   async function viewDidAppear() {
-    let newAlbums = await AlbumService.fetchAlbums()
+    let newAlbums = await AlbumService.fetchAlbums({
+      fields: "name,artist,artworkURLs"
+    })
     setAlbums(
       newAlbums.map(album => {
         return {
           id: album.id,
-          name: album.name,
-          artist: album.artist,
-          artworkURLs: album.artworkURLs
+          name: album.name ?? "",
+          artist: album.artist ?? "",
+          artworkURLs: album.artworkURLs ?? ""
         }
       })
     )

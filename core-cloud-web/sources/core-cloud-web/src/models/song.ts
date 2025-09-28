@@ -30,7 +30,7 @@ namespace Song {
         sampleRate: number
         isPopular: boolean
         duration: number
-        fileID: number,
+        fileID: number
         albumID: number
       }
 

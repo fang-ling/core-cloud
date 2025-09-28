@@ -31,12 +31,20 @@ namespace Album {
   }
 
   export namespace Plural {
+    export namespace Input {
+      export type Retrieval = {
+        fields: string
+      }
+    }
+
     export namespace Output {
       export type Retrieval = {
         id: number
-        name: string
-        artist: string
-        artworkURLs: string
+        name?: string
+        artist?: string
+        artworkURLs?: string
+        genre?: string
+        year?: number
       }
     }
   }

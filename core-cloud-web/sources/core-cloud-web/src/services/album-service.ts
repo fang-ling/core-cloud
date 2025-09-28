@@ -44,10 +44,14 @@ namespace AlbumService {
     }
   }
 
-  export async function fetchAlbums() {
+  export async function fetchAlbums(
+    request: Album.Plural.Input.Retrieval
+  ) {
     try {
+      const queryString = new URLSearchParams(request).toString()
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/albums`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/albums?${queryString}`,
         {
           method: "GET"
         }
