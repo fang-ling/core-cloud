@@ -31,7 +31,10 @@ export default function AsyncImage({
   contentMode,
   borderClassName = "",
   shadowClassName = "",
-  positionClassName = ""
+  positionClassName = "",
+  opacityClassName = "",
+  transformClassName = "",
+  foregroundStyleClassName = ""
 }: {
   /**
    * The URL of the image to display.
@@ -43,7 +46,10 @@ export default function AsyncImage({
   contentMode?: ContentMode,
   borderClassName?: string,
   shadowClassName?: string,
-  positionClassName?: string
+  positionClassName?: string,
+  opacityClassName?: string,
+  transformClassName?: string,
+  foregroundStyleClassName?: string
 }) {
   return (
     <picture>
@@ -61,7 +67,8 @@ export default function AsyncImage({
         className={
           `${widthClassName} ${heightClassName} ${marginClassName} ` +
             `${borderClassName} select-none ${shadowClassName} ` +
-            `${positionClassName} ` + (
+            `${positionClassName} ${opacityClassName} ` +
+            `${transformClassName} ${foregroundStyleClassName} ` + (
               contentMode === ContentMode.fit ? "object-contain" : ""
             )
         }

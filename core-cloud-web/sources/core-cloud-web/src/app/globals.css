@@ -26,6 +26,7 @@
   /* COLORS */
   --music-joeColor: rgba(0, 0, 0, .14);
   --music-keyColor: rgb(250, 35, 59);
+  --music-keyColor-pressed: rgb(224, 9, 33);
   --music-labelDivider: rgba(0, 0, 0, .15);
   --music-lcd-primary-text-color: rgba(0, 0, 0, 0.85);
   --music-lcd-secondary-text-color: rgba(0, 0, 0, 0.5);
@@ -96,6 +97,7 @@
     /* COLORS */
     --music-joeColor: rgba(255, 255, 255, .05);
     --music-keyColor: rgb(250, 45, 72);
+    --music-keyColor-pressed: rgb(255, 70, 97);
     --music-labelDivider: rgba(255, 255, 255, .1);
     --music-lcd-primary-text-color: rgba(255, 255, 255, 0.85);
     --music-lcd-secondary-text-color: rgba(255, 255, 255, 0.55);
@@ -202,6 +204,7 @@
 
   --color-music-joeColor: var(--music-joeColor);
   --color-music-keyColor: var(--music-keyColor);
+  --color-music-keyColor-pressed: var(--music-keyColor-pressed);
   --color-music-labelDivider: var(--music-labelDivider);
   --color-music-lcd-primary-text-color: var(--music-lcd-primary-text-color);
   --color-music-lcd-secondary-text-color: var(--music-lcd-secondary-text-color);

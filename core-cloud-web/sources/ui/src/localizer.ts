@@ -118,6 +118,9 @@ export default class NewLocalizer {
     "Password incorrect.": {
       "zh-TW": "密碼不正確。"
     },
+    "Play": {
+      "zh-TW": "播放"
+    },
     "Play Count": {
       "zh-TW": "播放次數"
     },
@@ -132,6 +135,9 @@ export default class NewLocalizer {
     },
     "Sample Size": {
       "zh-TW": "取樣大小"
+    },
+    "Shuffle": {
+      "zh-TW": "隨機播放"
     },
     "Songs": {
       "zh-TW": "歌曲"
