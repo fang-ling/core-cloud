@@ -414,7 +414,7 @@ export default function DetailView({
       <HStack
         heightClassName="h-14"
         borderClassName="rounded-[14px]"
-        positionClassName="absolute bottom-0 left-0 right-0"
+        positionClassName="absolute bottom-0 left-0 right-0 z-10"
         shadowClassName="shadow-[0_0_8px_rgba(0,0,0,.2)]"
         marginClassName="mb-1.25 mx-3"
         paddingClassName="pl-2 pr-3.75"
