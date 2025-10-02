@@ -1,0 +1,41 @@
+name: Build Web
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.20.0]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Build release
+      run: |
+        cd core-cloud-web
+        cp sources/core-cloud-web/.env-sample sources/core-cloud-web/.env
+        npm i
+        npm run build
+
+    - name: Create artifacts
+      run: |
+        mkdir result
+        mv core-cloud-web/sources/core-cloud-web/out result/out
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: CoreCloudWeb
+        path: result
