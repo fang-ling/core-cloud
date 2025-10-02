@@ -46,6 +46,8 @@
   --music-systemTertiary: rgba(0, 0, 0, 0.25);
   --music-systemStandardThinMaterialSover: hsla(0, 0, 96, 0.48);
   --music-trackBackgroundEven: rgba(0, 0, 0, .02);
+  --music-tracklistAltRowColor: rgba(0, 0, 0, .015);
+  --music-tracklistHoverColor: rgba(0, 0, 0, .06);
   --sk-body-link-color: #06c;
   --sk-body-text-color: #1d1d1f;
   --sk-button-background: #0071e3;
@@ -117,6 +119,8 @@
     --music-systemTertiary: rgba(255, 255, 255, 0.25);
     --music-systemStandardThinMaterialSover: rgba(40, 40, 40, 0.5);
     --music-trackBackgroundEven: rgba(255, 255, 255, .05);
+    --music-tracklistAltRowColor: hsla(0, 0, 100, .015);
+    --music-tracklistHoverColor: rgba(255, 255, 255, .06);
     --sk-body-link-color: #2997ff;
     --sk-body-text-color: #f5f5f7;
     --sk-button-background: #0071e3;
@@ -226,6 +230,8 @@
     --music-systemStandardThinMaterialSover
   );
   --color-music-trackBackgroundEven: var(--music-trackBackgroundEven);
+  --color-music-tracklistAltRowColor: var(--music-tracklistAltRowColor);
+  --color-music-tracklistHoverColor: var(--music-tracklistHoverColor);
 
   --color-sk-body-link-color: var(--sk-body-link-color);
   --color-sk-body-text-color: var(--sk-body-text-color);

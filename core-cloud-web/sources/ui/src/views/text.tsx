@@ -33,6 +33,7 @@ export default function Text({
   lineHeightClassName = "",
   multilineTextAlignmentClassName = "",
   truncationClassName = "",
+  paddingClassName = "",
   wrapClassName = ""
 }: {
   /**
@@ -65,6 +66,7 @@ export default function Text({
   lineHeightClassName?: string,
   multilineTextAlignmentClassName?: string,
   truncationClassName?: string,
+  paddingClassName?: string,
   wrapClassName?: string
 }) {
   return (
@@ -73,7 +75,7 @@ export default function Text({
         `${marginClassName} ${fontSizeClassName} ${fontWeightClassName} ` +
           `${foregroundStyleClassName} ${lineHeightClassName} select-none ` +
           `${truncationClassName} w-full ${multilineTextAlignmentClassName} ` +
-          `${wrapClassName}`
+          `${wrapClassName} ${paddingClassName}`
       }
       dangerouslySetInnerHTML={
         verbatimContent ? { __html: verbatimContent } : undefined

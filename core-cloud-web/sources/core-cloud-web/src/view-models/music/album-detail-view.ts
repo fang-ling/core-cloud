@@ -23,7 +23,8 @@ import { useState } from "react"
 
 export default function useAlbumDetailView({
   album,
-  setAlbum
+  setAlbum,
+  setCurrentPlayingSong
 }: {
   album: {
     id: number,
@@ -40,6 +41,14 @@ export default function useAlbumDetailView({
     artworkURLs: string,
     genre?: string,
     year?: number
+  } | undefined>>,
+  setCurrentPlayingSong: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string
   } | undefined>>
 }) {
   const [songs, setSongs] = useState<{
@@ -48,8 +57,12 @@ export default function useAlbumDetailView({
     trackNumber: number,
     discNumber: number,
     title: string,
-    duration: number
+    duration: number,
+    artist: string,
+    artworkURLs: string[],
+    fileID: number
   }[]>([])
+  const [selectedSongID, setSelectedSongID] = useState<number | undefined>()
 
   /* MARK: - Event handlers */
   function backButtonDidClick() {
@@ -69,7 +82,16 @@ export default function useAlbumDetailView({
 
   async function viewDidAppear2() {
     const newSongs = await SongService.fetchSongs({
-      fields: "isPopular,trackNumber,discNumber,title,duration",
+      fields: [
+        "isPopular",
+        "trackNumber",
+        "discNumber",
+        "title",
+        "duration",
+        "artist",
+        "artworkURLs",
+        "fileID"
+      ].join(","),
       filters: `albumID_EQUALS_${album.id}`
     })
     setSongs(
@@ -80,16 +102,37 @@ export default function useAlbumDetailView({
           trackNumber: song.trackNumber ?? 0,
           discNumber: song.discNumber ?? 0,
           title: song.title ?? "",
-          duration: song.duration ?? 0
+          duration: song.duration ?? 0,
+          artist: song.artist ?? "",
+          artworkURLs: song.artworkURLs?.split(",") ?? [],
+          fileID: song.fileID ?? 0
         }
       })
     )
   }
 
+  function trackListItemDidClick(id: number) {
+    setSelectedSongID(id)
+  }
+
+  function trackListItemDidDoubleClick(clickedItem: {
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string
+  }) {
+    setCurrentPlayingSong(clickedItem)
+  }
+
   return {
     songs,
+    selectedSongID,
     backButtonDidClick,
     viewDidAppear1,
-    viewDidAppear2
+    viewDidAppear2,
+    trackListItemDidClick,
+    trackListItemDidDoubleClick
   }
 }

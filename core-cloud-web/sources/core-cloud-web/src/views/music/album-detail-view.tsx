@@ -24,6 +24,7 @@ import Button from "ui/button"
 import Grid from "ui/grid"
 import HStack from "ui/h-stack"
 import Image from "ui/image"
+import NewLocalizer from "ui/localizer"
 import Spacer from "ui/spacer"
 import Text from "ui/text"
 import VStack from "ui/v-stack"
@@ -31,7 +32,8 @@ import ZStack from "ui/z-stack"
 
 export default function AlbumDetailView({
   album,
-  setAlbum
+  setAlbum,
+  setCurrentPlayingSong
 }: {
   album: {
     id: number,
@@ -48,11 +50,20 @@ export default function AlbumDetailView({
     artworkURLs: string,
     genre?: string,
     year?: number
+  } | undefined>>,
+  setCurrentPlayingSong: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string
   } | undefined>>
 }) {
   const viewModel = useAlbumDetailView({
     album: album,
-    setAlbum: setAlbum
+    setAlbum: setAlbum,
+    setCurrentPlayingSong: setCurrentPlayingSong
   })
 
   useEffect(() => {
@@ -224,27 +235,154 @@ export default function AlbumDetailView({
       </Grid>
 
       {
-        viewModel.songs.map(song => (
-          <HStack widthClassName="w-full">
-            <Text
-              verbatimContent={song.isPopular ? "P" : "X"}
-            />
-            <Text
-              verbatimContent={`${song.discNumber}-${song.trackNumber}`}
-            />
-            <Text
-              verbatimContent={song.title}
-            />
+        [...new Set(viewModel.songs.map(song => song.discNumber))].map(disc => (
+          <VStack
+            key={disc}
+            widthClassName="w-full"
+            paddingClassName="px-6.25 md:px-10"
+            marginClassName="not-first:mt-9.5"
+          >
             <Text
               verbatimContent={
-                new Date(song.duration * 1000)
-                  .toISOString()
-                  .substring(14, 19)
+                NewLocalizer.default.localize("Disc %lld")
+                  .replace("%lld", disc.toString())
               }
+              fontSizeClassName="text-xs"
+              fontWeightClassName="font-semibold"
+              foregroundStyleClassName="text-music-systemSecondary"
+              lineHeightClassName="leading-3.75"
+              marginClassName="mb-2.25"
             />
-          </HStack>
+            {
+              viewModel.songs
+                .filter(song => song.discNumber === disc)
+                .sort((lhs, rhs) => lhs.trackNumber - rhs.trackNumber)
+                .map(song => (
+                  <HStack
+                    key={song.id}
+                    widthClassName="w-full"
+                    heightClassName="h-11.5 min-h-11.5"
+                    borderClassName="rounded-md"
+                    backgroundStyleClassName={
+                      viewModel.selectedSongID === song.id
+                        ? "bg-music-selectionColor"
+                        : "even:bg-music-tracklistAltRowColor " +
+                          "hover:bg-music-tracklistHoverColor"
+                    }
+                    positionClassName="relative"
+                    onClick={() => viewModel.trackListItemDidClick(song.id)}
+                    onDoubleClick={() => {
+                      viewModel.trackListItemDidDoubleClick({
+                        id: song.id,
+                        artworkURLs: song.artworkURLs,
+                        fileID: song.fileID,
+                        title: song.title,
+                        artist: song.artist,
+                        album: album.name
+                      })
+                    }}
+                  >
+                    {
+                      song.isPopular && (
+                        <HStack
+                          widthClassName="w-6.25"
+                          heightClassName="h-full"
+                          positionClassName="absolute top-0 -left-6.25"
+                        >
+                          <HStack
+                            widthClassName="w-1.5"
+                            heightClassName="h-1.5"
+                            backgroundStyleClassName="bg-music-systemSecondary"
+                            marginClassName="mx-auto"
+                            borderClassName="rounded-full"
+                          />
+                        </HStack>
+                      )
+                    }
+
+                    <HStack widthClassName="w-10 min-w-10">
+                      <Text
+                        verbatimContent={song.trackNumber.toString()}
+                        fontSizeClassName="text-[13px]"
+                        lineHeightClassName="leading-4.25"
+                        foregroundStyleClassName={
+                          viewModel.selectedSongID === song.id
+                            ? "text-white"
+                            : "text-music-systemSecondary"
+                        }
+                        multilineTextAlignmentClassName="text-center"
+                      />
+                    </HStack>
+
+                    <VStack widthClassName="w-full">
+                      <Text
+                        verbatimContent={song.title}
+                        fontSizeClassName="text-[13px]"
+                        foregroundStyleClassName={
+                          viewModel.selectedSongID === song.id
+                            ? "text-white"
+                            : "text-music-systemPrimary"
+                        }
+                        lineHeightClassName="leading-4"
+                      />
+                      {
+                        song.artist !== album.artist && (
+                          <Text
+                            verbatimContent={song.artist}
+                            fontSizeClassName="text-[13px]"
+                            foregroundStyleClassName={
+                              viewModel.selectedSongID === song.id
+                                ? "text-white"
+                                : "text-music-systemSecondary"
+                            }
+                            lineHeightClassName="leading-4"
+                          />
+                        )
+                      }
+                    </VStack>
+
+                    <HStack
+                      widthClassName="w-9 min-w-9"
+                      marginClassName="mr-4.5"
+                    >
+                      <Text
+                        verbatimContent={
+                          new Date(song.duration * 1000)
+                            .toISOString()
+                            .substring(14, 19)
+                        }
+                        fontSizeClassName="text-[13px]"
+                        foregroundStyleClassName={
+                          viewModel.selectedSongID === song.id
+                            ? "text-white"
+                            : "text-music-systemSecondary"
+                        }
+                        lineHeightClassName="leading-4"
+                        multilineTextAlignmentClassName="text-right"
+                      />
+                    </HStack>
+                  </HStack>
+                ))
+            }
+          </VStack>
         ))
       }
+
+      <HStack widthClassName="w-full">
+        <Text
+          verbatimContent={
+            NewLocalizer.default.localize("%lld item(s)").replace(
+              "%lld",
+              viewModel.songs.length.toString()
+            )
+          }
+          fontSizeClassName="text-[13px]"
+          foregroundStyleClassName="text-music-systemSecondary"
+          lineHeightClassName="leading-4"
+          marginClassName="mt-8.5 mx-6.25 md:mx-10 mb-13"
+          paddingClassName="pl-3"
+        />
+      </HStack>
     </VStack>
   )
 }

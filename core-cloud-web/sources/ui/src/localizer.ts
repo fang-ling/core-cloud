@@ -76,6 +76,9 @@ export default class NewLocalizer {
     "Disc Number": {
       "zh-TW": "光碟編號"
     },
+    "Disc %lld": {
+      "zh-TW": "光碟%lld"
+    },
     "Duration": {
       "zh-TW": "時長"
     },
@@ -178,6 +181,9 @@ master password.": {
     },
     "Uploading...": {
       "zh-TW": "上傳中…"
+    },
+    "%lld item(s)": {
+      "zh-TW": "%lld個項目"
     }
   }
 }

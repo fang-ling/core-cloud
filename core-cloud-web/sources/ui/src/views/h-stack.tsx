@@ -40,6 +40,8 @@ export default function HStack({
   transitionClassName = "",
   transformationClassName = "",
   overflowClassName = "",
+  onClick,
+  onDoubleClick,
   children
 }: {
   /**
@@ -67,6 +69,8 @@ export default function HStack({
   transitionClassName?: string,
   transformationClassName?: string,
   overflowClassName?: string,
+  onClick?: () => void,
+  onDoubleClick?: () => void,
   /**
    * A view builder that creates the content of this stack.
    */
@@ -83,6 +87,8 @@ export default function HStack({
           `${transformationClassName} ${overflowClassName}`
       }
       style={style}
+      onClick={onClick}
+      onDoubleClick={onDoubleClick}
     >
       {children}
     </div>

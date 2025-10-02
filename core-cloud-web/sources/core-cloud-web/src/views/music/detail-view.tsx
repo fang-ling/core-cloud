@@ -510,6 +510,7 @@ export default function DetailView({
           <AlbumContentView
             albums={albums}
             setAlbums={setAlbums}
+            setCurrentPlayingSong={viewModel.setCurrentPlayingSong}
           />
         )
       }
