@@ -121,32 +121,6 @@ struct FileController: RouteCollection {
       return .unauthorized
     }
 
-    var path: String
-    do {
-      guard let location = try await Location.query(on: request.db)
-        .filter(\.$id == insertRequest.locationID)
-        .filter(\.$user.$id == userID)
-        .first()
-      else {
-        return .badRequest
-      }
-
-      path = "\(location.path)/"
-      path += "\(try location.requireID())/"
-      path += "\(userID)/"
-      path += "\(insertRequest.application)/"
-
-      if (try await FileSystem.shared.info(forFileAt: FilePath(path))) == nil {
-        try await FileSystem.shared.createDirectory(
-          at: FilePath(path),
-          withIntermediateDirectories: true
-        )
-      }
-    } catch {
-      request.logger.warning("\(error)")
-      return .badRequest
-    }
-
     let file = File(
       name: insertRequest.name,
       kind: insertRequest.kind,
@@ -162,6 +136,40 @@ struct FileController: RouteCollection {
     } catch {
       request.logger.warning("\(error)")
       return .serviceUnavailable
+    }
+
+    var path: String
+    do {
+      guard let location = try await Location.query(on: request.db)
+        .filter(\.$id == insertRequest.locationID)
+        .filter(\.$user.$id == userID)
+        .first()
+      else {
+        return .badRequest
+      }
+
+      path = "\(location.path)/"
+      path += "\(try location.requireID())/"
+      path += "\(userID)/"
+      path += "\(insertRequest.application)/"
+      path += "\(try file.requireID())"
+
+      if (try await FileSystem.shared.info(forFileAt: FilePath(path))) == nil {
+        try await FileSystem.shared.createDirectory(
+          at: FilePath(path),
+          withIntermediateDirectories: true
+        )
+      }
+    } catch {
+      do {
+        try await file.delete(on: request.db)
+      } catch {
+        request.logger.warning("\(error)")
+        return .serviceUnavailable
+      }
+
+      request.logger.warning("\(error)")
+      return .badRequest
     }
 
     do {
@@ -310,6 +318,7 @@ struct FileController: RouteCollection {
       _path += "\(try location.requireID())/"
       _path += "\(userID)/"
       _path += "\(fetchRequest.application)/"
+      _path += "\(try file.requireID())"
 
       path = _path
     } catch {
