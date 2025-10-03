@@ -78,5 +78,92 @@ extension ServiceTests {
         #expect(retrievedFile.application == "Photos")
       }
     }
+
+    @Test
+    func testGetFiles() async throws {
+      let fileService = FileService()
+
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        let lorna = User(
+          firstName: "Lorna",
+          lastName: "Chu",
+          username: "lorna@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await lorna.save(on: app.db)
+
+        let location = try Location(
+          name: "Tank",
+          path: "/mnt/tank1",
+          userID: lorna.requireID()
+        )
+        try await location.save(on: app.db)
+
+        var files = try await fileService.getFiles(
+          for: lorna.requireID(),
+          fields: ["name"],
+          filters: [],
+          on: app.db
+        )
+        #expect(files.isEmpty)
+
+        let file1 = try File(
+          name: "test",
+          kind: "JPEG Image",
+          size: 19358,
+          checksum: Data(),
+          application: "Photos",
+          decryptionKeySealedBox: Data(),
+          locationID: location.requireID(),
+          userID: lorna.requireID()
+        )
+        try await file1.save(on: app.db)
+
+        files = try await fileService.getFiles(
+          for: lorna.requireID(),
+          fields: ["name"],
+          filters: [],
+          on: app.db
+        )
+        #expect(files.count == 1)
+        #expect(files.first?.id == 1)
+        #expect(files.first?.name == "test")
+        #expect(files.first?.kind == nil)
+        #expect(files.first?.size == nil)
+        #expect(files.first?.date == nil)
+
+        files = try await fileService.getFiles(
+          for: lorna.requireID(),
+          fields: ["name"],
+          filters: ["kind_EQUALS_HEIF Image"],
+          on: app.db
+        )
+        #expect(files.isEmpty)
+
+        let eva = User(
+          firstName: "Eva",
+          lastName: "Chan",
+          username: "eva@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await eva.save(on: app.db)
+
+        files = try await fileService.getFiles(
+          for: eva.requireID(),
+          fields: ["name"],
+          filters: [],
+          on: app.db
+        )
+        #expect(files.isEmpty)
+      }
+    }
   }
 }

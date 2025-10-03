@@ -21,34 +21,64 @@ import Fluent
 import Vapor
 
 struct FileService {
+  /**
+   * Returns a list of files for a specified user.
+   *
+   * - Parameters:
+   *   - userID: An identifier for the user whose files are being retrieved.
+   *   - fields: The fields of the file to retrieve.
+   *   - filters: The filter rules to apply during the retrieval query.
+   *   - database: The database instance from which the files will be fetched.
+   *
+   * - Returns: An array of tuples, each containing the file details.
+   *
+   * - Throws:
+   *   - ``FileError/databaseError``: if there is an issue accessing the
+   *                                  database.
+   */
   func getFiles(
     for userID: User.IDValue,
-    application: String,
-    locationID: Int64,
+    fields: [String],
+    filters: [String],
     on database: Database
   ) async throws -> [(
     id: Int64,
-    name: String,
-    kind: String,
-    size: Int64,
-    date: Date
+    name: String?,
+    kind: String?,
+    size: Int64?,
+    date: Date?
   )] {
     do {
-      let files = try await File.query(on: database)
-        .filter(\.$user.$id == userID)
-        .filter(\.$location.$id == locationID)
-        .filter(\.$application == application)
-        .all()
+      var query = File.query(on: database).filter(\.$user.$id == userID)
 
-      return try files.map { file in
-        (
-          id: try file.requireID(),
-          name: file.name,
-          kind: file.kind,
-          size: file.size,
-          date: file.createdAt ?? Date(timeIntervalSince1970: 0)
-        )
+      for filter in filters {
+        if filter.contains("_EQUALS_") {
+          let entry = filter.components(separatedBy: "_EQUALS_")
+          if entry.count < 2 {
+            continue
+          }
+
+          if entry[0] == "locationID", let id = Int64(entry[1]) {
+            query = query.filter(\.$location.$id == id)
+          } else if entry[0] == "application" {
+            query = query.filter(\.$application == entry[1])
+          } else if entry[0] == "kind" {
+            query = query.filter(\.$kind == entry[1])
+          }
+        }
       }
+
+      return try await query
+        .all()
+        .map { file in
+          (
+            id: try file.requireID(),
+            name: fields.contains("name") ? file.name : nil,
+            kind: fields.contains("kind") ? file.kind : nil,
+            size: fields.contains("size") ? file.size : nil,
+            date: fields.contains("date") ? file.createdAt : nil
+          )
+        }
     } catch {
       throw FileError.databaseError
     }

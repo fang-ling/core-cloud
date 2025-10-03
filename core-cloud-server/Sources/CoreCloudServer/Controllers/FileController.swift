@@ -430,6 +430,19 @@ struct FileController: RouteCollection {
     return response
   }
 
+  /**
+   * - URL: GET /api/files
+   *
+   * - Response Codes:
+   *   - 200 OK: The songs are returned.
+   *   - 400 Bad Request: The server cannot or will not process the request due
+   *                      to an apparent client error.
+   *   - 401 Unauthorized: The authentication is required and has failed.
+   *   - 500 Internal Server Error: A response indicating an error occurred on
+   *                                the server.
+   *   - 503 Service Unavailable: A response indicating that the server is not
+   *                              ready to handle the request.
+   */
   func fetchFilesHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
@@ -456,8 +469,8 @@ struct FileController: RouteCollection {
     do {
       let files = try await fileService.getFiles(
         for: userID,
-        application: fetchRequest.application,
-        locationID: fetchRequest.locationID,
+        fields: fetchRequest.fields.components(separatedBy: ","),
+        filters: fetchRequest.fields.components(separatedBy: ","),
         on: request.db
       )
 
@@ -472,14 +485,18 @@ struct FileController: RouteCollection {
                 name: file.name,
                 kind: file.kind,
                 size: file.size,
-                date: Int64((file.date.timeIntervalSince1970 * 1000).rounded())
+                date: file.date != nil
+                  ? Int64((file.date!.timeIntervalSince1970 * 1000).rounded())
+                  : nil
               )
             }
           )
         )
       )
-    } catch {
+    } catch FileError.databaseError {
       return Response(status: .serviceUnavailable)
+    } catch {
+      return Response(status: .internalServerError)
     }
   }
 }

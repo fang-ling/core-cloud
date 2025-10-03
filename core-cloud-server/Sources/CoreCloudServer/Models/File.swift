@@ -133,17 +133,17 @@ extension File.Singular.Input {
 
 extension File.Plural.Input {
   struct Retrieval: Codable {
-    var locationID: Int64
-    var application: String
+    var fields: String
+    var filters: String
   }
 }
 
 extension File.Plural.Output {
   struct Retrieval: Codable {
     var id: Int64
-    var name: String
-    var kind: String
-    var size: Int64
-    var date: Int64
+    var name: String?
+    var kind: String?
+    var size: Int64?
+    var date: Int64?
   }
 }
