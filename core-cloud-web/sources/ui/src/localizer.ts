@@ -91,6 +91,9 @@ export default class NewLocalizer {
     "Enter your master password": {
       "zh-TW": "輸入你的主密碼"
     },
+    "File": {
+      "zh-TW": "檔案"
+    },
     "Genre": {
       "zh-TW": "類型"
     },

@@ -60,6 +60,7 @@ export default function SongSheet({
       viewModel.viewDidAppear1()
     }
     viewModel.viewDidAppear2()
+    viewModel.viewDidAppear3()
   }, [])
 
   return (
@@ -81,7 +82,7 @@ export default function SongSheet({
                 viewModel.playCount.value.length <= 0 ||
                 viewModel.sampleSize.value.length <= 0 ||
                 viewModel.sampleRate.value.length <= 0 ||
-                viewModel.fileID.value.length <= 0 ||
+                viewModel.selectedFileID.value.length <= 0 ||
                 viewModel.selectedAlbumID.value.length <= 0 ||
                 viewModel.isLoading
             ),
@@ -153,7 +154,7 @@ export default function SongSheet({
               {
                 (
                   typeof field.value.value !== "boolean" &&
-                    field.albums === undefined
+                    (field.albums === undefined && field.files === undefined)
                 ) && (
                   <TextField
                     text={field.value}
@@ -183,7 +184,7 @@ export default function SongSheet({
               {
                 (
                   typeof field.value.value !== "boolean" &&
-                    field.albums !== undefined
+                    (field.albums !== undefined || field.files !== undefined)
                 ) && (
                   <ZStack
                     widthClassName="w-full"
@@ -198,7 +199,11 @@ export default function SongSheet({
                           "focus:-outline-offset-2"
                       }
                       paddingClassName="pl-2.5 pr-8"
-                      selection={viewModel.selectedAlbumID}
+                      selection={
+                        field.albums !== undefined
+                          ? viewModel.selectedAlbumID
+                          : viewModel.selectedFileID
+                      }
                       backgroundStyleClassName={
                         "hover:bg-fillQuaternary disabled:bg-fillQuaternary"
                       }
@@ -216,19 +221,34 @@ export default function SongSheet({
                             tag="0"
                             disabled={true}
                           >
-                            {NewLocalizer.default.localize("Choose an Album")}
+                            {
+                              NewLocalizer.default.localize(
+                                field.albums !== undefined
+                                  ? "Choose an Album"
+                                  : "Choose a File"
+                              )
+                            }
                           </PickerOption>
                         )
                       }
                       {
-                        viewModel.albums.map(album => (
-                          <PickerOption
-                            key={album.id}
-                            tag={album.id.toString()}
-                          >
-                            {`${album.artist}, ${album.name}, ${album.year}`}
-                          </PickerOption>
-                        ))
+                        field.albums !== undefined
+                          ? viewModel.albums.map(album => (
+                            <PickerOption
+                              key={album.id}
+                              tag={album.id.toString()}
+                            >
+                              {`${album.artist}, ${album.name}, ${album.year}`}
+                            </PickerOption>
+                          ))
+                          : viewModel.files.map(file => (
+                            <PickerOption
+                              key={file.id}
+                              tag={file.id.toString()}
+                            >
+                              {file.name}
+                            </PickerOption>
+                          ))
                       }
                     </Picker>
 

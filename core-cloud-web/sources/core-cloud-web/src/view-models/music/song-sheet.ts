@@ -18,6 +18,7 @@
 //
 
 import AlbumService from "@/services/album-service"
+import FileService from "@/services/file-service"
 import SongService from "@/services/song-service"
 import { useState } from "react"
 import { useBinding } from "ui/binding"
@@ -45,7 +46,7 @@ export default function useSongSheet({
   const sampleRate = useBinding("")
   const duration = useBinding(detail?.duration?.toString() ?? "")
   const isPopular = useBinding(false)
-  const fileID = useBinding(detail?.fileID?.toString() ?? "")
+  const selectedFileID = useBinding(detail?.fileID?.toString() ?? "0")
   const selectedAlbumID = useBinding("0")
   const [isError, setIsError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -54,6 +55,10 @@ export default function useSongSheet({
     name: string,
     artist: string,
     year: number
+  }[]>([])
+  const [files, setFiles] = useState<{
+    id: number,
+    name: string
   }[]>([])
 
   const fields = [{
@@ -85,8 +90,9 @@ export default function useSongSheet({
     value: isPopular,
     caption: "The song is popular on this album"
   }, {
-    label: "File ID",
-    value: fileID
+    label: "File",
+    value: selectedFileID,
+    files: files
   }, {
     label: "Album",
     value: selectedAlbumID,
@@ -108,7 +114,7 @@ export default function useSongSheet({
       sampleRate: +sampleRate.value,
       duration: +duration.value,
       isPopular: isPopular.value,
-      fileID: +fileID.value,
+      fileID: +selectedFileID.value,
       albumID: +selectedAlbumID.value
     })
 
@@ -175,6 +181,22 @@ export default function useSongSheet({
     )
   }
 
+  async function viewDidAppear3() {
+    const newFiles = await FileService.fetchFiles({
+      fields: "name",
+      filters: "kind_EQUALS_Apple MPEG-4 Audio"
+    })
+
+    setFiles(
+      newFiles.map(file => {
+        return {
+          id: file.id,
+          name: file.name ?? ""
+        }
+      })
+    )
+  }
+
   return {
     title,
     artist,
@@ -183,14 +205,16 @@ export default function useSongSheet({
     playCount,
     sampleSize,
     sampleRate,
-    fileID,
+    selectedFileID,
     selectedAlbumID,
     fields,
     isError,
     isLoading,
     albums,
+    files,
     createButtonDidClick,
     viewDidAppear1,
-    viewDidAppear2
+    viewDidAppear2,
+    viewDidAppear3
   }
 }
