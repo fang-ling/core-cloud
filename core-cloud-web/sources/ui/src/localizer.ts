@@ -67,6 +67,9 @@ export default class NewLocalizer {
     "Choose a File": {
       "zh-TW": "選擇檔案"
     },
+    "Choose an Album": {
+      "zh-TW": "選擇專輯"
+    },
     "Create": {
       "zh-TW": "建立"
     },

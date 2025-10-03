@@ -17,6 +17,7 @@
 //  limitations under the License.
 //
 
+import AlbumService from "@/services/album-service"
 import SongService from "@/services/song-service"
 import { useState } from "react"
 import { useBinding } from "ui/binding"
@@ -45,7 +46,16 @@ export default function useSongSheet({
   const duration = useBinding(detail?.duration?.toString() ?? "")
   const isPopular = useBinding(false)
   const fileID = useBinding(detail?.fileID?.toString() ?? "")
-  const albumID = useBinding("")
+  const selectedAlbumID = useBinding("0")
+  const [isError, setIsError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [albums, setAlbums] = useState<{
+    id: number,
+    name: string,
+    artist: string,
+    year: number
+  }[]>([])
+
   const fields = [{
     label: "Title",
     value: title
@@ -78,11 +88,10 @@ export default function useSongSheet({
     label: "File ID",
     value: fileID
   }, {
-    label: "Album ID",
-    value: albumID
+    label: "Album",
+    value: selectedAlbumID,
+    albums: albums
   }]
-  const [isError, setIsError] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   /* MARK: - Event handlers */
   async function createButtonDidClick() {
@@ -100,7 +109,7 @@ export default function useSongSheet({
       duration: +duration.value,
       isPopular: isPopular.value,
       fileID: +fileID.value,
-      albumID: +albumID.value
+      albumID: +selectedAlbumID.value
     })
 
     setIsLoading(false)
@@ -115,7 +124,7 @@ export default function useSongSheet({
     return success
   }
 
-  async function viewDidAppear() {
+  async function viewDidAppear1() {
     /* TODO: Use this loading state. */
     setIsLoading(true)
 
@@ -145,8 +154,25 @@ export default function useSongSheet({
       sampleSize.setValue(song.sampleSize?.toString() ?? "")
       sampleRate.setValue(song.sampleRate?.toString() ?? "")
       isPopular.setValue(song.isPopular ?? false)
-      albumID.setValue(song.albumID?.toString() ?? "")
+      selectedAlbumID.setValue(song.albumID?.toString() ?? "")
     }
+  }
+
+  async function viewDidAppear2() {
+    const newAlbums = await AlbumService.fetchAlbums({
+      fields: "name,artist,year"
+    })
+
+    setAlbums(
+      newAlbums.map(album => {
+        return {
+          id: album.id,
+          name: album.name ?? "",
+          artist: album.artist ?? "",
+          year: album.year ?? 0
+        }
+      })
+    )
   }
 
   return {
@@ -158,11 +184,13 @@ export default function useSongSheet({
     sampleSize,
     sampleRate,
     fileID,
-    albumID,
+    selectedAlbumID,
     fields,
     isError,
     isLoading,
+    albums,
     createButtonDidClick,
-    viewDidAppear
+    viewDidAppear1,
+    viewDidAppear2
   }
 }

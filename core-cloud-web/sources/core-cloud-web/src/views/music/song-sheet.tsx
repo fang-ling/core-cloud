@@ -27,6 +27,10 @@ import Sheet from "ui/sheet"
 import Text from "ui/text"
 import TextField from "ui/text-field"
 import Toggle from "ui/toggle"
+import { Picker, PickerOption } from "ui/picker"
+import NewLocalizer from "ui/localizer"
+import ZStack from "ui/z-stack"
+import Image from "ui/image"
 
 export default function SongSheet({
   isPresented,
@@ -53,8 +57,9 @@ export default function SongSheet({
 
   useEffect(() => {
     if (mode === "modification" && detail?.id !== undefined) {
-      viewModel.viewDidAppear()
+      viewModel.viewDidAppear1()
     }
+    viewModel.viewDidAppear2()
   }, [])
 
   return (
@@ -77,7 +82,7 @@ export default function SongSheet({
                 viewModel.sampleSize.value.length <= 0 ||
                 viewModel.sampleRate.value.length <= 0 ||
                 viewModel.fileID.value.length <= 0 ||
-                viewModel.albumID.value.length <= 0 ||
+                viewModel.selectedAlbumID.value.length <= 0 ||
                 viewModel.isLoading
             ),
             label: () => (
@@ -146,7 +151,10 @@ export default function SongSheet({
                 )
               }
               {
-                typeof field.value.value !== "boolean" && (
+                (
+                  typeof field.value.value !== "boolean" &&
+                    field.albums === undefined
+                ) && (
                   <TextField
                     text={field.value}
                     widthClassName="w-full"
@@ -170,6 +178,78 @@ export default function SongSheet({
                     }
                     disabled={viewModel.isLoading}
                   />
+                )
+              }
+              {
+                (
+                  typeof field.value.value !== "boolean" &&
+                    field.albums !== undefined
+                ) && (
+                  <ZStack
+                    widthClassName="w-full"
+                    marginClassName="mb-3.75"
+                  >
+                    <Picker
+                      widthClassName="w-full"
+                      heightClassName="h-9"
+                      borderClassName={
+                        "rounded-lg border border-gray3 focus:outline-3 " +
+                          "focus:outline-music-keyColor/70 " +
+                          "focus:-outline-offset-2"
+                      }
+                      paddingClassName="pl-2.5 pr-8"
+                      selection={viewModel.selectedAlbumID}
+                      backgroundStyleClassName={
+                        "hover:bg-fillQuaternary disabled:bg-fillQuaternary"
+                      }
+                      fontSizeClassName="text-sm"
+                      lineHeightClassName="leading-4.5"
+                      foregroundStyleClassName={
+                        "text-labelPrimary disabled:opacity-30 " +
+                          "dark:disabled:opacity-40"
+                      }
+                      disabled={viewModel.isLoading}
+                    >
+                      {
+                        mode === "creation" && (
+                          <PickerOption
+                            tag="0"
+                            disabled={true}
+                          >
+                            {NewLocalizer.default.localize("Choose an Album")}
+                          </PickerOption>
+                        )
+                      }
+                      {
+                        viewModel.albums.map(album => (
+                          <PickerOption
+                            key={album.id}
+                            tag={album.id.toString()}
+                          >
+                            {`${album.artist}, ${album.name}, ${album.year}`}
+                          </PickerOption>
+                        ))
+                      }
+                    </Picker>
+
+                    <HStack
+                      widthClassName="w-3"
+                      heightClassName="h-9"
+                      positionClassName="absolute top-0 right-2.5"
+                    >
+                      <Image
+                        systemName="chevron.down"
+                        widthClassName="w-3"
+                        foregroundStyleClassName={
+                          "fill-labelSecondary " + (
+                            viewModel.isLoading
+                              ? "opacity-30 dark:opacity-40"
+                              : ""
+                          )
+                        }
+                      />
+                    </HStack>
+                  </ZStack>
                 )
               }
             </Fragment>

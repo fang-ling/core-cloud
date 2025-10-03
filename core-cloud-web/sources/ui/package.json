@@ -13,6 +13,7 @@
     "./image": "./src/views/image.tsx",
     "./localizer": "./src/localizer.ts",
     "./navigation-split-view": "./src/views/navigation-split-view.tsx",
+    "./picker": "./src/views/picker.tsx",
     "./progress-view": "./src/views/progress-view.tsx",
     "./secure-field": "./src/views/secure-field.tsx",
     "./sheet": "./src/views/sheet.tsx",
