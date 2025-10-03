@@ -22,7 +22,7 @@ import File from "@/models/file"
 namespace FileService {
   export async function fetchFiles(
     request: File.Plural.Input.Retrieval
-  ): Promise<File.Plural.Output.Retrieval> {
+  ) {
     try {
       const queryString = new URLSearchParams(request).toString()
 
@@ -33,7 +33,7 @@ namespace FileService {
         }
       )
       if (response.status === 200) {
-        return await response.json()
+        return await response.json() as File.Plural.Output.Retrieval[]
       } else {
         throw new Error()
       }

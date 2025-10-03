@@ -60,10 +60,23 @@ export default function useDetailView({
     if (fileName) {
       newNavigationStack.push(fileName)
       const newFiles = await FileService.fetchFiles({
-        application: fileName,
-        locationID: currentSidebarKey
+        filters: [
+          `application_EQUALS_${fileName}`,
+          `locationID_EQUALS_${currentSidebarKey}`
+        ].join(","),
+        fields: "name,kind,size,date"
       })
-      setFiles(newFiles)
+      setFiles(
+        newFiles.map(file => {
+          return {
+            id: file.id,
+            name: file.name ?? "",
+            kind: file.kind ?? "",
+            size: file.size ?? 0,
+            date: file.date ?? 0
+          }
+        })
+      )
     } else {
       newNavigationStack.pop()
       if (newNavigationStack.length === 1) {

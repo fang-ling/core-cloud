@@ -34,19 +34,19 @@ namespace File {
   export namespace Plural {
     export namespace Input {
       export type Retrieval = {
-        locationID: string
-        application: string
+        filters: string
+        fields: string
       }
     }
 
     export namespace Output {
       export type Retrieval = {
         id: number
-        name: string
-        kind: string
-        size: number
-        date: number
-      }[]
+        name?: string
+        kind?: string
+        size?: number
+        date?: number
+      }
     }
   }
 }
