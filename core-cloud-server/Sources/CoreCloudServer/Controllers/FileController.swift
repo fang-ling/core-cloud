@@ -470,7 +470,7 @@ struct FileController: RouteCollection {
       let files = try await fileService.getFiles(
         for: userID,
         fields: fetchRequest.fields.components(separatedBy: ","),
-        filters: fetchRequest.fields.components(separatedBy: ","),
+        filters: fetchRequest.filters.components(separatedBy: ","),
         on: request.db
       )
 
