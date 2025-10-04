@@ -103,6 +103,9 @@ export default class NewLocalizer {
     "Get Info": {
       "zh-TW": "取得資訊"
     },
+    "Instrumental": {
+      "zh-TW": "演奏曲"
+    },
     "Keep me signed in": {
       "zh-TW": "讓我保持登入"
     },
