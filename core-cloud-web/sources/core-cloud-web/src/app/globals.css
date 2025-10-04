@@ -37,6 +37,8 @@
   --music-playerLCDBGFill: rgb(255, 255, 255);
   --music-playerMissingArtworkBg: rgb(233, 233, 233);
   --music-playerMissingArtworkIcon: rgb(220, 220, 220);
+  --music-playerPlatterButtonBGFill: rgb(108, 108, 108);
+  --music-playerPlatterButtonIconFill: rgba(255, 255, 255);
   --music-playerScrubberFill: rgba(0, 0, 0, .5);
   --music-playerScrubberTrack: rgba(0, 0, 0, .1);
   --music-selectionColor: rgb(221, 31, 52);
@@ -44,7 +46,9 @@
   --music-systemPrimary-vibrant: rgb(76, 76, 76);
   --music-systemSecondary: rgba(0, 0, 0, 0.5);
   --music-systemTertiary: rgba(0, 0, 0, 0.25);
+  --music-systemQuaternary: rgba(0, 0, 0, .1);
   --music-systemStandardThinMaterialSover: hsla(0, 0, 96, 0.48);
+  --music-systemToolbarTitlebarMaterialSover: rgba(253, 253, 253, .8);
   --music-trackBackgroundEven: rgba(0, 0, 0, .02);
   --music-tracklistAltRowColor: rgba(0, 0, 0, .015);
   --music-tracklistHoverColor: rgba(0, 0, 0, .06);
@@ -110,6 +114,8 @@
     --music-playerLCDBGFill: rgb(77, 77, 77);
     --music-playerMissingArtworkBg: rgb(50, 50, 50);
     --music-playerMissingArtworkIcon: rgb(67, 67, 67);
+    --music-playerPlatterButtonBGFill: rgb(255, 255, 255);
+    --music-playerPlatterButtonIconFill: rgba(0, 0, 0, .7);
     --music-playerScrubberFill: rgba(255, 255, 255, 0.6);
     --music-playerScrubberTrack: rgba(255, 255, 255, .1);
     --music-selectionColor: rgb(193, 27, 46);
@@ -117,7 +123,9 @@
     --music-systemPrimary-vibrant: rgb(229, 229, 229);
     --music-systemSecondary: rgba(255, 255, 255, 0.55);
     --music-systemTertiary: rgba(255, 255, 255, 0.25);
+    --music-systemQuaternary: rgba(255, 255, 255, .1);
     --music-systemStandardThinMaterialSover: rgba(40, 40, 40, 0.5);
+    --music-systemToolbarTitlebarMaterialSover: rgba(60, 60, 60, .8);
     --music-trackBackgroundEven: rgba(255, 255, 255, .05);
     --music-tracklistAltRowColor: hsla(0, 0, 100, .015);
     --music-tracklistHoverColor: rgba(255, 255, 255, .06);
@@ -219,6 +227,12 @@
   --color-music-playerLCDBGFill: var(--music-playerLCDBGFill);
   --color-music-playerMissingArtworkBg: var(--music-playerMissingArtworkBg);
   --color-music-playerMissingArtworkIcon: var(--music-playerMissingArtworkIcon);
+  --color-music-playerPlatterButtonBGFill: var(
+    --music-playerPlatterButtonBGFill
+  );
+  --color-music-playerPlatterButtonIconFill: var(
+    --music-playerPlatterButtonIconFill
+  );
   --color-music-playerScrubberFill: var(--music-playerScrubberFill);
   --color-music-playerScrubberTrack: var(--music-playerScrubberTrack);
   --color-music-selectionColor: var(--music-selectionColor);
@@ -226,8 +240,12 @@
   --color-music-systemPrimary-vibrant: var(--music-systemPrimary-vibrant);
   --color-music-systemSecondary: var(--music-systemSecondary);
   --color-music-systemTertiary: var(--music-systemTertiary);
+  --color-music-systemQuaternary: var(--music-systemQuaternary);
   --color-music-systemStandardThinMaterialSover: var(
     --music-systemStandardThinMaterialSover
+  );
+  --color-music-systemToolbarTitlebarMaterialSover: var(
+    --music-systemToolbarTitlebarMaterialSover
   );
   --color-music-trackBackgroundEven: var(--music-trackBackgroundEven);
   --color-music-tracklistAltRowColor: var(--music-tracklistAltRowColor);
@@ -447,5 +465,51 @@
   @keyframes slideOut {
     0% { transform: translateY(0px); }
     100% { transform: translateY(100%); }
+  }
+
+  @keyframes svelte-636731410-0 {
+    0% { transform: translate(0px); opacity: 1; }
+    5.5553333333333335% { transform: translate(47.271879px); opacity: 1; }
+    11.110666666666667% { transform: translate(89.297251px); opacity: 1; }
+    16.666% { transform: translate(126.384722px); opacity: 1; }
+    22.221333333333334% { transform: translate(158.842897px); opacity: 1; }
+    27.776666666666667% { transform: translate(186.980381px); opacity: 1; }
+    33.332% { transform: translate(211.105778px); opacity: 1; }
+    38.88733333333334% { transform: translate(231.527693px); opacity: 1; }
+    44.44266666666667% { transform: translate(248.554732px); opacity: 1; }
+    49.998000000000005% { transform: translate(262.4955px); opacity: 1; }
+    55.553333333333335% { transform: translate(273.658601px); opacity: 1; }
+    61.108666666666664% { transform: translate(282.35264px); opacity: 1; }
+    66.664% { transform: translate(288.886222px); opacity: 1; }
+    72.21933333333334% { transform: translate(293.567952px); opacity: 1; }
+    77.77466666666668% { transform: translate(296.706436px); opacity: 1; }
+    83.33% { transform: translate(298.610278px); opacity: 1; }
+    88.88533333333334% { transform: translate(299.588082px); opacity: 1; }
+    94.44066666666667% { transform: translate(299.948455px); opacity: 1; }
+    99.99600000000001% { transform: translate(300px); opacity: 1; }
+    100% { transform: translate(300px); opacity: 1; }
+  }
+
+  @keyframes svelte-1102588416-0 {
+    0% { transform: translate(300px); opacity: 1; }
+    5.5553333333333335% { transform: translate(252.728121px); opacity: 1; }
+    11.110666666666667% { transform: translate(210.702749px); opacity: 1; }
+    16.666% { transform: translate(173.615278px); opacity: 1; }
+    22.221333333333334% { transform: translate(141.157103px); opacity: 1; }
+    27.776666666666667% { transform: translate(113.019619px); opacity: 1; }
+    33.332% { transform: translate(88.894222px); opacity: 1; }
+    38.88733333333334% { transform: translate(68.472307px); opacity: 1; }
+    44.44266666666667% { transform: translate(51.445268px); opacity: 1; }
+    49.998000000000005% { transform: translate(37.5045px); opacity: 1; }
+    55.553333333333335% { transform: translate(26.341399px); opacity: 1; }
+    61.108666666666664% { transform: translate(17.64736px); opacity: 1; }
+    66.664% { transform: translate(11.113778px); opacity: 1; }
+    72.21933333333334% { transform: translate(6.432048px); opacity: 1; }
+    77.77466666666668% { transform: translate(3.293564px); opacity: 1; }
+    83.33% { transform: translate(1.389722px); opacity: 1; }
+    88.88533333333334% { transform: translate(0.411918px); opacity: 1; }
+    94.44066666666667% { transform: translate(0.051545px); opacity: 1; }
+    99.99600000000001% { transform: translate(0px); opacity: 1; }
+    100% { transform: translate(0px); opacity: 1; }
   }
 }

@@ -22,9 +22,20 @@ import { useState } from "react"
 import { useBinding } from "ui/binding"
 
 export default function useSongListView({
+  songs,
   setSongs,
-  setCurrentPlayingSong
+  setCurrentPlayingSong,
+  setPlayingNextQueue
 }: {
+  songs: {
+    id: number,
+    title: string,
+    artist: string,
+    albumName?: string,
+    artworkURLs?: string,
+    duration: number,
+    fileID: number
+  }[],
   setSongs: React.Dispatch<React.SetStateAction<{
     id: number,
     title: string,
@@ -41,7 +52,16 @@ export default function useSongListView({
     title: string,
     artist: string,
     album: string
-  } | undefined>>
+  } | undefined>>,
+  setPlayingNextQueue: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string,
+    duration: number
+  }[]>>
 }) {
   const [selectedSongID, setSelectedSongID] = useState<number | undefined>()
   const isContextMenuPresented = useBinding(false)
@@ -79,9 +99,24 @@ export default function useSongListView({
       title: string,
       artist: string,
       album: string
-    }
+    },
+    index: number
   ) {
     setCurrentPlayingSong(clickedItem)
+
+    setPlayingNextQueue(
+      songs.slice(index + 1).map(song => {
+        return {
+          id: song.id,
+          artworkURLs: song.artworkURLs?.split(",") ?? [],
+          fileID: song.fileID ?? 0,
+          title: song.title ?? "",
+          artist: song.artist ?? "",
+          album: song.albumName ?? "",
+          duration: song.duration ?? 0
+        }
+      })
+    )
   }
 
   function songListItemDidClick(id: number) {

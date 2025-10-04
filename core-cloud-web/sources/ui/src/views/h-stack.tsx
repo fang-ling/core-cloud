@@ -40,6 +40,7 @@ export default function HStack({
   transitionClassName = "",
   transformationClassName = "",
   overflowClassName = "",
+  spacingClassName = "",
   onClick,
   onDoubleClick,
   children
@@ -69,6 +70,7 @@ export default function HStack({
   transitionClassName?: string,
   transformationClassName?: string,
   overflowClassName?: string,
+  spacingClassName?: string,
   onClick?: () => void,
   onDoubleClick?: () => void,
   /**
@@ -83,7 +85,7 @@ export default function HStack({
           `${widthClassName} ${backgroundStyleClassName} ${marginClassName} ` +
           `${paddingClassName} ${foregroundStyleClassName} ` +
           `${positionClassName} ${borderClassName} ${visibilityClassName} ` +
-          `${opacityClassName} ${transitionClassName} ` +
+          `${opacityClassName} ${transitionClassName} ${spacingClassName} ` +
           `${transformationClassName} ${overflowClassName}`
       }
       style={style}

@@ -24,7 +24,8 @@ import { useState } from "react"
 export default function useAlbumDetailView({
   album,
   setAlbum,
-  setCurrentPlayingSong
+  setCurrentPlayingSong,
+  setPlayingNextQueue
 }: {
   album: {
     id: number,
@@ -49,7 +50,16 @@ export default function useAlbumDetailView({
     title: string,
     artist: string,
     album: string
-  } | undefined>>
+  } | undefined>>,
+  setPlayingNextQueue: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string,
+    duration: number
+  }[]>>
 }) {
   const [songs, setSongs] = useState<{
     id: number,
@@ -115,15 +125,61 @@ export default function useAlbumDetailView({
     setSelectedSongID(id)
   }
 
-  function trackListItemDidDoubleClick(clickedItem: {
-    id: number,
-    artworkURLs: string[],
-    fileID: number,
-    title: string,
-    artist: string,
-    album: string
-  }) {
+  function trackListItemDidDoubleClick(
+    clickedItem: {
+      id: number,
+      artworkURLs: string[],
+      fileID: number,
+      title: string,
+      artist: string,
+      album: string
+    },
+    discNumber: number,
+    trackNumber: number
+  ) {
     setCurrentPlayingSong(clickedItem)
+
+    const newSongs = songs.filter(song => {
+      if (song.discNumber < trackNumber) {
+        return false
+      } else if (song.discNumber === discNumber) {
+        return song.trackNumber >= trackNumber
+      }
+      return true
+    })
+    play(newSongs)
+  }
+
+  function playButtonDidClick() {
+    const newSongs = songs.slice()
+    play(newSongs)
+  }
+
+  /* MARK: - Utilities */
+  function play(newSongs: typeof songs) {
+    const currentSong = newSongs.shift()
+    setCurrentPlayingSong({
+      id: currentSong?.id ?? 0,
+      artworkURLs: currentSong?.artworkURLs ?? [],
+      fileID: currentSong?.fileID ?? 0,
+      title: currentSong?.title ?? "",
+      artist: currentSong?.artist ?? "",
+      album: album.name
+    })
+
+    setPlayingNextQueue(
+      newSongs.map(song => {
+        return {
+          id: song.id,
+          artworkURLs: song.artworkURLs,
+          fileID: song.fileID,
+          title: song.title,
+          artist: song.artist,
+          album: album.name,
+          duration: song.duration
+        }
+      })
+    )
   }
 
   return {
@@ -133,6 +189,7 @@ export default function useAlbumDetailView({
     viewDidAppear1,
     viewDidAppear2,
     trackListItemDidClick,
-    trackListItemDidDoubleClick
+    trackListItemDidDoubleClick,
+    playButtonDidClick
   }
 }

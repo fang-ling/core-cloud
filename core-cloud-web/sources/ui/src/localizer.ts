@@ -70,6 +70,9 @@ export default class NewLocalizer {
     "Choose an Album": {
       "zh-TW": "選擇專輯"
     },
+    "Clear": {
+      "zh-TW": "清除"
+    },
     "Create": {
       "zh-TW": "建立"
     },
@@ -121,6 +124,9 @@ export default class NewLocalizer {
     "New Song": {
       "zh-TW": "新歌曲"
     },
+    "No upcoming songs.": {
+      "zh-TW": "沒有即將播放的歌曲。"
+    },
     "Not Playing": {
       "zh-TW": "未在播放"
     },
@@ -132,6 +138,9 @@ export default class NewLocalizer {
     },
     "Play Count": {
       "zh-TW": "播放次數"
+    },
+    "Playing Next": {
+      "zh-TW": "待播清單"
     },
     "Pop": {
       "zh-TW": "流行樂"

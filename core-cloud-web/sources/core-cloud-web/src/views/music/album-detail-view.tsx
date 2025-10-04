@@ -33,7 +33,8 @@ import ZStack from "ui/z-stack"
 export default function AlbumDetailView({
   album,
   setAlbum,
-  setCurrentPlayingSong
+  setCurrentPlayingSong,
+  setPlayingNextQueue
 }: {
   album: {
     id: number,
@@ -58,12 +59,22 @@ export default function AlbumDetailView({
     title: string,
     artist: string,
     album: string
-  } | undefined>>
+  } | undefined>>,
+  setPlayingNextQueue: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string,
+    duration: number
+  }[]>>
 }) {
   const viewModel = useAlbumDetailView({
     album: album,
     setAlbum: setAlbum,
-    setCurrentPlayingSong: setCurrentPlayingSong
+    setCurrentPlayingSong: setCurrentPlayingSong,
+    setPlayingNextQueue: setPlayingNextQueue
   })
 
   useEffect(() => {
@@ -196,7 +207,11 @@ export default function AlbumDetailView({
           >
             {
               [
-                { label: "Play", icon: "play.fill", action: () => {} },
+                {
+                  label: "Play",
+                  icon: "play.fill",
+                  action: () => viewModel.playButtonDidClick()
+                },
                 { label: "Shuffle", icon: "shuffle", action: () => {} }
               ].map((item, index) => (
                 <Button
@@ -272,14 +287,18 @@ export default function AlbumDetailView({
                     positionClassName="relative"
                     onClick={() => viewModel.trackListItemDidClick(song.id)}
                     onDoubleClick={() => {
-                      viewModel.trackListItemDidDoubleClick({
-                        id: song.id,
-                        artworkURLs: song.artworkURLs,
-                        fileID: song.fileID,
-                        title: song.title,
-                        artist: song.artist,
-                        album: album.name
-                      })
+                      viewModel.trackListItemDidDoubleClick(
+                        {
+                          id: song.id,
+                          artworkURLs: song.artworkURLs,
+                          fileID: song.fileID,
+                          title: song.title,
+                          artist: song.artist,
+                          album: album.name
+                        },
+                        song.discNumber,
+                        song.trackNumber
+                      )
                     }}
                   >
                     {

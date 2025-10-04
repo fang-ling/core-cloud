@@ -33,7 +33,8 @@ export default function SongListView({
   setSongs,
   currentPlayingSong,
   setCurrentPlayingSong,
-  isPlaying
+  isPlaying,
+  setPlayingNextQueue
 }: {
   songs: {
     id: number,
@@ -69,11 +70,22 @@ export default function SongListView({
     artist: string,
     album: string
   } | undefined>>,
-  isPlaying: boolean
+  isPlaying: boolean,
+  setPlayingNextQueue: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string,
+    duration: number
+  }[]>>
 }) {
   const viewModel = useSongListView({
+    songs: songs,
     setSongs: setSongs,
-    setCurrentPlayingSong: setCurrentPlayingSong
+    setCurrentPlayingSong: setCurrentPlayingSong,
+    setPlayingNextQueue: setPlayingNextQueue
   })
 
   useEffect(() => {

@@ -18,10 +18,13 @@
 //
 
 import AlbumService from "@/services/album-service"
+import SongService from "@/services/song-service"
 
 export default function useAlbumListView({
   setAlbums,
-  setSelectedAlbum
+  setSelectedAlbum,
+  setPlayingNextQueue,
+  setCurrentPlayingSong
 }: {
   setAlbums: React.Dispatch<React.SetStateAction<{
     id: number,
@@ -36,6 +39,23 @@ export default function useAlbumListView({
     artworkURLs: string,
     genre?: string,
     year?: number
+  } | undefined>>,
+  setPlayingNextQueue: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string,
+    duration: number
+  }[]>>,
+  setCurrentPlayingSong: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string
   } | undefined>>
 }) {
   /* MARK: Event handlers */
@@ -64,8 +84,42 @@ export default function useAlbumListView({
     setSelectedAlbum(selectedAlbum)
   }
 
+  async function playButtonDidClick(albumID: number) {
+    const songs = await SongService.fetchSongs({
+      filters: `albumID_EQUALS_${albumID}`,
+      fields: "artworkURLs,fileID,title,artist,album,duration"
+    })
+
+    const currentSong = songs.shift()
+    if (currentSong) {
+      setCurrentPlayingSong({
+        id: currentSong.id,
+        artworkURLs: currentSong.artworkURLs?.split(",") ?? [],
+        fileID: currentSong.fileID ?? 0,
+        title: currentSong.title ?? "",
+        artist: currentSong.artist ?? "",
+        album: currentSong.albumName ?? ""
+      })
+    }
+
+    setPlayingNextQueue(
+      songs.map(song => {
+        return {
+          id: song.id,
+          artworkURLs: song.artworkURLs?.split(",") ?? [],
+          fileID: song.fileID ?? 0,
+          title: song.title ?? "",
+          artist: song.artist ?? "",
+          album: song.albumName ?? "",
+          duration: song.duration ?? 0
+        }
+      })
+    )
+  }
+
   return {
     viewDidAppear,
-    albumDidSelect
+    albumDidSelect,
+    playButtonDidClick
   }
 }

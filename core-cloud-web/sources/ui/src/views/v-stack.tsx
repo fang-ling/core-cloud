@@ -35,6 +35,8 @@ export default function VStack({
   shadowClassName = "",
   pointerStyleClassname = "",
   overflowClassName = "",
+  animationClassName = "",
+  visibilityClassName = "",
   style = undefined,
   isGroup,
   onClick,
@@ -60,6 +62,8 @@ export default function VStack({
   shadowClassName?: string,
   pointerStyleClassname?: string,
   overflowClassName?: string,
+  animationClassName?: string,
+  visibilityClassName?: string,
   style?: React.CSSProperties,
   isGroup?: boolean,
   onClick?: () => void,
@@ -75,7 +79,8 @@ export default function VStack({
           `${widthClassName} ${marginClassName} ${paddingClassName} ` +
           `${positionClassName} ${backgroundStyleClassName} ` +
           `${borderClassName} ${shadowClassName} ${pointerStyleClassname} ` +
-          `${overflowClassName} ${isGroup ? "group" : ""}`
+          `${overflowClassName} ${isGroup ? "group" : ""} ` +
+          `${animationClassName} ${visibilityClassName}`
       }
       style={style}
       onClick={onClick}

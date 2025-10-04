@@ -28,6 +28,9 @@ import ZStack from "ui/z-stack"
 import { useEffect } from "react"
 import AlbumContentView from "./album-content-view"
 import SongListView from "./song-list-view"
+import Button from "ui/button"
+import Spacer from "ui/spacer"
+import PlayingNextQueue from "./playing-next-queue"
 
 export default function DetailView({
   selectedSidebarItemKey,
@@ -122,12 +125,12 @@ export default function DetailView({
                 className={
                   /* TODO: support shuffle */
                   "opacity-40 pointer-events-none " +
-                  `${PLAYER_OUTER_BUTTON_STYLE} ` + (
-                    viewModel.isShuffleEnabled
-                      ? "fill-music-keyColor"
-                      : "fill-music-systemSecondary " +
-                        "hover:fill-music-systemPrimary-vibrant " +
-                        "active:fill-music-keyColor"
+                    `${PLAYER_OUTER_BUTTON_STYLE} ` + (
+                      viewModel.isShuffleEnabled
+                        ? "fill-music-keyColor"
+                        : "fill-music-systemSecondary " +
+                          "hover:fill-music-systemPrimary-vibrant " +
+                          "active:fill-music-keyColor"
                   )
                 }
                 onClick={() => viewModel.shuffleButtonDidClick()}
@@ -204,6 +207,7 @@ export default function DetailView({
                 />
               </button>
             </HStack>
+
             <HStack
               paddingClassName="p-1.25"
               widthClassName="w-full"
@@ -276,6 +280,20 @@ export default function DetailView({
                     {
                       viewModel.currentPlayingSong && (
                         <>
+                          <audio
+                            ref={viewModel.audioRef}
+                            className="hidden"
+                            src={
+                              `${process.env.NEXT_PUBLIC_API_HOST}/api/file` +
+                                `?id=${viewModel.currentPlayingSong.fileID}` +
+                                "&application=Music"
+                            }
+                            onLoadedMetadata={() => {
+                              viewModel.audioMetadataDidLoad()
+                            }}
+                            onTimeUpdate={() => viewModel.audioTimeDidUpdate()}
+                            onEnded={() => viewModel.audioDidEnd()}
+                          />
                           <Text
                             verbatimContent={viewModel.currentPlayingSong.title}
                             fontSizeClassName="text-xs"
@@ -405,7 +423,37 @@ export default function DetailView({
                 </ZStack>
               </Grid>
             </HStack>
-            <p>{/*TODO: Volume Control & Play Next Queue*/}</p>
+
+            {/* Playing Next Queue Toggle */}
+            <HStack
+              widthClassName="w-full"
+              paddingClassName="pr-2.5"
+            >
+              <Spacer />
+
+              <Button
+                widthClassName="w-8"
+                heightClassName="h-7"
+                borderClassName="rounded-sm"
+                backgroundStyleClassName={
+                  viewModel.isPlayingNextQueuePresented
+                    ? "bg-music-playerPlatterButtonBGFill"
+                    : ""
+                }
+                action={() => viewModel.playingNextQueueToggleDidTrigger()}
+              >
+                <Image
+                  systemName="list.bullet"
+                  widthClassName="w-4.5"
+                  heightClassName="h-4.5"
+                  foregroundStyleClassName={
+                    viewModel.isPlayingNextQueuePresented
+                      ? "fill-music-playerPlatterButtonIconFill"
+                      : "fill-music-systemSecondary"
+                  }
+                />
+              </Button>
+            </HStack>
           </Grid>
         </ZStack>
       </HStack>
@@ -494,26 +542,43 @@ export default function DetailView({
         </HStack>
       </HStack>
 
-      {
-        selectedSidebarItemKey === "songs" && (
-          <SongListView
-            songs={songs}
-            setSongs={setSongs}
-            currentPlayingSong={viewModel.currentPlayingSong}
-            setCurrentPlayingSong={viewModel.setCurrentPlayingSong}
-            isPlaying={viewModel.isPlaying}
-          />
-        )
-      }
-      {
-        selectedSidebarItemKey === "albums" && (
-          <AlbumContentView
-            albums={albums}
-            setAlbums={setAlbums}
-            setCurrentPlayingSong={viewModel.setCurrentPlayingSong}
-          />
-        )
-      }
+      <HStack
+        widthClassName="w-full"
+        heightClassName="h-full"
+        overflowClassName="overflow-hidden"
+      >
+        {
+          selectedSidebarItemKey === "songs" && (
+            <SongListView
+              songs={songs}
+              setSongs={setSongs}
+              currentPlayingSong={viewModel.currentPlayingSong}
+              setCurrentPlayingSong={viewModel.setCurrentPlayingSong}
+              isPlaying={viewModel.isPlaying}
+              setPlayingNextQueue={viewModel.setPlayingNextQueue}
+            />
+          )
+        }
+        {
+          selectedSidebarItemKey === "albums" && (
+            <AlbumContentView
+              albums={albums}
+              setAlbums={setAlbums}
+              setCurrentPlayingSong={viewModel.setCurrentPlayingSong}
+              setPlayingNextQueue={viewModel.setPlayingNextQueue}
+            />
+          )
+        }
+        {
+          viewModel.isPlayingNextQueuePresented && (
+            <PlayingNextQueue
+              queue={viewModel.playingNextQueue}
+              animationClassName={viewModel.playingNextQueueAnimationClassName}
+              setPlayingNextQueue={viewModel.setPlayingNextQueue}
+            />
+          )
+        }
+      </HStack>
     </VStack>
   )
 }

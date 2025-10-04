@@ -34,7 +34,9 @@ import Image from "ui/image"
 export default function AlbumListView({
   albums,
   setAlbums,
-  setSelectedAlbum
+  setSelectedAlbum,
+  setPlayingNextQueue,
+  setCurrentPlayingSong
 }: {
   albums: {
     id: number,
@@ -55,11 +57,30 @@ export default function AlbumListView({
     artworkURLs: string,
     genre?: string,
     year?: number
+  } | undefined>>,
+  setPlayingNextQueue: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string,
+    duration: number
+  }[]>>,
+  setCurrentPlayingSong: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string
   } | undefined>>
 }) {
   const viewModel = useAlbumListView({
     setAlbums: setAlbums,
-    setSelectedAlbum: setSelectedAlbum
+    setSelectedAlbum: setSelectedAlbum,
+    setPlayingNextQueue: setPlayingNextQueue,
+    setCurrentPlayingSong: setCurrentPlayingSong
   })
 
   useEffect(() => {
@@ -152,7 +173,8 @@ export default function AlbumListView({
                           }
                           borderClassName="rounded-full"
                           positionClassName="absolute bottom-2.5 left-2.5"
-                          action={() => {}}
+                          propagationStopped={true}
+                          action={() => viewModel.playButtonDidClick(album.id)}
                         >
                           <Image
                             systemName="play.fill"

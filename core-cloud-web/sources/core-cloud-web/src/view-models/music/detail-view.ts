@@ -45,6 +45,23 @@ export default function useDetailView() {
   const totalRef = useRef(0)
   const audioRef = useRef<HTMLAudioElement>(null)
   const playedRef = useRef(false)
+  const [
+    isPlayingNextQueuePresented,
+    setIsPlayingNextQueuePresented
+  ] = useState(false)
+  const [playingNextQueue, setPlayingNextQueue] = useState<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string,
+    duration: number
+  }[]>([])
+  const [
+    playingNextQueueAnimationClassName,
+    setPlayingNextQueueAnimationClassName
+  ] = useState("")
 
   /* MARK: - Event handlers */
   function shuffleButtonDidClick() {
@@ -97,11 +114,26 @@ export default function useDetailView() {
   }
 
   function audioDidEnd() {
-    /* TODO: Add Play Next Queue */
-    setIsPlaying(false)
-    setCurrentPlayingSong(undefined)
     totalRef.current = 0
     setElapsed(0)
+
+    if (playingNextQueue.length > 0) {
+      const newPlayingNextQueue = playingNextQueue.slice()
+
+      const currentSong = newPlayingNextQueue.shift()
+      setCurrentPlayingSong({
+        id: currentSong?.id ?? 0,
+        artworkURLs: currentSong?.artworkURLs ?? [],
+        fileID: currentSong?.fileID ?? 0,
+        title: currentSong?.title ?? "",
+        artist: currentSong?.artist ?? "",
+        album: currentSong?.album ?? ""
+      })
+      setPlayingNextQueue(newPlayingNextQueue)
+    } else {
+      setIsPlaying(false)
+      setCurrentPlayingSong(undefined)
+    }
   }
 
   function currentPlayingSongDidChange() {
@@ -110,33 +142,42 @@ export default function useDetailView() {
     }
 
     audioRef.current?.pause()
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0
+    }
     playedRef.current = false
     setIsPlaying(false)
 
-    audioRef.current = new Audio(
-      `${process.env.NEXT_PUBLIC_API_HOST}/api/file` +
-        `?id=${currentPlayingSong?.fileID}&application=Music`
-    )
-
-    audioRef.current.addEventListener("loadedmetadata", audioMetadataDidLoad)
-    audioRef.current.addEventListener("timeupdate", audioTimeDidUpdate)
-    audioRef.current.addEventListener("ended", audioDidEnd)
-
-    audioRef.current.play()
+    audioRef.current?.play()
     setIsPlaying(true)
 
     return () => {
       audioRef.current?.pause()
-      audioRef.current?.removeEventListener(
-        "loadedmetadata",
-        audioMetadataDidLoad
+    }
+  }
+
+  function playingNextQueueToggleDidTrigger() {
+    if (isPlayingNextQueuePresented) {
+      setPlayingNextQueueAnimationClassName(
+        "animate-[300ms_linear_0ms_both_svelte-636731410-0]"
       )
-      audioRef.current?.removeEventListener("timeupdate", audioTimeDidUpdate)
-      audioRef.current?.removeEventListener("ended", audioDidEnd)
+      setTimeout(() => {
+        setPlayingNextQueueAnimationClassName("")
+        setIsPlayingNextQueuePresented(!isPlayingNextQueuePresented)
+      }, 300)
+    } else {
+      setPlayingNextQueueAnimationClassName(
+        "animate-[300ms_linear_0ms_both_svelte-1102588416-0]"
+      )
+      setIsPlayingNextQueuePresented(!isPlayingNextQueuePresented)
+      setTimeout(() => {
+        setPlayingNextQueueAnimationClassName("")
+      }, 300)
     }
   }
 
   return {
+    audioRef,
     isShuffleEnabled,
     repeatMode,
     isBackwardForwardButtonDisabled,
@@ -145,9 +186,17 @@ export default function useDetailView() {
     setCurrentPlayingSong,
     elapsed,
     totalRef,
+    isPlayingNextQueuePresented,
+    playingNextQueue,
+    setPlayingNextQueue,
+    playingNextQueueAnimationClassName,
     shuffleButtonDidClick,
     repeatButtonDidClick,
     playPauseButtonDidClick,
-    currentPlayingSongDidChange
+    currentPlayingSongDidChange,
+    playingNextQueueToggleDidTrigger,
+    audioMetadataDidLoad,
+    audioTimeDidUpdate,
+    audioDidEnd
   }
 }

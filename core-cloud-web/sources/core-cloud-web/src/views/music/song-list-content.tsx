@@ -47,14 +47,17 @@ export default function SongListContent({
     fileID: number
   }[],
   listItemOnClick: (id: number) => void,
-  listItemOnDoubleClick: (clickedItem: {
-    id: number,
-    artworkURLs: string[],
-    fileID: number,
-    title: string,
-    artist: string,
-    album: string
-  }) => void,
+  listItemOnDoubleClick: (
+    clickedItem: {
+      id: number,
+      artworkURLs: string[],
+      fileID: number,
+      title: string,
+      artist: string,
+      album: string
+    },
+    index: number
+  ) => void,
   moreOptionsButtonOnClick: (
     clickPosition: { x: number, y: number },
     isMobile: boolean
@@ -92,14 +95,17 @@ export default function SongListContent({
             key={song.id}
             onClick={() => listItemOnClick(song.id)}
             onDoubleClick={() => {
-              listItemOnDoubleClick({
-                id: song.id,
-                artworkURLs: song.artworkURLs?.split(",") ?? [],
-                album: song.albumName ?? "",
-                artist: song.artist,
-                title: song.title,
-                fileID: song.fileID
-              })
+              listItemOnDoubleClick(
+                {
+                  id: song.id,
+                  artworkURLs: song.artworkURLs?.split(",") ?? [],
+                  album: song.albumName ?? "",
+                  artist: song.artist,
+                  title: song.title,
+                  fileID: song.fileID
+                },
+                index
+              )
             }}
           >
             {/* Is Playing Indicator */}

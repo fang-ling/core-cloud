@@ -24,7 +24,8 @@ import AlbumDetailView from "./album-detail-view"
 export default function AlbumContentView({
   albums,
   setAlbums,
-  setCurrentPlayingSong
+  setCurrentPlayingSong,
+  setPlayingNextQueue
 }: {
   albums: {
     id: number,
@@ -45,7 +46,16 @@ export default function AlbumContentView({
     title: string,
     artist: string,
     album: string
-  } | undefined>>
+  } | undefined>>,
+  setPlayingNextQueue: React.Dispatch<React.SetStateAction<{
+    id: number,
+    artworkURLs: string[],
+    fileID: number,
+    title: string,
+    artist: string,
+    album: string,
+    duration: number
+  }[]>>
 }) {
   const viewModel = useAlbumContentView()
 
@@ -57,6 +67,8 @@ export default function AlbumContentView({
             albums={albums}
             setAlbums={setAlbums}
             setSelectedAlbum={viewModel.setSelectedAlbum}
+            setPlayingNextQueue={setPlayingNextQueue}
+            setCurrentPlayingSong={setCurrentPlayingSong}
           />
         )
       }
@@ -67,6 +79,7 @@ export default function AlbumContentView({
             album={viewModel.selectedAlbum}
             setAlbum={viewModel.setSelectedAlbum}
             setCurrentPlayingSong={setCurrentPlayingSong}
+            setPlayingNextQueue={setPlayingNextQueue}
           />
         )
       }

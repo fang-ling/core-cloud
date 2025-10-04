@@ -31,6 +31,7 @@ export default function Button({
   positionClassName = "",
   marginClassName = "",
   transitionClassName = "",
+  propagationStopped = false,
   children
 }: {
   /**
@@ -44,6 +45,7 @@ export default function Button({
   positionClassName?: string,
   marginClassName?: string,
   transitionClassName?: string,
+  propagationStopped?: boolean,
   /**
    * A view that describes the purpose of the button's action.
    */
@@ -57,6 +59,10 @@ export default function Button({
           `${positionClassName} ${marginClassName} ${transitionClassName}`
       }
       onClick={(event) => {
+        if (propagationStopped) {
+          event.stopPropagation()
+        }
+
         action({
           x: event.clientX,
           y: event.clientY
