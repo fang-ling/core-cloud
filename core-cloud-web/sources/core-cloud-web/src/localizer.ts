@@ -63,12 +63,6 @@ export default class Localizer {
     "Already have a *X* Account?": {
       "zh-TW": "已經有 *X* 帳號？"
     },
-    "Apple MPEG-4 Audio": {
-      "zh-TW": "Apple MPEG-4 音訊"
-    },
-    "Application Library": {
-      "zh-TW": "應用程式庫"
-    },
     "At least 1 lowercase letter": {
       "zh-TW": "至少 1 個小寫字母"
     },

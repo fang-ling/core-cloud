@@ -112,7 +112,13 @@ export default function UploadSheet({
               id="dropbox"
               type="file"
               className="hidden"
-              accept=".m4a"
+              accept={
+                application === "Music"
+                  ? ".m4a"
+                  : application === "TV"
+                  ? ".mp4"
+                  : ".zyy"
+              }
               onChange={(event) => {
                 viewModel.fileInputDidChange((event.target.files ?? [])[0])
               }}

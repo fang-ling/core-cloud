@@ -235,7 +235,10 @@ export default function ContentView() {
                         <Button
                           disabled={
                             viewModel.navigationStack.length < 2 ||
-                              viewModel.navigationStack[1] !== "Music"
+                              (
+                                viewModel.navigationStack[1] !== "Music" &&
+                                  viewModel.navigationStack[1] !== "TV"
+                              )
                           }
                           onClick={() => {
                             viewModel.uploadButtonDidClick()

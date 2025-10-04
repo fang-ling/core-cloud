@@ -17,12 +17,13 @@
 //  limitations under the License.
 //
 
-import Localizer from '@/localizer'
-import useTableView from '@/view-models/drive/table-view'
-import { Fragment } from 'react'
-import TableViewSymbol from './table-view-symbol'
-import Measurement from 'foundation/measurement'
-import { UnitInformationStorage } from 'foundation/unit'
+import Localizer from "@/localizer"
+import useTableView from "@/view-models/drive/table-view"
+import { Fragment } from "react"
+import TableViewSymbol from "./table-view-symbol"
+import Measurement from "foundation/measurement"
+import { UnitInformationStorage } from "foundation/unit"
+import NewLocalizer from "ui/localizer"
 
 export default function TableView({
   files,
@@ -46,31 +47,31 @@ export default function TableView({
       <thead className="sticky top-0 bg-backgroundPrimary">
         <tr
           className={
-            'w-[calc(100%-36px)] text-labelTertiary text-sm ' +
-              'leading-4 h-11 relative not-md:hidden ' +
-              '*:shadow-[inset_0_-1px_var(--color-separator)]'
+            "w-[calc(100%-36px)] text-labelTertiary text-sm " +
+              "leading-4 h-11 relative not-md:hidden " +
+              "*:shadow-[inset_0_-1px_var(--color-separator)]"
           }
         >
           <th className="w-13.5" />
           <th className="pr-3 w-[calc(25%-18.4px)] font-normal text-left">
-            {Localizer.default().localize('Name')}
+            {Localizer.default().localize("Name")}
           </th>
           <th className="px-3 w-[calc(25%-18.4px)] font-normal text-left">
-            {Localizer.default().localize('Kind')}
+            {Localizer.default().localize("Kind")}
           </th>
           <th
             className={
-              'px-3 w-[calc(25%-18.4px)] font-normal text-left not-md:hidden'
+              "px-3 w-[calc(25%-18.4px)] font-normal text-left not-md:hidden"
             }
           >
-            {Localizer.default().localize('Size')}
+            {Localizer.default().localize("Size")}
           </th>
           <th
             className={
-              'px-3 w-[calc(25%-18.4px)] font-normal text-left not-lg:hidden'
+              "px-3 w-[calc(25%-18.4px)] font-normal text-left not-lg:hidden"
             }
           >
-            {Localizer.default().localize('Date')}
+            {Localizer.default().localize("Date")}
           </th>
         </tr>
       </thead>
@@ -83,16 +84,16 @@ export default function TableView({
               {/* >= md */}
               <tr
                 className={
-                  'w-full h-10.25 not-md:hidden select-none ' + (
+                  "w-full h-10.25 not-md:hidden select-none " + (
                     viewModel.selectedFileID === file.id
-                      ? 'bg-appTint hover:bg-[rgb(0,93,186)] ' +
-                        'dark:hover:bg-[rgb(41,169,255)]'
-                      : 'hover:bg-fillQuaternary'
+                      ? "bg-appTint hover:bg-[rgb(0,93,186)] " +
+                        "dark:hover:bg-[rgb(41,169,255)]"
+                      : "hover:bg-fillQuaternary"
                   )
                 }
                 onClick={() => viewModel.handleSelectedFileChange(file.id)}
                 onDoubleClick={() => {
-                  if (file.kind === 'Application Library') {
+                  if (file.kind === "Application Library") {
                     viewModel.handleNavigationChange(file.name)
                   }
                 }}
@@ -102,7 +103,7 @@ export default function TableView({
                     <TableViewSymbol
                       kind={file.kind}
                       applicationName={
-                        file.kind === 'Application Library'
+                        file.kind === "Application Library"
                           ? file.name
                           : undefined
                       }
@@ -113,57 +114,57 @@ export default function TableView({
                 </td>
                 <td
                   className={
-                    'pr-3 w-[calc(25%-18.4px)] text-ellipsis overflow-hidden ' +
-                      'whitespace-nowrap text-base leading-5 ' + (
+                    "pr-3 w-[calc(25%-18.4px)] text-ellipsis overflow-hidden " +
+                      "whitespace-nowrap text-base leading-5 " + (
                         index !== files.length - 1
-                          ? 'border-b border-separator '
-                          : ''
+                          ? "border-b border-separator "
+                          : ""
                       ) + (
                         viewModel.selectedFileID === file.id
-                          ? 'text-systemWhite'
-                          : 'text-labelPrimary'
+                          ? "text-systemWhite"
+                          : "text-labelPrimary"
                       )
                   }
                 >
                   {
-                    file.kind === 'Application Library'
+                    file.kind === "Application Library"
                       ? Localizer.default().localize(file.name)
                       : file.name
                   }
                 </td>
                 <td
                   className={
-                    'px-3 w-[calc(25%-18.4px)] text-sm leading-4 ' +
-                      'text-ellipsis overflow-hidden whitespace-nowrap ' + (
+                    "px-3 w-[calc(25%-18.4px)] text-sm leading-4 " +
+                      "text-ellipsis overflow-hidden whitespace-nowrap " + (
                         index !== files.length - 1
-                          ? 'border-b border-separator '
-                          : ''
+                          ? "border-b border-separator "
+                          : ""
                       ) + (
                         viewModel.selectedFileID === file.id
-                          ? 'text-systemWhite'
-                          : 'text-labelSecondary'
+                          ? "text-systemWhite"
+                          : "text-labelSecondary"
                       )
                   }
                 >
-                  {Localizer.default().localize(file.kind)}
+                  {NewLocalizer.default.localize(file.kind)}
                 </td>
                 <td
                   className={
-                    'px-3 w-[calc(25%-18.4px)] not-md:hidden text-sm ' +
-                      'leading-4 not-lg:rounded-r-[10px] ' + (
+                    "px-3 w-[calc(25%-18.4px)] not-md:hidden text-sm " +
+                      "leading-4 not-lg:rounded-r-[10px] " + (
                         index !== files.length - 1
-                          ? 'border-b border-separator '
-                          : ''
+                          ? "border-b border-separator "
+                          : ""
                       ) + (
                         viewModel.selectedFileID === file.id
-                          ? 'text-systemWhite'
-                          : 'text-labelSecondary'
+                          ? "text-systemWhite"
+                          : "text-labelSecondary"
                       )
                   }
                 >
                   {
                     file.size === -1
-                      ? '--'
+                      ? "--"
                       : new Measurement({
                         value: file.size,
                         unit: UnitInformationStorage.bytes
@@ -172,22 +173,22 @@ export default function TableView({
                 </td>
                 <td
                   className={
-                    'px-3 w-[calc(25%-18.4px)] not-lg:hidden text-ellipsis ' +
-                      'overflow-hidden whitespace-nowrap text-sm leading-4 ' +
-                      'rounded-r-[10px] ' + (
+                    "px-3 w-[calc(25%-18.4px)] not-lg:hidden text-ellipsis " +
+                      "overflow-hidden whitespace-nowrap text-sm leading-4 " +
+                      "rounded-r-[10px] " + (
                         index !== files.length - 1
-                          ? 'border-b border-separator '
-                          : ''
+                          ? "border-b border-separator "
+                          : ""
                       ) + (
                         viewModel.selectedFileID === file.id
-                          ? 'text-systemWhite'
-                          : 'text-labelSecondary'
+                          ? "text-systemWhite"
+                          : "text-labelSecondary"
                       )
                   }
                 >
                   {
                     file.date === -1
-                      ? ''
+                      ? ""
                       : new Date(file.date).toLocaleString()
                   }
                 </td>
@@ -196,16 +197,16 @@ export default function TableView({
               {/* < md */}
               <tr
                 className={
-                  'w-full h-15.25 md:hidden ' + (
+                  "w-full h-15.25 md:hidden " + (
                     viewModel.selectedFileID === file.id
-                      ? 'bg-appTint hover:bg-[rgb(0,93,186)] ' +
-                        'dark:hover:bg-[rgb(41,169,255)]'
-                      : 'hover:bg-fillQuaternary'
+                      ? "bg-appTint hover:bg-[rgb(0,93,186)] " +
+                        "dark:hover:bg-[rgb(41,169,255)]"
+                      : "hover:bg-fillQuaternary"
                   )
                 }
                 onClick={() => viewModel.handleSelectedFileChange(file.id)}
                 onDoubleClick={() => {
-                  if (file.kind === 'Application Library') {
+                  if (file.kind === "Application Library") {
                     viewModel.handleNavigationChange(file.name)
                   }
                 }}
@@ -215,7 +216,7 @@ export default function TableView({
                     <TableViewSymbol
                       kind={file.kind}
                       applicationName={
-                        file.kind === 'Application Library'
+                        file.kind === "Application Library"
                           ? file.name
                           : undefined
                       }
@@ -226,35 +227,35 @@ export default function TableView({
                 </td>
                 <td
                   className={
-                    'rounded-r-xl px-3 ' + (
+                    "rounded-r-xl px-3 " + (
                       index !== files.length - 1
-                        ? 'border-b border-b-separator'
-                        : ''
+                        ? "border-b border-b-separator"
+                        : ""
                     )
                   }
                 >
                   <div
                     className={
-                      'text-ellipsis overflow-hidden whitespace-nowrap ' +
-                        'text-base leading-7.5 ' + (
+                      "text-ellipsis overflow-hidden whitespace-nowrap " +
+                        "text-base leading-7.5 " + (
                           viewModel.selectedFileID === file.id
-                            ? 'text-systemWhite'
-                            : 'text-labelPrimary'
+                            ? "text-systemWhite"
+                            : "text-labelPrimary"
                         )
                     }
                   >
                     {
-                      file.kind === 'Application Library'
+                      file.kind === "Application Library"
                         ? Localizer.default().localize(file.name)
                         : file.name
                     }
                   </div>
                   <div
                     className={
-                      'text-sm leading-4 ' + (
+                      "text-sm leading-4 " + (
                         viewModel.selectedFileID === file.id
-                          ? 'text-systemWhite'
-                          : 'text-labelSecondary'
+                          ? "text-systemWhite"
+                          : "text-labelSecondary"
                       )
                     }
                   >

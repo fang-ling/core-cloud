@@ -46,8 +46,11 @@ export default function useUploadSheet({
 
     let kind= ""
     const components = file.name.split(".")
-    if (components[components.length - 1] === "m4a") {
+    const extension = components[components.length - 1]
+    if (extension === "m4a") {
       kind = "Apple MPEG-4 Audio"
+    } else if (extension === "mp4") {
+      kind = "MPEG-4 Movie"
     }
 
     setIsError(false)

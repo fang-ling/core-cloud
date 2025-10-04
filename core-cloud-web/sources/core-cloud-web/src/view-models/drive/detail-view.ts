@@ -38,6 +38,13 @@ export default function useDetailView({
       kind: "Application Library",
       size: -1,
       date: -1
+    },
+    {
+      id: 1,
+      name: "TV",
+      kind: "Application Library",
+      size: -1,
+      date: -1
     }
   ]
   const [isLoading, setIsLoading] = useState(true)

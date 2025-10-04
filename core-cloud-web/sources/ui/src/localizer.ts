@@ -52,6 +52,12 @@ export default class NewLocalizer {
     "Albums": {
       "zh-TW": "專輯"
     },
+    "Apple MPEG-4 Audio": {
+      "zh-TW": "Apple MPEG-4 音訊"
+    },
+    "Application Library": {
+      "zh-TW": "應用程式庫"
+    },
     "Artist": {
       "zh-TW": "藝人"
     },
@@ -114,6 +120,9 @@ export default class NewLocalizer {
     },
     "Loading...": {
       "zh-TW": "正在載入…"
+    },
+    "MPEG-4 Movie": {
+      "zh-TW": "MPEG-4 影片"
     },
     "Name": { /* Duplicate with the old localizer. */
       "zh-TW": "名稱"
