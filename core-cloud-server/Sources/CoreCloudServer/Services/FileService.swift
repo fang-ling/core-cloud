@@ -132,6 +132,8 @@ struct FileService {
   func kindToContentType(kind: String) -> String {
     if (kind == "Apple MPEG-4 Audio") {
       return "audio/mp4"
+    } else if (kind == "MPEG-4 Movie") {
+      return "video/mp4"
     }
     return ""
   }
