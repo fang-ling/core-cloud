@@ -2,7 +2,7 @@
 //  content-view.tsx
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/24.
+//  Created by Fang Ling on 2025/10/5.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,20 +17,19 @@
 //  limitations under the License.
 //
 
-import useContentView from "@/view-models/music/content-view"
-import NavigationSplitView from "ui/navigation-split-view"
+import useContentView from "@/view-models/tv/content-view"
+import VStack from "ui/v-stack"
 import SharedToolbar from "../shared-toolbar"
 import SharedBodyguard from "../shared-bodyguard"
 import SharedFooter from "../shared-footer"
+import NavigationSplitView from "ui/navigation-split-view"
 import SharedSidebar from "../shared-sidebar"
-import VStack from "ui/v-stack"
-import DetailView from "./detail-view"
+import HomeVideoSheet from "./home-video-sheet"
 import HStack from "ui/h-stack"
+import Button from "ui/button"
 import Image from "ui/image"
 import Text from "ui/text"
-import SongSheet from "./song-sheet"
-import AlbumSheet from "./album-sheet"
-import Button from "ui/button"
+import DetailView from "./detail-view"
 
 export default function ContentView() {
   const viewModel = useContentView()
@@ -38,7 +37,7 @@ export default function ContentView() {
   return (
     <VStack heightClassName="h-dvh">
       <SharedToolbar
-        source="music"
+        source="tv"
         variant={viewModel.isCheckpointPassed.value ? "app" : "thinMaterial"}
       />
 
@@ -50,8 +49,8 @@ export default function ContentView() {
                 <SharedSidebar
                   sections={viewModel.sectionsRef.current}
                   selectedItemKey={selectedItemKey}
-                  itemForegroundStyleClassName="fill-music-keyColor"
-                  itemBackgroundStyleClassName="active:bg-music-keyColor"
+                  itemForegroundStyleClassName="fill-systemBlue"
+                  itemBackgroundStyleClassName="active:bg-systemBlue"
                   onSelectedItemKeyChange={(newSelectedItemKey) => {
                     onChange(newSelectedItemKey)
                   }}
@@ -64,19 +63,13 @@ export default function ContentView() {
                     heightClassName="h-7.5"
                     borderClassName="rounded-lg"
                     foregroundStyleClassName={
-                      "text-music-keyColor active:text-music-keyColor/30"
+                      "text-systemBlue active:text-systemBlue/30"
                     }
                     paddingClassName="px-2.5"
                     backgroundStyleClassName={
-                      "hover:bg-fillTertiary active:bg-music-keyColor/16"
+                      "hover:bg-fillTertiary active:bg-systemBlue/16"
                     }
-                    action={() => {
-                      if (viewModel.selectedSidebarItemKey === "albums") {
-                        viewModel.newAlbumButtonDidClick()
-                      } else {
-                        viewModel.newSongButtonDidClick()
-                      }
-                    }}
+                    action={() => viewModel.newHomeVideoButtonDidClick()}
                   >
                     <HStack
                       widthClassName="w-4.75"
@@ -89,11 +82,7 @@ export default function ContentView() {
                       />
                     </HStack>
                     <Text
-                      textKey={
-                        viewModel.selectedSidebarItemKey === "albums"
-                          ? "New Album"
-                          : "New Song"
-                      }
+                      textKey="New Home Video"
                       fontSizeClassName="text-[15px]"
                       fontWeightClassName="font-semibold"
                       lineHeightClassName="leading-4.5"
@@ -104,11 +93,9 @@ export default function ContentView() {
             )}
             detail={() => (
               <DetailView
-                albums={viewModel.albums}
-                setAlbums={viewModel.setAlbums}
-                songs={viewModel.songs}
-                setSongs={viewModel.setSongs}
                 selectedSidebarItemKey={viewModel.selectedSidebarItemKey}
+                homeVideos={viewModel.homeVideos}
+                setHomeVideos={viewModel.setHomeVideos}
               />
             )}
             selectedSidebarItemKey={viewModel.selectedSidebarItemKey}
@@ -118,12 +105,13 @@ export default function ContentView() {
               )
             }}
             toggleForegroundStyleClassName={
-              "fill-music-keyColor active:fill-music-keyColor/30"
+              "fill-systemBlue active:fill-systemBlue/30"
             }
             toggleBackgroundStyleClassName={
-              "hover:bg-fillTertiary active:bg-music-keyColor/16"
+              "hover:bg-fillTertiary active:bg-systemBlue/16"
             }
-          />
+          >
+          </NavigationSplitView>
         )
       }
 
@@ -133,7 +121,7 @@ export default function ContentView() {
             <SharedBodyguard
               isPassed={viewModel.isCheckpointPassed}
               secureFieldTintClassName={
-                "focus:border-music-keyColor caret-music-keyColor"
+                "focus:border-systemBlue caret-systemBlue"
               }
             />
             <SharedFooter />
@@ -142,18 +130,10 @@ export default function ContentView() {
       }
 
       {
-        viewModel.isNewAlbumSheetPresented.value && (
-          <AlbumSheet
-            isPresented={viewModel.isNewAlbumSheetPresented}
-            onCreate={() => viewModel.newAlbumDidCreate()}
-          />
-        )
-      }
-      {
-        viewModel.isNewSongSheetPresented.value && (
-          <SongSheet
-            isPresented={viewModel.isNewSongSheetPresented}
-            onCreate={() => viewModel.newSongDidCreate()}
+        viewModel.isNewHomeVideoSheetPresented.value && (
+          <HomeVideoSheet
+            isPresented={viewModel.isNewHomeVideoSheetPresented}
+            onCreate={() => viewModel.newHomeVideoDidCreate()}
             mode="creation"
           />
         )

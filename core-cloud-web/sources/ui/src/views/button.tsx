@@ -31,6 +31,8 @@ export default function Button({
   positionClassName = "",
   marginClassName = "",
   transitionClassName = "",
+  foregroundStyleClassName = "",
+  paddingClassName = "",
   propagationStopped = false,
   children
 }: {
@@ -45,6 +47,8 @@ export default function Button({
   positionClassName?: string,
   marginClassName?: string,
   transitionClassName?: string,
+  foregroundStyleClassName?: string,
+  paddingClassName?: string,
   propagationStopped?: boolean,
   /**
    * A view that describes the purpose of the button's action.
@@ -56,7 +60,8 @@ export default function Button({
       className={
         `cursor-pointer flex items-center justify-center ${widthClassName} ` +
           `${heightClassName} ${backgroundStyleClassName} ${borderClassName} ` +
-          `${positionClassName} ${marginClassName} ${transitionClassName}`
+          `${positionClassName} ${marginClassName} ${transitionClassName} ` +
+          `${foregroundStyleClassName} ${paddingClassName}`
       }
       onClick={(event) => {
         if (propagationStopped) {

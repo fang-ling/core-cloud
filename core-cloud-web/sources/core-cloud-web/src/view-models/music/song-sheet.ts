@@ -56,10 +56,7 @@ export default function useSongSheet({
     artist: string,
     year: number
   }[]>([])
-  const [files, setFiles] = useState<{
-    id: number,
-    name: string
-  }[]>([])
+  const [files, setFiles] = useState<{ id: number, name: string }[]>([])
 
   const fields = [{
     label: "Title",
@@ -210,8 +207,6 @@ export default function useSongSheet({
     fields,
     isError,
     isLoading,
-    albums,
-    files,
     createButtonDidClick,
     viewDidAppear1,
     viewDidAppear2,

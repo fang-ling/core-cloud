@@ -27,22 +27,28 @@ export default function useContentView() {
   const [selectedSidebarItemKey, setSelectedSidebarItemKey] = useState(
     "albums"
   )
-  const sectionsRef = useRef([{
-    header: "Library",
-    items: [/*{
-      key: "artists",
-      symbolName: "music.microphone",
-      title: "Artists"
-    },*/{
-      key: "albums",
-      symbolName: "square.stack",
-      title: "Albums"
-    },{
-      key: "songs",
-      symbolName: "music.note",
-      title: "Songs"
-    }]
-  }])
+  const sectionsRef = useRef([
+    {
+      header: "Library",
+      items: [
+        /*{
+        key: "artists",
+        symbolName: "music.microphone",
+        title: "Artists"
+        },*/
+        {
+          key: "albums",
+          symbolName: "square.stack",
+          title: "Albums"
+        },
+        {
+          key: "songs",
+          symbolName: "music.note",
+          title: "Songs"
+        }
+      ]
+    }
+  ])
   const isNewAlbumSheetPresented = useBinding(false)
   const isNewSongSheetPresented = useBinding(false)
   const [songs, setSongs] = useState<{
@@ -99,7 +105,7 @@ export default function useContentView() {
       return
     }
 
-    let newSongs = await SongService.fetchSongs({
+    const newSongs = await SongService.fetchSongs({
       fields: "title,artist,albumName,artworkURLs,duration,fileID"
     })
     setSongs(

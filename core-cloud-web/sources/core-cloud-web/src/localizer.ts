@@ -123,9 +123,6 @@ export default class Localizer {
     "Done": {
       "zh-TW": "完成"
     },
-    "Drive": {
-      "zh-TW": "雲碟"
-    },
     "Enter a valid email address to use as your primary email address.": {
       "zh-TW": "請輸入有效的電子郵件地址，來作為你的主要電子郵件地址。"
     },
@@ -170,9 +167,6 @@ export default class Localizer {
     },
     "Master Password": {
       "zh-TW": "主密碼"
-    },
-    "Music": {
-      "zh-TW": "音樂"
     },
     "Name": {
       "zh-TW": "名稱"

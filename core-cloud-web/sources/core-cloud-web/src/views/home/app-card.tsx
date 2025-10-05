@@ -17,8 +17,11 @@
 //  limitations under the License.
 //
 
-import Link from 'next/link'
-import UIImage from '../ui-image'
+import Link from "next/link"
+import HStack from "ui/h-stack"
+import Text from "ui/text"
+import AsyncImage from "ui/async-image"
+import ContentMode from "ui/content-mode"
 
 export default function AppCard({
   apps
@@ -33,22 +36,22 @@ export default function AppCard({
     <div className="w-78.75 lg:w-165 h-78.75 m-3.75">
       <div
         className={
-          'w-78.75 lg:w-165 h-78.75 rounded-2xl lg:px-7.5 lg:py-8.75 p-5 ' +
-            'backdrop-blur-[15px] backdrop-saturate-86 transition-[width] ' + (
+          "w-78.75 lg:w-165 h-78.75 rounded-2xl lg:px-7.5 lg:py-8.75 p-5 " +
+            "backdrop-blur-[15px] backdrop-saturate-86 transition-[width] " + (
               /* bg gradient */
-              'bg-radial-[circle_at_100%_0px] from-[rgba(255,255,255,.85)] ' +
-                'to-[rgba(245,245,245,.13)] to-183% ' +
-                'dark:bg-radial-[circle_at_97%_3.3%] ' +
-                'dark:from-[rgba(0,0,0,.35)] dark:to-[rgba(0,0,0,.6)] ' +
-                'dark:to-164% '
+              "bg-radial-[circle_at_100%_0px] from-[rgba(255,255,255,.85)] " +
+                "to-[rgba(245,245,245,.13)] to-183% " +
+                "dark:bg-radial-[circle_at_97%_3.3%] " +
+                "dark:from-[rgba(0,0,0,.35)] dark:to-[rgba(0,0,0,.6)] " +
+                "dark:to-164% "
             ) +
-            'ease-[ease-in-out] duration-300'
+            "ease-[ease-in-out] duration-300"
         }
       >
         <div
           className={
-            'grid grid-cols-4 lg:grid-cols-6 gap-x-4.25 lg:gap-x-7.5 ' +
-              'gap-y-2.5 lg:gap-y-7.5'
+            "grid grid-cols-4 lg:grid-cols-6 gap-x-4.25 lg:gap-x-7.5 " +
+              "gap-y-2.5 lg:gap-y-7.5"
           }
         >
           {
@@ -57,30 +60,32 @@ export default function AppCard({
                 key={index}
                 href={app.href}
                 className={
-                  'min-w-14 lg:min-w-17.5 rounded-[10px] p-0.75 ' +
-                    'duration-200 ease-[cubic-bezier(.32,.08,.24,1)] ' +
-                    'hover:scale-3d hover:scale-x-105 hover:scale-y-105 ' +
-                    'hover:scale-z-105 flex transition-transform ' +
-                    'drop-shadow-[0_2px_10px_var(--theme-color-boxShadow)] ' +
-                    'flex-col items-center active:scale-100 group'
+                  "min-w-14 lg:min-w-17.5 rounded-[10px] p-0.75 " +
+                    "duration-200 ease-[cubic-bezier(.32,.08,.24,1)] " +
+                    "hover:scale-3d hover:scale-x-105 hover:scale-y-105 " +
+                    "hover:scale-z-105 flex transition-transform " +
+                    "drop-shadow-[0_2px_10px_var(--theme-color-boxShadow)] " +
+                    "flex-col items-center active:scale-100 group"
                 }
               >
-                <UIImage
+                <AsyncImage
                   urls={app.urls}
-                  className={
-                    'size-12.5 lg:size-17.5 object-contain ' +
-                      'group-active:opacity-60'
-                  }
+                  widthClassName="w-12.5 lg:w-17.5"
+                  heightClassName="h-12.5 lg:h-17.5"
+                  contentMode={ContentMode.fit}
+                  foregroundStyleClassName="group-active:opacity-60"
                 />
-                <div
-                  className={
-                    'mt-3.75 lg:mt-3.75 text-xs lg:text-sm leading-3.5 ' +
-                      'lg:leading-4.5 text-labelPrimary ' +
-                      'group-active:text-labelQuaternary'
-                  }
-                >
-                  {app.name}
-                </div>
+                <HStack>
+                  <Text
+                    textKey={app.name}
+                    fontSizeClassName="text-xs lg:text-sm"
+                    lineHeightClassName="leading-3.5 lg:leading-4.5"
+                    foregroundStyleClassName={
+                      "text-labelPrimary group-active:text-labelQuaternary"
+                    }
+                    marginClassName="mt-3.75 lg:mt-3.75"
+                  />
+                </HStack>
               </Link>
             ))
           }

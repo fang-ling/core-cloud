@@ -30,13 +30,15 @@ import MenuItem from "./shared/toolbar/menu-item"
 import Localizer from "@/localizer"
 import CoreCloudWeb from "@/core-cloud-web"
 import { useEffect } from "react"
+import HStack from "ui/h-stack"
+import Text from "ui/text"
 
 export default function SharedToolbar({
   source,
   variant,
   onCustomize
 }: {
-  source: "authenticator" | "home" | "drive" | "music",
+  source: "authenticator" | "home" | "drive" | "music" | "tv",
   variant:  "thinMaterial" | "regularMaterial" | "app",
   onCustomize?: () => void
 }) {
@@ -109,6 +111,9 @@ export default function SharedToolbar({
                   case "music": return (
                     process.env.NEXT_PUBLIC_MUSIC_ICON_URLS
                   )
+                  case "tv": return (
+                    process.env.NEXT_PUBLIC_TV_ICON_URLS
+                  )
                 }
               })()?.split(",")
             }
@@ -121,20 +126,31 @@ export default function SharedToolbar({
             />
           </div>
         </Link>
-        {
-          source === "drive" && (
-            <div className="font-semibold text-[21px] text-systemBlue">
-              {Localizer.default().localize("Drive")}
-            </div>
-          )
-        }
-        {
-          source === "music" && (
-            <div className="font-semibold text-[21px] text-music-keyColor">
-              {Localizer.default().localize("Music")}
-            </div>
-          )
-        }
+
+        <HStack>
+          <Text
+            textKey={
+              (() => {
+                switch (source) {
+                  case "drive": return "Drive"
+                  case "music": return "Music"
+                  case "tv": return "TV"
+                }
+              })()
+            }
+            fontSizeClassName="text-[21px]"
+            fontWeightClassName="font-semibold"
+            foregroundStyleClassName={
+              (() => {
+                switch (source) {
+                  case "drive": return "text-systemBlue"
+                  case "music": return "text-music-keyColor"
+                  case "tv": return "text-systemBlue"
+                }
+              })()
+            }
+          />
+        </HStack>
 
         {
           source !== "authenticator" && (
@@ -470,14 +486,18 @@ export default function SharedToolbar({
                         className="size-13.5 mb-1.25 group-active:opacity-60"
                         urls={app.urls}
                       />
-                      <span
-                        className={
-                          "mt-1.5 text-labelSecondary text-xs leading-4 " +
-                            "group-active:text-labelQuaternary"
-                        }
-                      >
-                        {app.name}
-                      </span>
+                      <HStack>
+                        <Text
+                          textKey={app.name}
+                          fontSizeClassName="text-xs"
+                          lineHeightClassName="leading-4"
+                          foregroundStyleClassName={
+                            "text-labelSecondary " +
+                              "group-active:text-labelQuaternary"
+                          }
+                          marginClassName="mt-1.5"
+                        />
+                      </HStack>
                     </Link>
                   ))
                 }

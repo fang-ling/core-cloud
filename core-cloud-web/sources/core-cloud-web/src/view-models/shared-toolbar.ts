@@ -26,7 +26,7 @@ export default function useSharedToolbar({
   source,
   onCustomize
 }: {
-  source: "authenticator" | "home" | "drive" | "music",
+  source: "authenticator" | "home" | "drive" | "music" | "tv",
   onCustomize?: () => void
 }) {
   /*
@@ -74,7 +74,8 @@ export default function useSharedToolbar({
     if (
       source !== "home" &&
         source !== "drive" &&
-        source !== "music"
+        source !== "music" &&
+        source !== "tv"
     ) {
       return
     }

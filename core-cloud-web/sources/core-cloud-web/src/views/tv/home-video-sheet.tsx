@@ -1,8 +1,8 @@
 //
-//  song-sheet.tsx
+//  home-video-sheet.tsx
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/31.
+//  Created by Fang Ling on 2025/10/5.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,22 +17,22 @@
 //  limitations under the License.
 //
 
-import useSongSheet from "@/view-models/music/song-sheet"
+import useHomeVideoSheet from "@/view-models/tv/home-video-sheet"
 import { Fragment, useEffect } from "react"
 import AsyncImage from "ui/async-image"
 import { BoolBinding } from "ui/binding"
 import Grid from "ui/grid"
 import HStack from "ui/h-stack"
+import Image from "ui/image"
+import NewLocalizer from "ui/localizer"
+import { Picker, PickerOption } from "ui/picker"
 import Sheet from "ui/sheet"
 import Text from "ui/text"
 import TextField from "ui/text-field"
 import Toggle from "ui/toggle"
-import { Picker, PickerOption } from "ui/picker"
-import NewLocalizer from "ui/localizer"
 import ZStack from "ui/z-stack"
-import Image from "ui/image"
 
-export default function SongSheet({
+export default function HomeVideoSheet({
   isPresented,
   mode,
   onCreate,
@@ -42,48 +42,48 @@ export default function SongSheet({
   mode: "creation" | "modification",
   onCreate?: () => void,
   detail?: {
-    id?: number,
-    artworkURLs?: string,
-    title?: string,
-    artist?: string,
-    fileID?: number,
-    duration?: number
+    id?: number
   }
 }) {
-  const viewModel = useSongSheet({
+  const viewModel = useHomeVideoSheet({
     onCreate: onCreate,
     detail: detail
   })
 
   useEffect(() => {
-    if (mode === "modification" && detail?.id !== undefined) {
-      viewModel.viewDidAppear1()
+    if (mode === "modification" && detail?.id !== undefined)  {
+      /* TODO: Load home video detail. */
     }
-    viewModel.viewDidAppear2()
-    viewModel.viewDidAppear3()
+    viewModel.viewDidAppear1()
   }, [])
 
   return (
     <Sheet
       isPresented={isPresented}
-      closeButtonActiveBackgroundStyleClassName="active:bg-music-keyColor/16"
+      closeButtonActiveBackgroundStyleClassName="active:bg-systemBlue/16"
       primaryButton={
         mode === "creation"
           ? {
             backgroundStyleClassName: (
-              "bg-music-keyColor hover:bg-[#fb394f] active:bg-[#f90722]"
+              "bg-systemBlue hover:bg-[rgb(0,93,186)] " +
+                "dark:hover:bg-[rgb(41,169,255)] " +
+                "dark:active:bg-[rgb(82,186,255)] active:bg-[rgb(0,73,145)] "
             ),
             action: () => viewModel.createButtonDidClick(),
             disabled: (
               viewModel.title.value.length <= 0 ||
-                viewModel.artist.value.length <= 0 ||
-                viewModel.trackNumber.value.length <= 0 ||
-                viewModel.discNumber.value.length <= 0 ||
-                viewModel.playCount.value.length <= 0 ||
-                viewModel.sampleSize.value.length <= 0 ||
-                viewModel.sampleRate.value.length <= 0 ||
+                viewModel.cast.value.length <= 0 ||
+                viewModel.director.value.length <= 0 ||
+                viewModel.genre.value.length <= 0 ||
+                viewModel.tags.value.length <= 0 ||
+                viewModel.date.value.length <= 0 ||
+                viewModel.duration.value.length <= 0 ||
+                viewModel.artworkURLs.value.length <= 0 ||
+                viewModel.width.value.length <= 0 ||
+                viewModel.height.value.length <= 0 ||
+                viewModel.videoCodec.value.length <= 0 ||
+                viewModel.audioCodec.value.length <= 0 ||
                 +viewModel.selectedFileID.value <= 0 ||
-                +viewModel.selectedAlbumID.value <= 0 ||
                 viewModel.isLoading
             ),
             label: () => (
@@ -98,13 +98,13 @@ export default function SongSheet({
         heightClassName="h-9"
         marginClassName="mb-3.5"
         urls={
-          mode === "creation"
-            ? process.env.NEXT_PUBLIC_MUSIC_ICON_URLS?.split(",")
-            : detail?.artworkURLs?.split(",")
+          /*mode === "creation"
+          ? */process.env.NEXT_PUBLIC_TV_ICON_URLS?.split(",")
+          /*: detail?.artworkURLs?.split(",")*/
         }
       />
       <Text
-        textKey={mode === "creation" ? "New Song" : "Details"}
+        textKey={mode === "creation" ? "New Home Video" : "Details"}
         foregroundStyleClassName="text-labelPrimary"
         fontSizeClassName="text-[19px]"
         fontWeightClassName="font-semibold"
@@ -138,8 +138,7 @@ export default function SongSheet({
                   <Toggle
                     isOn={field.value}
                     tintClassName={
-                      "checked:bg-music-keyColor " +
-                        "checked:border-music-keyColor"
+                      "checked:bg-systemBlue checked:border-systemBlue"
                     }
                     marginClassName="mb-3.75"
                   >
@@ -154,7 +153,7 @@ export default function SongSheet({
               {
                 (
                   typeof field.value.value !== "boolean" &&
-                    (field.albums === undefined && field.files === undefined)
+                    field.files === undefined
                 ) && (
                   <TextField
                     text={field.value}
@@ -163,10 +162,10 @@ export default function SongSheet({
                     paddingClassName="px-2.5"
                     borderClassName={
                       "rounded-lg border border-gray3 focus:outline-3 " +
-                        "focus:outline-music-keyColor/70 " +
+                        "focus:outline-systemBlue/70 " +
                         "focus:-outline-offset-2"
                     }
-                    tintClassName="caret-music-keyColor"
+                    tintClassName="caret-systemBlue"
                     marginClassName="mb-3.75"
                     backgroundStyleClassName={
                       "hover:bg-fillQuaternary disabled:bg-fillQuaternary"
@@ -184,7 +183,7 @@ export default function SongSheet({
               {
                 (
                   typeof field.value.value !== "boolean" &&
-                    (field.albums !== undefined || field.files !== undefined)
+                    field.files !== undefined
                 ) && (
                   <ZStack
                     widthClassName="w-full"
@@ -195,15 +194,10 @@ export default function SongSheet({
                       heightClassName="h-9"
                       borderClassName={
                         "rounded-lg border border-gray3 focus:outline-3 " +
-                          "focus:outline-music-keyColor/70 " +
-                          "focus:-outline-offset-2"
+                          "focus:outline-systemBlue/70 focus:-outline-offset-2"
                       }
                       paddingClassName="pl-2.5 pr-8"
-                      selection={
-                        field.albums !== undefined
-                          ? viewModel.selectedAlbumID
-                          : viewModel.selectedFileID
-                      }
+                      selection={viewModel.selectedFileID}
                       backgroundStyleClassName={
                         "hover:bg-fillQuaternary disabled:bg-fillQuaternary"
                       }
@@ -221,34 +215,19 @@ export default function SongSheet({
                             tag="0"
                             disabled={true}
                           >
-                            {
-                              NewLocalizer.default.localize(
-                                field.albums !== undefined
-                                  ? "Choose an Album"
-                                  : "Choose a File"
-                              )
-                            }
+                            {NewLocalizer.default.localize("Choose a File")}
                           </PickerOption>
                         )
                       }
                       {
-                        field.albums !== undefined
-                          ? field.albums.map(album => (
-                            <PickerOption
-                              key={album.id}
-                              tag={album.id.toString()}
-                            >
-                              {`${album.artist}, ${album.name}, ${album.year}`}
-                            </PickerOption>
-                          ))
-                          : field.files.map(file => (
-                            <PickerOption
-                              key={file.id}
-                              tag={file.id.toString()}
-                            >
-                              {file.name}
-                            </PickerOption>
-                          ))
+                        field.files.map(file => (
+                          <PickerOption
+                            key={file.id}
+                            tag={file.id.toString()}
+                          >
+                            {file.name}
+                          </PickerOption>
+                        ))
                       }
                     </Picker>
 
@@ -280,7 +259,7 @@ export default function SongSheet({
       {
         viewModel.isError && (
           <Text
-            textKey="Unable to create song. Try again later."
+            textKey="Unable to create home video. Try again later."
             foregroundStyleClassName="text-[#e30000] dark:text-[#ff3037]"
             fontSizeClassName="text-sm"
             lineHeightClassName="leading-5"

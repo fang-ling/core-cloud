@@ -31,7 +31,7 @@ import { useEffect } from "react"
 import CoreCloudWeb from "@/core-cloud-web"
 
 export default function ContentView() {
-  const viewModel = useContentView({ })
+  const viewModel = useContentView()
 
   useEffect(() => {
     viewModel.viewDidAppear()

@@ -23,11 +23,7 @@ import SettingService from "@/services/setting-service"
 import UserService from "@/services/user-service"
 import { useState } from "react"
 
-export default function useContentView({
-
-}: {
-
-}) {
+export default function useContentView() {
   const [isCustomizationPresented, setIsCustomizationPresented] = useState(
     false
   )

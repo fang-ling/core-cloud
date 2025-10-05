@@ -52,9 +52,7 @@ namespace SongService {
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/api/songs?${queryString}`,
-        {
-          method: "GET"
-        }
+        { method: "GET" }
       )
       if (response.status === 200) {
         return (await response.json()) as Song.Plural.Output.Retrieval[]

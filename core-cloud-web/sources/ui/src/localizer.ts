@@ -67,8 +67,14 @@ export default class NewLocalizer {
     "Artwork URL": {
       "zh-TW": "插圖連結"
     },
+    "Audio Codec": {
+      "zh-TW": "音訊編碼"
+    },
     "Browse millions of songs and collect your favorites here.": {
       "zh-TW": "瀏覽上億首歌曲，並將你的喜好項目收藏於此。"
+    },
+    "Cast": {
+      "zh-TW": "演員"
     },
     "Choose a File": {
       "zh-TW": "選擇檔案"
@@ -82,14 +88,23 @@ export default class NewLocalizer {
     "Create": {
       "zh-TW": "建立"
     },
+    "Date": { /* Duplicate with the old localizer. */
+      "zh-TW": "日期"
+    },
     "Details": {
       "zh-TW": "詳細資訊"
+    },
+    "Director": {
+      "zh-TW": "導演"
     },
     "Disc Number": {
       "zh-TW": "光碟編號"
     },
     "Disc %lld": {
       "zh-TW": "光碟%lld"
+    },
+    "Drive": {
+      "zh-TW": "雲碟"
     },
     "Duration": {
       "zh-TW": "時長"
@@ -109,6 +124,12 @@ export default class NewLocalizer {
     "Get Info": {
       "zh-TW": "取得資訊"
     },
+    "Home Videos": {
+      "zh-TW": "本機影片"
+    },
+    "Height": {
+      "zh-TW": "高度"
+    },
     "Instrumental": {
       "zh-TW": "演奏曲"
     },
@@ -124,6 +145,9 @@ export default class NewLocalizer {
     "MPEG-4 Movie": {
       "zh-TW": "MPEG-4 影片"
     },
+    "Music": {
+      "zh-TW": "音樂"
+    },
     "Name": { /* Duplicate with the old localizer. */
       "zh-TW": "名稱"
     },
@@ -132,6 +156,9 @@ export default class NewLocalizer {
     },
     "New File": {
       "zh-TW": "新檔案"
+    },
+    "New Home Video": {
+      "zh-TW": "新本機影片"
     },
     "New Song": {
       "zh-TW": "新歌曲"
@@ -175,6 +202,12 @@ export default class NewLocalizer {
     "Soundtrack": {
       "zh-TW": "原聲帶"
     },
+    "Tag": {
+      "zh-TW": "標籤"
+    },
+    "The file contains HDR content": {
+      "zh-TW": "檔案包含 HDR 內容"
+    },
     "The song is popular on this album": {
       "zh-TW": "歌曲在專輯中受歡迎"
     },
@@ -191,11 +224,14 @@ master password.": {
     "Try entering it again.": {
       "zh-TW": "請嘗試再輸入一次。"
     },
-    "Year": {
-      "zh-TW": "年份"
+    "TV": {
+      "zh-TW": "TV"
     },
     "Unable to create album. Try again later.": {
       "zh-TW": "無法建立專輯。請稍後再試。"
+    },
+    "Unable to create home video. Try again later.": {
+      "zh-TW": "無法建立本機影片。請稍後再試。"
     },
     "Unable to create song. Try again later.": {
       "zh-TW": "無法建立歌曲。請稍後再試。"
@@ -208,6 +244,15 @@ master password.": {
     },
     "Uploading...": {
       "zh-TW": "上傳中…"
+    },
+    "Video Codec": {
+      "zh-TW": "影片編碼"
+    },
+    "Width": {
+      "zh-TW": "寬度"
+    },
+    "Year": {
+      "zh-TW": "年份"
     },
     "%lld item(s)": {
       "zh-TW": "%lld個項目"

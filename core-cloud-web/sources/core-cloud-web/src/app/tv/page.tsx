@@ -1,8 +1,8 @@
 //
-//  core-cloud-web.ts
+//  page.tsx
 //  core-cloud-web
 //
-//  Created by Fang Ling on 2025/8/10.
+//  Created by Fang Ling on 2025/10/5.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,23 +17,15 @@
 //  limitations under the License.
 //
 
-namespace CoreCloudWeb {
-  export const APPS = [
-    {
-      urls: process.env.NEXT_PUBLIC_DRIVE_ICON_URLS?.split(",") ?? [],
-      name: "Drive",
-      href: "/drive"
-    },
-    {
-      urls: process.env.NEXT_PUBLIC_MUSIC_ICON_URLS?.split(",") ?? [],
-      name: "Music",
-      href: "/music"
-    },
-    {
-      urls: process.env.NEXT_PUBLIC_TV_ICON_URLS?.split(",") ?? [],
-      name: "TV",
-      href: "/tv"
-    }
-  ]
+"use client"
+
+import dynamic from "next/dynamic"
+
+const ContentView = dynamic(
+  () => import("@/views/tv/content-view"),
+  { ssr: false }
+)
+
+export default function Page() {
+  return <ContentView />
 }
-export default CoreCloudWeb

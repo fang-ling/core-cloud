@@ -58,9 +58,9 @@ export default function useAlbumListView({
     album: string
   } | undefined>>
 }) {
-  /* MARK: Event handlers */
+  /* MARK: - Event handlers */
   async function viewDidAppear() {
-    let newAlbums = await AlbumService.fetchAlbums({
+    const newAlbums = await AlbumService.fetchAlbums({
       fields: "name,artist,artworkURLs"
     })
     setAlbums(
