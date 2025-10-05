@@ -97,7 +97,7 @@ struct HomeVideoController: RouteCollection {
         director: insertRequest.director,
         genre: insertRequest.genre,
         tags: insertRequest.tags,
-        date: insertRequest.date,
+        date: Date(timeIntervalSince1970: Double(insertRequest.date) / 1000),
         duration: insertRequest.duration,
         artworkURLs: insertRequest.artworkURLs,
         width: insertRequest.width,

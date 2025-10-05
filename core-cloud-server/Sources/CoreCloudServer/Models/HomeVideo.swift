@@ -164,7 +164,7 @@ extension HomeVideo.Singular.Input {
     var director: String
     var genre: String
     var tags: String
-    var date: Date
+    var date: Int64
     var duration: Int64
     var artworkURLs: String
     var width: Int64
