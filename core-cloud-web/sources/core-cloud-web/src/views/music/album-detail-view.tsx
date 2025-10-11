@@ -378,6 +378,7 @@ export default function AlbumDetailView({
                         }
                         lineHeightClassName="leading-4"
                         multilineTextAlignmentClassName="text-right"
+                        fontDesignClassName="tabular-nums"
                       />
                     </HStack>
                   </HStack>

@@ -243,6 +243,7 @@ export default function SongListContent({
                 marginClassName="mr-2.25"
                 multilineTextAlignmentClassName="text-left"
                 truncationClassName="truncate"
+                fontDesignClassName="tabular-nums"
               />
             </HStack>
           </GridRow>
