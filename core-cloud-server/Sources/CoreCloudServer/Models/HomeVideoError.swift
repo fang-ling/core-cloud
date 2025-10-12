@@ -19,4 +19,5 @@
 
 enum HomeVideoError: Error {
   case databaseError
+  case noSuchHomeVideo
 }

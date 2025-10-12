@@ -150,6 +150,7 @@ extension HomeVideo {
 
 extension HomeVideo.Singular {
   enum Input { }
+  enum Output { }
 }
 
 extension HomeVideo.Plural {
@@ -173,6 +174,27 @@ extension HomeVideo.Singular.Input {
     var videoCodec: String
     var audioCodec: String
     var fileID: Int64
+  }
+
+  struct Retrieval: Codable {
+    var id: Int64
+    var fields: String
+  }
+}
+
+extension HomeVideo.Singular.Output {
+  struct Retrieval: Codable {
+    var cast: String?
+    var director: String?
+    var genre: String?
+    var tags: String?
+    var date: Int64?
+    var duration: Int64?
+    var width: Int64?
+    var height: Int64?
+    var isHDR: Bool?
+    var videoCodec: String?
+    var audioCodec: String?
   }
 }
 

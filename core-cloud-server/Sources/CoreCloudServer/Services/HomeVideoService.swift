@@ -40,7 +40,7 @@ struct HomeVideoService {
    *   - audioCodec: The audio codec of the home video.
    *   - fileID: An identifier for the home video file.
    *   - userID: An identifier for the user adding the home video.
-   *   - database: The database instance where the song will be added.
+   *   - database: The database instance where the home video will be added.
    *
    * - Throws:
    *   - ``HomeVideoError/databaseError``: if there is an issue accessing the
@@ -132,6 +132,66 @@ struct HomeVideoService {
         )}
     } catch {
       throw HomeVideoError.databaseError
+    }
+  }
+
+  /**
+   * Returns the detail of the given home video.
+   *
+   * - Parameters:
+   *   - id: The unique identifier for the home video to retrieve.
+   *   - fields: The fields of the home video to retrieve.
+   *   - userID: An identifier for the user whose home video is being retrieved.
+   *   - database: The database instance from which the home video will be
+   *               fetched.
+   *
+   * - Returns: A tuple containing the detail of the home video.
+   *
+   * - Throws:
+   *   - ``HomeVideoError/databaseError``: if there is an issue accessing the
+   *                                       database.
+   *   - ``HomeVideoError/noSuchHomeVideo``: if the home video is not found.
+   */
+  func getHomeVideo(
+    with id: HomeVideo.IDValue,
+    fields: [String],
+    for userID: User.IDValue,
+    on database: Database
+  ) async throws -> (
+    cast: String?,
+    director: String?,
+    genre: String?,
+    tags: String?,
+    date: Date?,
+    duration: Int64?,
+    width: Int64?,
+    height: Int64?,
+    isHDR: Bool?,
+    videoCodec: String?,
+    audioCodec: String?
+  ) {
+    do {
+      guard let homeVideo = try await HomeVideo.query(on: database)
+        .filter(\.$user.$id == userID)
+        .filter(\.$id == id)
+        .first()
+      else {
+        throw HomeVideoError.noSuchHomeVideo
+      }
+
+      return (
+        cast: fields.contains("cast") ? homeVideo.cast : nil,
+        director: fields.contains("director") ? homeVideo.director : nil,
+        genre: fields.contains("genre") ? homeVideo.genre : nil,
+        tags: fields.contains("tags") ? homeVideo.tags : nil,
+        date: fields.contains("date") ? homeVideo.date : nil,
+        duration: fields.contains("duration") ? homeVideo.duration : nil,
+        width: fields.contains("width") ? homeVideo.width : nil,
+        height: fields.contains("height") ? homeVideo.height : nil,
+        isHDR: fields.contains("isHDR") ? homeVideo.isHDR : nil,
+        videoCodec: fields.contains("videoCodec") ? homeVideo.videoCodec : nil,
+        audioCodec: fields.contains("audioCodec") ? homeVideo.audioCodec : nil
+      )
     }
   }
 }

@@ -156,15 +156,15 @@ struct SongService {
    * - Parameters:
    *   - id: The unique identifier for the song to retrieve.
    *   - fields: The fields of the song to retrieve.
-   *   - userID: An identifier for the user whose songs are being retrieved.
-   *   - database: The database instance from which the songs will be fetched.
+   *   - userID: An identifier for the user whose song is being retrieved.
+   *   - database: The database instance from which the song will be fetched.
    *
    * - Returns: A tuple containing the detail of the song.
    *
    * - Throws:
    *   - ``SongError/databaseError``: if there is an issue accessing the
    *                                  database.
-   *   - ``SongError/noSuchSong``: if the album is not found.
+   *   - ``SongError/noSuchSong``: if the song is not found.
    */
   func getSong(
     with id: Song.IDValue,

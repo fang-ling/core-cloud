@@ -250,5 +250,111 @@ extension ServiceTests {
         #expect(homeVideos.first?.artworkURLs == "https://example.com/1.png")
       }
     }
+
+    @Test
+    func testGetHomeVideo() async throws {
+      let homeVideoService = HomeVideoService()
+
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        await #expect(throws: HomeVideoError.noSuchHomeVideo) {
+          try await homeVideoService.getHomeVideo(
+            with: 1,
+            fields: ["cast"],
+            for: 1,
+            on: app.db
+          )
+        }
+
+        let eva = User(
+          firstName: "Eva",
+          lastName: "Chan",
+          username: "eva@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await eva.save(on: app.db)
+
+        await #expect(throws: HomeVideoError.noSuchHomeVideo) {
+          try await homeVideoService.getHomeVideo(
+            with: 1,
+            fields: ["cast"],
+            for: eva.requireID(),
+            on: app.db
+          )
+        }
+
+        let location = try Location(
+          name: "Tank",
+          path: "/mnt/tank1",
+          userID: eva.requireID()
+        )
+        try await location.save(on: app.db)
+
+        let file = try File(
+          name: "test",
+          kind: "MPEG-4 Movie",
+          size: 123,
+          checksum: Data(),
+          application: "TV",
+          decryptionKeySealedBox: Data(),
+          locationID: 1,
+          userID: eva.requireID()
+        )
+        try await file.save(on: app.db)
+
+        let homeVideo = try HomeVideo(
+          title: "test",
+          cast: "Alice",
+          director: "Lorna",
+          genre: "Vlog",
+          tags: "",
+          date: Date(timeIntervalSince1970: 19342),
+          duration: 19358,
+          artworkURLs: "https://example.com/1.png",
+          width: 1920,
+          height: 1080,
+          isHDR: false,
+          videoCodec: "H.264",
+          audioCodec: "ALAC",
+          fileID: file.requireID(),
+          userID: eva.requireID()
+        )
+        try await homeVideo.save(on: app.db)
+
+        let homeVideoDetail = try await homeVideoService.getHomeVideo(
+          with: homeVideo.requireID(),
+          fields: ["cast", "videoCodec"],
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(homeVideoDetail.cast == "Alice")
+        #expect(homeVideoDetail.videoCodec == "H.264")
+        #expect(homeVideoDetail.director == nil)
+
+        let alice = User(
+          firstName: "Alice",
+          lastName: "Ou",
+          username: "alice@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await alice.save(on: app.db)
+
+        await #expect(throws: HomeVideoError.noSuchHomeVideo) {
+          try await homeVideoService.getHomeVideo(
+            with: homeVideo.requireID(),
+            fields: ["cast"],
+            for: alice.requireID(),
+            on: app.db
+          )
+        }
+      }
+    }
   }
 }

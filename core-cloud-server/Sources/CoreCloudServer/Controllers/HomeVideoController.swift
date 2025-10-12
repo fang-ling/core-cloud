@@ -34,6 +34,11 @@ struct HomeVideoController: RouteCollection {
       .grouped("api")
       .grouped("home-videos")
       .get(use: fetchHomeVideosHandler)
+
+    routes
+      .grouped("api")
+      .grouped("home-video")
+      .get(use: fetchHomeVideoHandler)
   }
 
   /**
@@ -176,6 +181,83 @@ struct HomeVideoController: RouteCollection {
           )
         )
       )
+    } catch HomeVideoError.databaseError {
+      return Response(status: .serviceUnavailable)
+    } catch {
+      return Response(status: .internalServerError)
+    }
+  }
+
+  /**
+   * - URL: GET /api/home-video
+   *
+   * - Response Codes:
+   *   - 200 OK: The home video is returned.
+   *   - 401 Unauthorized: The authentication is required and has failed.
+   *   - 404 Not Found: The home video is not found.
+   *   - 500 Internal Server Error: A response indicating an error occurred on
+   *                                the server.
+   *   - 503 Service Unavailable: A response indicating that the server is not
+   *                              ready to handle the request.
+   */
+  func fetchHomeVideoHandler(request: Request) async -> Response {
+    let userID: User.IDValue
+    do {
+      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let id = try await userTokenService.verifyUserToken(
+        from: jwt ?? ""
+      ) { token in
+        try await request.jwt.verify(token)
+      }
+      userID = id
+    } catch {
+      return Response(status: .unauthorized)
+    }
+
+    let fetchRequest: HomeVideo.Singular.Input.Retrieval
+    do {
+      fetchRequest = try request.query.decode(
+        HomeVideo.Singular.Input.Retrieval.self
+      )
+    } catch {
+      return Response(status: .badRequest)
+    }
+
+    do {
+      let homeVideo = try await homeVideoService.getHomeVideo(
+        with: fetchRequest.id,
+        fields: fetchRequest.fields.components(separatedBy: ","),
+        for: userID,
+        on: request.db
+      )
+
+      return try Response(
+        status: .ok,
+        headers: .init([("Content-Type", "application/json")]),
+        body: .init(
+          data: CoreCloudServer.encoder.encode(
+            HomeVideo.Singular.Output.Retrieval(
+              cast: homeVideo.cast,
+              director: homeVideo.director,
+              genre: homeVideo.genre,
+              tags: homeVideo.tags,
+              date: (
+                homeVideo.date != nil
+                  ? Int64(homeVideo.date!.timeIntervalSince1970 * 1000)
+                  : nil
+              ),
+              duration: homeVideo.duration,
+              width: homeVideo.width,
+              height: homeVideo.height,
+              isHDR: homeVideo.isHDR,
+              videoCodec: homeVideo.videoCodec,
+              audioCodec: homeVideo.audioCodec
+            )
+          )
+        )
+      )
+    } catch HomeVideoError.noSuchHomeVideo {
+      return Response(status: .notFound)
     } catch HomeVideoError.databaseError {
       return Response(status: .serviceUnavailable)
     } catch {

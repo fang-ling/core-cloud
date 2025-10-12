@@ -46,6 +46,14 @@ extension ControllerTests {
       )
 
       try await app.testing().test(
+        .GET,
+        "api/home-video",
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
+
+      try await app.testing().test(
         .POST,
         "api/user",
         beforeRequest: { request async throws in
@@ -450,6 +458,29 @@ extension ControllerTests {
           #expect(homeVideos.first?.id == 1)
           #expect(homeVideos.first?.title == "test")
           #expect(homeVideos.first?.fileID == 3)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/home-video?fields=cast,audioCodec&id=1",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .ok)
+
+          let homeVideo = try response.content.decode(
+            HomeVideo.Singular.Output.Retrieval.self
+          )
+          #expect(homeVideo.cast == "Alice")
+          #expect(homeVideo.audioCodec == "ALAC")
+          #expect(homeVideo.videoCodec == nil)
         }
       )
     }
