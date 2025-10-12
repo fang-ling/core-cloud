@@ -167,14 +167,21 @@ export default function useSongSheet({
     })
 
     setAlbums(
-      newAlbums.map(album => {
-        return {
-          id: album.id,
-          name: album.name ?? "",
-          artist: album.artist ?? "",
-          year: album.year ?? 0
-        }
-      })
+      newAlbums
+        .sort((lhs, rhs) => {
+          if (lhs.name?.localeCompare(rhs.name ?? "") === 0) {
+            return lhs.artist?.localeCompare(rhs.artist ?? "") ?? 0
+          }
+          return lhs.name?.localeCompare(rhs.name ?? "") ?? 0
+        })
+        .map(album => {
+          return {
+            id: album.id,
+            name: album.name ?? "",
+            artist: album.artist ?? "",
+            year: album.year ?? 0
+          }
+        })
     )
   }
 
@@ -185,12 +192,14 @@ export default function useSongSheet({
     })
 
     setFiles(
-      newFiles.map(file => {
-        return {
-          id: file.id,
-          name: file.name ?? ""
-        }
-      })
+      newFiles
+        .sort((lhs, rhs) => lhs.name?.localeCompare(rhs.name ?? "") ?? 0)
+        .map(file => {
+          return {
+            id: file.id,
+            name: file.name ?? ""
+          }
+        })
     )
   }
 

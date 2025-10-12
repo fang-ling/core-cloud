@@ -77,12 +77,14 @@ export default function useHomeVideoSheet({
     })
 
     setFiles(
-      newFiles.map(file => {
-        return {
-          id: file.id,
-          name: file.name ?? ""
-        }
-      })
+      newFiles
+        .sort((lhs, rhs) => lhs.name?.localeCompare(rhs.name ?? "") ?? 0)
+        .map(file => {
+          return {
+            id: file.id,
+            name: file.name ?? ""
+          }
+        })
     )
   }
 
