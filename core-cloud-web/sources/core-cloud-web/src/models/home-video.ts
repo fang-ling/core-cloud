@@ -36,6 +36,27 @@ namespace HomeVideo {
         audioCodec: string
         fileID: number
       }
+
+      export type Retrieval = {
+        id: string
+        fields: string
+      }
+    }
+
+    export namespace Output {
+      export type Retrieval = {
+        cast?: string
+        director?: string
+        genre?: string
+        tags?: string
+        date?: number
+        duration?: number
+        width?: number
+        height?: number
+        isHDR?: boolean
+        videoCodec?: string
+        audioCodec?: string
+      }
     }
   }
 

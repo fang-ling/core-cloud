@@ -28,23 +28,26 @@ export default function useHomeVideoSheet({
 }: {
   onCreate?: () => void,
   detail?: {
-    id?: number
+    id: number,
+    title: string,
+    artworkURLs: string,
+    fileID: number
   }
 }) {
-  const title = useBinding(/*detail?.title ?? */"")
+  const title = useBinding(detail?.title ?? "")
   const cast = useBinding("")
   const director = useBinding("")
   const genre = useBinding("")
   const tags = useBinding("")
   const date = useBinding("")
   const duration = useBinding("")
-  const artworkURLs = useBinding("")
+  const artworkURLs = useBinding(detail?.artworkURLs ?? "")
   const width = useBinding("")
   const height = useBinding("")
   const isHDR = useBinding(false)
   const videoCodec = useBinding("")
   const audioCodec = useBinding("")
-  const selectedFileID = useBinding("0")
+  const selectedFileID = useBinding(detail?.fileID.toString() ?? "0")
   const [files, setFiles] = useState<{ id: number, name: string}[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
@@ -81,6 +84,40 @@ export default function useHomeVideoSheet({
         }
       })
     )
+  }
+
+  async function viewDidAppear2() {
+    const homeVideo = await HomeVideoService.fetchHomeVideo({
+      id: detail?.id.toString() ?? "0",
+      fields: [
+        "cast",
+        "director",
+        "genre",
+        "tags",
+        "date",
+        "duration",
+        "width",
+        "height",
+        "isHDR",
+        "videoCodec",
+        "audioCodec"
+      ]
+        .join(",")
+    })
+
+    if (homeVideo) {
+      cast.setValue(homeVideo.cast ?? "")
+      director.setValue(homeVideo.director ?? "")
+      genre.setValue(homeVideo.genre ?? "")
+      tags.setValue(homeVideo.tags ?? "")
+      date.setValue(homeVideo.date?.toString() ?? "")
+      duration.setValue(homeVideo.duration?.toString() ?? "")
+      width.setValue(homeVideo.width?.toString() ?? "")
+      height.setValue(homeVideo.height?.toString() ?? "")
+      isHDR.setValue(homeVideo.isHDR ?? false)
+      videoCodec.setValue(homeVideo.videoCodec ?? "")
+      audioCodec.setValue(homeVideo.audioCodec ?? "")
+    }
   }
 
   async function createButtonDidClick() {
@@ -135,6 +172,7 @@ export default function useHomeVideoSheet({
     isError,
     fields,
     viewDidAppear1,
+    viewDidAppear2,
     createButtonDidClick
   }
 }

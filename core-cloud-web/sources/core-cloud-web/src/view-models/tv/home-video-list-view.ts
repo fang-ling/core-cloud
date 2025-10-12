@@ -18,6 +18,8 @@
 //
 
 import HomeVideoService from "@/services/home-video-service"
+import { useState } from "react"
+import { useBinding } from "ui/binding"
 
 export default function useHomeVideoListView({
   setHomeVideos
@@ -29,6 +31,12 @@ export default function useHomeVideoListView({
     fileID: number
   }[]>>
 }) {
+  const isHomeVideoSheetPresented = useBinding(false)
+  const [
+    selectedHomeVideoID,
+    setSelectedHomeVideoID
+  ] = useState<number | undefined>(undefined)
+
   /* MARK: - Event handlers */
   async function viewDidAppear() {
     const newHomeVideos = await HomeVideoService.fetchHomeVideos({
@@ -46,7 +54,15 @@ export default function useHomeVideoListView({
     )
   }
 
+  function getInfoButtonDidClick(newSelectedHomeVideoID: number) {
+    setSelectedHomeVideoID(newSelectedHomeVideoID)
+    isHomeVideoSheetPresented.toggle()
+  }
+
   return {
-    viewDidAppear
+    isHomeVideoSheetPresented,
+    selectedHomeVideoID,
+    viewDidAppear,
+    getInfoButtonDidClick
   }
 }

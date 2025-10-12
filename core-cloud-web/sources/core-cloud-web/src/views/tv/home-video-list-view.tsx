@@ -30,6 +30,7 @@ import ZStack from "ui/z-stack"
 import ContentMode from "ui/content-mode"
 import Button from "ui/button"
 import Image from "ui/image"
+import HomeVideoSheet from "./home-video-sheet"
 
 export default function HomeVideoListView({
   homeVideos,
@@ -197,7 +198,7 @@ export default function HomeVideoListView({
                           positionClassName="absolute bottom-2.5 right-2.5"
                           propagationStopped={true}
                           action={() => {
-
+                            viewModel.getInfoButtonDidClick(homeVideo.id)
                           }}
                         >
                           <Image
@@ -230,6 +231,18 @@ export default function HomeVideoListView({
       {/* Empty */}
       {
         homeVideos.length <= 0 && <EmptyView />
+      }
+
+      {
+        viewModel.isHomeVideoSheetPresented.value && (
+          <HomeVideoSheet
+            isPresented={viewModel.isHomeVideoSheetPresented}
+            mode="modification"
+            detail={
+              homeVideos.find(h => h.id === viewModel.selectedHomeVideoID)
+            }
+          />
+        )
       }
 
       <video

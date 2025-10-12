@@ -42,7 +42,10 @@ export default function HomeVideoSheet({
   mode: "creation" | "modification",
   onCreate?: () => void,
   detail?: {
-    id?: number
+    id: number,
+    title: string,
+    artworkURLs: string,
+    fileID: number
   }
 }) {
   const viewModel = useHomeVideoSheet({
@@ -51,8 +54,8 @@ export default function HomeVideoSheet({
   })
 
   useEffect(() => {
-    if (mode === "modification" && detail?.id !== undefined)  {
-      /* TODO: Load home video detail. */
+    if (mode === "modification" && detail !== undefined)  {
+      viewModel.viewDidAppear2()
     }
     viewModel.viewDidAppear1()
   }, [])
@@ -97,11 +100,7 @@ export default function HomeVideoSheet({
         widthClassName="w-9"
         heightClassName="h-9"
         marginClassName="mb-3.5"
-        urls={
-          /*mode === "creation"
-          ? */process.env.NEXT_PUBLIC_TV_ICON_URLS?.split(",")
-          /*: detail?.artworkURLs?.split(",")*/
-        }
+        urls={process.env.NEXT_PUBLIC_TV_ICON_URLS?.split(",")}
       />
       <Text
         textKey={mode === "creation" ? "New Home Video" : "Details"}
