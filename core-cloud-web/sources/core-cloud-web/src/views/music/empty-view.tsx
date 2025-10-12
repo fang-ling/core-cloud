@@ -24,7 +24,10 @@ import VStack from "ui/v-stack"
 
 export default function EmptyView() {
   return (
-    <VStack heightClassName="h-full">
+    <VStack
+      widthClassName="w-full"
+      heightClassName="h-full"
+    >
       <Spacer />
 
       <Image
