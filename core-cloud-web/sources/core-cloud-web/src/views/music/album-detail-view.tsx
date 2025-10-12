@@ -288,14 +288,6 @@ export default function AlbumDetailView({
                     onClick={() => viewModel.trackListItemDidClick(song.id)}
                     onDoubleClick={() => {
                       viewModel.trackListItemDidDoubleClick(
-                        {
-                          id: song.id,
-                          artworkURLs: song.artworkURLs,
-                          fileID: song.fileID,
-                          title: song.title,
-                          artist: song.artist,
-                          album: album.name
-                        },
                         song.discNumber,
                         song.trackNumber
                       )

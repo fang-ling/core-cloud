@@ -126,21 +126,11 @@ export default function useAlbumDetailView({
   }
 
   function trackListItemDidDoubleClick(
-    clickedItem: {
-      id: number,
-      artworkURLs: string[],
-      fileID: number,
-      title: string,
-      artist: string,
-      album: string
-    },
     discNumber: number,
     trackNumber: number
   ) {
-    setCurrentPlayingSong(clickedItem)
-
     const newSongs = songs.filter(song => {
-      if (song.discNumber < trackNumber) {
+      if (song.discNumber < discNumber) {
         return false
       } else if (song.discNumber === discNumber) {
         return song.trackNumber >= trackNumber
