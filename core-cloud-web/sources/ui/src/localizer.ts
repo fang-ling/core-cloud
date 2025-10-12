@@ -46,6 +46,9 @@ export default class NewLocalizer {
     "Add Music to Your Library": {
       "zh-TW": "將音樂加入資料庫"
     },
+    "Add to Your Library": {
+      "zh-TW": "加入到你的資料庫"
+    },
     "Album": {
       "zh-TW": "專輯"
     },
@@ -72,6 +75,9 @@ export default class NewLocalizer {
     },
     "Browse millions of songs and collect your favorites here.": {
       "zh-TW": "瀏覽上億首歌曲，並將你的喜好項目收藏於此。"
+    },
+    "Browse thousands of movies and TV shows.": {
+      "zh-TW": "瀏覽上千部電影和電視節目。"
     },
     "Cast": {
       "zh-TW": "演員"

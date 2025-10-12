@@ -22,6 +22,7 @@ import { useEffect, useRef, useState } from "react"
 import AsyncImage from "ui/async-image"
 import Text from "ui/text"
 import VStack from "ui/v-stack"
+import EmptyView from "./empty-view"
 
 export default function HomeVideoListView({
   homeVideos,
@@ -123,7 +124,10 @@ export default function HomeVideoListView({
         )
       }
 
-      {/* TODO: Add empty view. */}
+      {/* Empty */}
+      {
+        homeVideos.length <= 0 && <EmptyView />
+      }
 
       <video
         className={!tempURL ? "hidden" : ""}
