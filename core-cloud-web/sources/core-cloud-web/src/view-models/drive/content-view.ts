@@ -21,6 +21,7 @@ import Localizer from "@/localizer"
 import LocationService from "@/services/location-service"
 import { useState } from "react"
 import { useBinding } from "ui/binding"
+import NewLocalizer from "ui/localizer"
 
 export default function useContentView() {
   const [isLoading, setIsLoading] = useState(true)
@@ -28,7 +29,7 @@ export default function useContentView() {
   const [isSidebarOn, setIsSidebarOn] = useState(true)
   const [sections, setSections] = useState([
     {
-      header: Localizer.default().localize("Drive"),
+      header: NewLocalizer.default.localize("Drive"),
       items: [
         {
           key: "recents",
