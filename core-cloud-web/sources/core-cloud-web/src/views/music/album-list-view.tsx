@@ -179,6 +179,7 @@ export default function AlbumListView({
                           <Image
                             systemName="play.fill"
                             widthClassName="w-3"
+                            marginClassName="ml-0.25"
                             foregroundStyleClassName="fill-white"
                           />
                         </Button>
