@@ -40,7 +40,7 @@ struct DiskController: RouteCollection {
    */
   func fetchDisksHandler(request: Request) async -> Response {
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       try await request.jwt.verify(jwt ?? "", as: UserToken.self)
     } catch {
       return Response(status: .unauthorized)

@@ -58,7 +58,7 @@ struct HomeVideoController: RouteCollection {
   func insertHomeVideoHandler(request: Request) async -> HTTPStatus {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
@@ -137,7 +137,7 @@ struct HomeVideoController: RouteCollection {
   func fetchHomeVideosHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
@@ -203,7 +203,7 @@ struct HomeVideoController: RouteCollection {
   func fetchHomeVideoHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in

@@ -64,7 +64,7 @@ struct SongController: RouteCollection {
   func insertSongHandler(request: Request) async -> HTTPStatus {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
@@ -154,7 +154,7 @@ struct SongController: RouteCollection {
   func fetchSongsHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
@@ -224,7 +224,7 @@ struct SongController: RouteCollection {
   func fetchSongHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
@@ -298,7 +298,7 @@ struct SongController: RouteCollection {
   func modifySongHandler(request: Request) async -> HTTPStatus {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in

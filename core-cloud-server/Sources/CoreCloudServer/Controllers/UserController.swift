@@ -143,7 +143,7 @@ struct UserController: RouteCollection {
   func fetchUserHandler(request: Request) async -> Response {
     let id: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let userToken = try await request.jwt.verify(
         jwt ?? "",
         as: UserToken.self

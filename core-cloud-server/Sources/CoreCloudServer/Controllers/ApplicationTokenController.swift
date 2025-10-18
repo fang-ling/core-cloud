@@ -52,7 +52,7 @@ struct ApplicationTokenController: RouteCollection {
   func insertApplicationTokenHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let userToken = try await request.jwt.verify(
         jwt ?? "",
         as: UserToken.self
@@ -119,15 +119,14 @@ struct ApplicationTokenController: RouteCollection {
    */
   func peekApplicationTokenHandler(request: Request) async -> HTTPStatus {
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       try await request.jwt.verify(jwt ?? "", as: UserToken.self)
     } catch {
       return .unauthorized
     }
 
     guard let _ = request
-      .headers
-      .cookie?
+      .cookies
       .all[CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME]?
       .string
     else {

@@ -51,7 +51,7 @@ struct LocationController: RouteCollection {
   func insertLocationHandler(request: Request) async -> HTTPStatus {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let userToken = try await request.jwt.verify(
         jwt ?? "",
         as: UserToken.self
@@ -103,7 +103,7 @@ struct LocationController: RouteCollection {
   func fetchLocationsHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let userToken = try await request.jwt.verify(
         jwt ?? "",
         as: UserToken.self

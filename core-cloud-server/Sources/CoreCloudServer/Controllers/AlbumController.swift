@@ -57,7 +57,7 @@ struct AlbumController: RouteCollection {
   func insertAlbumHandler(request: Request) async -> HTTPStatus {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
@@ -110,7 +110,7 @@ struct AlbumController: RouteCollection {
   func fetchAlbumsHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
@@ -177,7 +177,7 @@ struct AlbumController: RouteCollection {
   func fetchAlbumHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in

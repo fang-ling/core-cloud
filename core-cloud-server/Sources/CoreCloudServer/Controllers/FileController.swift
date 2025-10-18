@@ -15,6 +15,14 @@ struct FileController: RouteCollection {
 
   func boot(routes: any RoutesBuilder) throws {
     routes
+      .grouped("ws")
+      .grouped("file")
+      .webSocket(
+        maxFrameSize: WebSocketMaxFrameSize(integerLiteral: 4 * 1024 * 1024),
+        onUpgrade: insertFileHandler
+      )
+
+    routes
       .grouped("api")
       .grouped("file")
       .on(.POST, body: .stream, use: insertFileHandler)
@@ -30,6 +38,281 @@ struct FileController: RouteCollection {
       .get(use: fetchFilesHandler)
   }
 
+  /**
+   * The WebSocket-based uploader exists only as a stopgap for large file
+   * uploads.
+   * WebKit currently lacks support for ReadableStream in fetch request bodies,
+   * which prevents efficient streaming over plain HTTP. This implementation
+   * works around that limitation but is significantly slower and less optimal.
+   * Once WebKit adds ReadableStream support (or our clients can polyfill it),
+   * plan to retire this WebSocket path in favor of a proper streaming HTTP
+   * upload.
+   */
+  func insertFileHandler(request: Request, webSocket: WebSocket) async {
+    @Sendable
+    func removeFiles(at path: FilePath, fileID: Int64) async throws {
+      _ = try await FileSystem.shared.withDirectoryHandle(
+        atPath: path
+      ) { directory in
+        for try await entry in directory.listContents() {
+          if (
+            entry.name.stem.starts(with: "\(fileID)-") &&
+            entry.name.extension == "sealedbox"
+          ) {
+            request.logger.notice("\(entry.path) is deleted.")
+            try await FileSystem.shared.removeItem(at: entry.path)
+          }
+        }
+      }
+    }
+
+    actor FilePathStore {
+      var path = FilePath()
+
+      func update(_ path: FilePath) {
+        self.path = path
+      }
+
+      func get() -> FilePath {
+        return path
+      }
+    }
+
+    actor IndexStore {
+      var index: Int64 = 0
+
+      func update(_ index: Int64) {
+        self.index = index
+      }
+
+      func get() -> Int64 {
+        return index
+      }
+    }
+
+    actor SizeStore {
+      var size: Int64 = 0
+
+      func update(_ size: Int64) {
+        self.size = size
+      }
+
+      func get() -> Int64 {
+        return size
+      }
+    }
+
+    actor HasherStore {
+      var hasher = SHA512()
+
+      func update(_ hasher: SHA512) {
+        self.hasher = hasher
+      }
+
+      func get() -> SHA512 {
+        return hasher
+      }
+    }
+
+    let userID: User.IDValue
+    do {
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
+      let id = try await userTokenService.verifyUserToken(
+        from: jwt ?? ""
+      ) { token in
+        try await request.jwt.verify(token)
+      }
+      userID = id
+    } catch {
+      request.logger.notice("JWT verify failed: \(request.cookies)")
+      try? await webSocket.close()
+      return
+    }
+
+    guard let token = request
+      .cookies
+      .all[CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME]?
+      .string,
+          let decryptionKeySealedBoxKeyData = Data(base64Encoded: token)
+    else {
+      request.logger.notice("Unauthorized: \(request.cookies)")
+      try? await webSocket.close()
+      return
+    }
+
+    let key = SymmetricKey(size: .bits256)
+    let decryptionKeySealedBoxKey = SymmetricKey(
+      data: decryptionKeySealedBoxKeyData
+    )
+    let decryptionKeySealedBox: AES.GCM.SealedBox
+    do {
+      decryptionKeySealedBox = try AES.GCM.seal(
+        key.withUnsafeBytes({ Data($0) }),
+        using: decryptionKeySealedBoxKey
+      )
+    } catch {
+      request.logger.notice("Unauthorized: \(request.cookies)")
+      try? await webSocket.close()
+      return
+    }
+
+    let file = File(
+      name: "",
+      kind: "",
+      size: 0,
+      checksum: Data(),
+      application: "",
+      decryptionKeySealedBox: decryptionKeySealedBox.combined ?? Data(),
+      locationID: 0,
+      userID: userID
+    )
+
+    let pathStore = FilePathStore()
+    let indexStore = IndexStore()
+    let sizeStore = SizeStore()
+    let hasherStore = HasherStore()
+
+    webSocket.onText { webSocket, message in
+      guard let data = message.data(using: .utf8),
+            let json = try? JSONSerialization.jsonObject(
+              with: data
+            ) as? [String: Any],
+            let type = json["type"] as? String else {
+        return
+      }
+
+      switch type {
+      case "metadata":
+        guard let name = json["name"] as? String,
+              let kind = json["kind"] as? String,
+              let size = json["size"] as? Int64,
+              let checksum = json["checksum"] as? String,
+              let application = json["application"] as? String,
+              let locationID = json["locationID"] as? Int64
+        else {
+          request.logger.notice("Bad Request in metadata WebSocket")
+          try? await webSocket.close()
+          return
+        }
+
+        file.name = name
+        file.kind = kind
+        file.size = size
+        file.checksum = Data(base64Encoded: checksum) ?? Data()
+        file.application = application
+        file.$location.id = locationID
+
+        do {
+          try await file.save(on: request.db)
+        } catch {
+          request.logger.notice("Bad Request: \(file)")
+          try? await webSocket.close()
+        }
+
+        do {
+          let location = try await Location.query(on: request.db)
+            .filter(\.$id == file.$location.id)
+            .filter(\.$user.$id == userID)
+            .first()
+
+          let path = try await pathStore
+            .get()
+            .appending(location?.path ?? "")
+            .appending("\(location?.requireID() ?? 0)")
+            .appending("\(userID)")
+            .appending("\(file.application)")
+            .appending("\(file.requireID())")
+          await pathStore.update(path)
+
+          let info = try await FileSystem.shared.info(forFileAt: path)
+          if info == nil {
+            request.logger.notice("Creating: \(path)")
+            try await FileSystem.shared.createDirectory(
+              at: path,
+              withIntermediateDirectories: true
+            )
+          }
+        } catch {
+          request.logger.notice("Bad Request: \(file)")
+          try? await file.delete(on: request.db)
+          try? await webSocket.close()
+        }
+
+        try? await webSocket.send(#"{"status":"metadata"}"#)
+
+      case "complete":
+        let hasher = await hasherStore.get()
+        let serverChecksum = hasher.finalize()
+        let actualSize = await sizeStore.get()
+        let path = await pathStore.get()
+
+        if Data(serverChecksum) != file.checksum || actualSize != file.size {
+          request.logger.notice(
+            "\((try? file.requireID()) ?? -1) checksum or size not matched"
+          )
+          try? await removeFiles(at: path, fileID: file.requireID())
+          try? await file.delete(on: request.db)
+          try? await webSocket.close()
+        }
+        try? await webSocket.send(#"{"status":"ok"}"#)
+        try? await webSocket.close()
+
+      default: break
+      }
+    }
+
+    webSocket.onBinary { webSocket, byteBuffer in
+      var byteBuffer = byteBuffer
+
+      var hasher = await hasherStore.get()
+      let path = await pathStore.get()
+      let index = await indexStore.get()
+      let size = await sizeStore.get()
+      do {
+        let count = Int64(byteBuffer.readableBytes)
+        if let buffer = byteBuffer.readData(length: Int(count)) {
+          /* Update digest */
+          hasher.update(data: buffer)
+
+          /* Encryption */
+          let sealedBox = try AES.GCM.seal(buffer, using: key)
+
+          /* Write the file */
+          let filePath = try path.appending(
+            "\(file.requireID())-\(index).sealedbox"
+          )
+          request.logger.notice("Writing file at: \(filePath)")
+          _ = try await FileSystem.shared.withFileHandle(
+            forWritingAt: filePath
+          ) { file in
+            try await file.write(
+              contentsOf: sealedBox.combined!,
+              toAbsoluteOffset: 0
+            )
+          }
+        }
+
+        await hasherStore.update(hasher)
+        await indexStore.update(index + 1)
+        await sizeStore.update(size + count)
+      } catch {
+        request.logger.error("\(error)")
+        try? await removeFiles(at: path, fileID: file.requireID())
+        try? await file.delete(on: request.db)
+        try? await webSocket.close()
+      }
+
+      try? await webSocket.send(#"{"status":"chunk"}"#)
+    }
+
+    try? await webSocket.send(#"{"status":"ready"}"#)
+  }
+
+  /**
+   * We are intentionally keeping the HTTP upload path enabled.
+   * The current testing framework relies on HTTP-based uploads to validate
+   * file handling behavior
+   */
   func insertFileHandler(request: Request) async -> HTTPStatus {
     func saveFile(
       byteBuffer: inout ByteBuffer,
@@ -77,7 +360,7 @@ struct FileController: RouteCollection {
 
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
@@ -89,8 +372,7 @@ struct FileController: RouteCollection {
     }
 
     guard let token = request
-      .headers
-      .cookie?
+      .cookies
       .all[CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME]?
       .string,
           let decryptionKeySealedBoxKeyData = Data(base64Encoded: token)
@@ -243,7 +525,7 @@ struct FileController: RouteCollection {
   func fetchFileHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
@@ -255,8 +537,7 @@ struct FileController: RouteCollection {
     }
 
     guard let token = request
-      .headers
-      .cookie?
+      .cookies
       .all[CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME]?
       .string,
           let decryptionKeySealedBoxKeyData = Data(base64Encoded: token)
@@ -446,7 +727,7 @@ struct FileController: RouteCollection {
   func fetchFilesHandler(request: Request) async -> Response {
     let userID: User.IDValue
     do {
-      let jwt = request.headers.cookie?.all[CoreCloudServer.COOKIE_NAME]?.string
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
