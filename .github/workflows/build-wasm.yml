@@ -23,7 +23,7 @@ jobs:
              -s STANDALONE_WASM=1 \
              -s EXPORTED_FUNCTIONS='["_SHA512_Init","_SHA512_Update","_SHA512_Final","_malloc","_free"]' \
              -s EXPORTED_RUNTIME_METHODS='["cwrap","getValue","setValue"]' \
-             -Wl.--no-entry
+             -Wl,--no-entry
 
     - name: Create artifacts
       run: |
