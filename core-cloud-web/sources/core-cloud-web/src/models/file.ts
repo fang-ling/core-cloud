@@ -23,10 +23,10 @@ namespace File {
       export type Insertion = {
         name: string
         kind: string
-        size: string
+        size: number
         checksum: string
         application: string
-        locationID: string
+        locationID: number
       }
     }
   }

@@ -44,28 +44,91 @@ namespace FileService {
 
   export async function insertFile({
     request,
-    file
+    file,
+    onSuccess
   }: {
     request: File.Singular.Input.Insertion,
-    file: File
-  }): Promise<boolean> {
-    try {
-      const queryString = new URLSearchParams(request).toString()
+    file: File,
+    onSuccess: () => void
+  }) {
+    /* Load wasm */
+    const wasmResponse = await fetch("/sha512.wasm")
+    const wasmBytes = await wasmResponse.arrayBuffer()
+    const { instance: wasmInstance } = await WebAssembly.instantiate(wasmBytes)
+    const wasm = wasmInstance.exports
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/file?${queryString}`,
-        {
-          method: "POST",
-          body: file
+    /* Compute hash */
+    const {
+      SHA512_Init,
+      SHA512_Update,
+      SHA512_Final,
+      malloc,
+      memory,
+      free
+    } = wasm as any
+    const contextPointer = malloc(8 * 10 + 128 /* sizeof(SHA512_CTX) */)
+    SHA512_Init(contextPointer)
+
+    const chunkSize = 4 * 1024 * 1024
+    let offset = 0
+    while (offset < file.size) {
+      const slice = file.slice(offset, offset + chunkSize)
+      const arrayBuffer = await slice.arrayBuffer()
+      const data = new Uint8Array(arrayBuffer)
+
+      const dataPointer = malloc(data.length)
+      new Uint8Array(memory.buffer, dataPointer, data.length)
+        .set(data)
+      SHA512_Update(contextPointer, dataPointer, data.length)
+      free(dataPointer)
+
+      offset += chunkSize
+    }
+
+    const digestPointer = malloc(64 /* 512/8 */)
+    SHA512_Final(digestPointer, contextPointer)
+    const digest = new Uint8Array(memory.buffer, digestPointer, 64 /* 512/8 */)
+    request.checksum = btoa(String.fromCharCode(...digest))
+
+    free(contextPointer)
+    free(digestPointer)
+
+    /* Upload */
+    offset = 0
+
+    const webSocket = new WebSocket(
+      `${process.env.NEXT_PUBLIC_API_HOST}/ws/file`
+    )
+
+    webSocket.onmessage = (event) => {
+      const response = JSON.parse(event.data)
+      if (
+        response.status === "metadata" ||
+          response.status === "chunk"
+      ) { /* Metadata create successfully. */
+        if (offset < file.size) {
+          const slice = file.slice(offset, offset + chunkSize)
+          webSocket.send(slice)
+
+          offset += chunkSize
+        } else {
+          webSocket.send(
+            JSON.stringify(
+              {
+                type: "complete"
+              }
+            )
+          )
         }
-      )
-      if (response.status === 201) {
-        return true
-      } else {
-        throw new Error()
+      } else if (response.status === "ready") {
+        const requestData = {
+          ...request,
+          type: "metadata"
+        }
+        webSocket.send(JSON.stringify(requestData))
+      } else if (response.status === "ok") {
+        onSuccess()
       }
-    } catch {
-      return false
     }
   }
 }

@@ -56,34 +56,23 @@ export default function useUploadSheet({
     setIsError(false)
     setIsLoading(true)
 
-    const fileBuffer = await file.arrayBuffer()
-    const digestBuffer = await crypto.subtle.digest("SHA-512", fileBuffer)
-    const digestData = new Uint8Array(digestBuffer)
-    const binaryCharacters: string[] = []
-    digestData.forEach(digestDatum => {
-      binaryCharacters.push(String.fromCharCode(digestDatum))
-    })
-
-    const response = await FileService.insertFile({
+    await FileService.insertFile({
       request: {
         name: file.name.split(".")[0],
         kind: kind,
-        size: `${file.size}`,
-        checksum: btoa(binaryCharacters.join("")),
+        size: file.size,
+        checksum: "",
         application: application,
-        locationID: locationID
+        locationID: +locationID
       },
-      file: file
+      file: file,
+      onSuccess: () => {
+        setIsLoading(false)
+        onUpload()
+      }
     })
-    if (!response) {
-      setIsError(true)
-      setIsLoading(false)
-      return false
-    } else {
-      onUpload()
-      setIsLoading(false)
-      return true
-    }
+
+    return false
   }
 
   return {
