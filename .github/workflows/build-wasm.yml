@@ -1,0 +1,37 @@
+name: Build Wasm
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Emscripten
+      uses: mymindstorm/setup-emsdk@v14
+      with:
+        version: 4.0.16
+        
+    - name: Build release
+      run: |
+        cd core-cloud-wasm
+        emcc sha512.c -O3 -msimd128 -o sha512.wasm \
+             -s STANDALONE_WASM=1 \
+             -s EXPORTED_FUNCTIONS='["_SHA512_Init","_SHA512_Update","_SHA512_Final","_malloc","_free"]' \
+             -s EXPORTED_RUNTIME_METHODS='["cwrap","getValue","setValue"]' \
+             -Wl.--no-entry
+
+    - name: Create artifacts
+      run: |
+        mkdir result
+        mv *.wasm result/
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: CoreCloudWasm
+        path: result
