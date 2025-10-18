@@ -121,7 +121,7 @@ export default function HomeVideoListView({
               }
               overflowClassName="overflow-y-auto"
               paddingClassName="px-6.25 lg:px-10 pb-3.75"
-              horizontalSpacingClassName="gap-x-2.5 lg:gap-x.5"
+              horizontalSpacingClassName="gap-x-2.5 lg:gap-x-5"
               verticalSpacingClassName="gap-y-6.25"
             >
               {
