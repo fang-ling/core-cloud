@@ -22,6 +22,7 @@
 
 :root {
   color-scheme: light dark;
+  text-autospace: normal;
 
   /* COLORS */
   --music-joeColor: rgba(0, 0, 0, .14);
