@@ -30,6 +30,7 @@ import Button from "ui/button"
 import Image from "ui/image"
 import Text from "ui/text"
 import DetailView from "./detail-view"
+import TVShowSheet from "./tv-show-sheet"
 
 export default function ContentView() {
   const viewModel = useContentView()
@@ -69,7 +70,13 @@ export default function ContentView() {
                     backgroundStyleClassName={
                       "hover:bg-fillTertiary active:bg-systemBlue/16"
                     }
-                    action={() => viewModel.newHomeVideoButtonDidClick()}
+                    action={() => {
+                      if (viewModel.selectedSidebarItemKey === "home videos") {
+                        viewModel.newHomeVideoButtonDidClick()
+                      } else {
+                        viewModel.newTVShowSheetButtonDidClick()
+                      }
+                    }}
                   >
                     <HStack
                       widthClassName="w-4.75"
@@ -82,7 +89,11 @@ export default function ContentView() {
                       />
                     </HStack>
                     <Text
-                      textKey="New Home Video"
+                      textKey={
+                        viewModel.selectedSidebarItemKey === "home videos"
+                          ? "New Home Video"
+                          : "New TV Show"
+                      }
                       fontSizeClassName="text-[15px]"
                       fontWeightClassName="font-semibold"
                       lineHeightClassName="leading-4.5"
@@ -96,6 +107,8 @@ export default function ContentView() {
                 selectedSidebarItemKey={viewModel.selectedSidebarItemKey}
                 homeVideos={viewModel.homeVideos}
                 setHomeVideos={viewModel.setHomeVideos}
+                tvShows={viewModel.tvShows}
+                setTVShows={viewModel.setTVShows}
               />
             )}
             selectedSidebarItemKey={viewModel.selectedSidebarItemKey}
@@ -135,6 +148,14 @@ export default function ContentView() {
             isPresented={viewModel.isNewHomeVideoSheetPresented}
             onCreate={() => viewModel.newHomeVideoDidCreate()}
             mode="creation"
+          />
+        )
+      }
+      {
+        viewModel.isNewTVShowSheetPresented.value && (
+          <TVShowSheet
+            isPresented={viewModel.isNewTVShowSheetPresented}
+            onCreate={() => viewModel.newTVShowDidCreate()}
           />
         )
       }

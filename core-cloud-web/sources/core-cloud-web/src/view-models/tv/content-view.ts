@@ -18,6 +18,7 @@
 //
 
 import HomeVideoService from "@/services/home-video-service"
+import TVShowService from "@/services/tv-show-service"
 import { useRef, useState } from "react"
 import { useBinding } from "ui/binding"
 
@@ -28,6 +29,11 @@ export default function useContentView() {
       header: "Library",
       items: [
         {
+          key: "tv shows",
+          symbolName: "tv",
+          title: "TV Shows"
+        },
+        {
           key: "home videos",
           symbolName: "video",
           title: "Home Videos"
@@ -36,7 +42,7 @@ export default function useContentView() {
     }
   ])
   const [selectedSidebarItemKey, setSelectedSidebarItemKey] = useState(
-    "home videos"
+    "tv shows"
   )
   const isNewHomeVideoSheetPresented = useBinding(false)
   const [homeVideos, setHomeVideos] = useState<{
@@ -45,6 +51,11 @@ export default function useContentView() {
     artworkURLs: string
     fileID: number
   }[]>([])
+  const [tvShows, setTVShows] = useState<{
+    id: number,
+    posterURLs: string
+  }[]>([])
+  const isNewTVShowSheetPresented = useBinding(false)
 
   /* MARK: - Event handlers */
   function selectedSidebarItemKeyDidChange(newSelectedSidebarItemKey: string) {
@@ -53,6 +64,10 @@ export default function useContentView() {
 
   function newHomeVideoButtonDidClick() {
     isNewHomeVideoSheetPresented.toggle()
+  }
+
+  function newTVShowSheetButtonDidClick() {
+    isNewTVShowSheetPresented.toggle()
   }
 
   async function newHomeVideoDidCreate() {
@@ -75,15 +90,38 @@ export default function useContentView() {
     )
   }
 
+  async function newTVShowDidCreate() {
+    if (selectedSidebarItemKey !== "tv shows") {
+      return
+    }
+
+    const newTVShows = await TVShowService.fetchTVShows({
+      fields: "posterURLs"
+    })
+    setTVShows(
+      newTVShows.map(tvShow => {
+        return {
+          id: tvShow.id,
+          posterURLs: tvShow.posterURLs ?? ""
+        }
+      })
+    )
+  }
+
   return {
     isCheckpointPassed,
     sectionsRef,
     selectedSidebarItemKey,
     isNewHomeVideoSheetPresented,
+    isNewTVShowSheetPresented,
     homeVideos,
     setHomeVideos,
+    tvShows,
+    setTVShows,
     selectedSidebarItemKeyDidChange,
     newHomeVideoButtonDidClick,
-    newHomeVideoDidCreate
+    newTVShowSheetButtonDidClick,
+    newHomeVideoDidCreate,
+    newTVShowDidCreate
   }
 }

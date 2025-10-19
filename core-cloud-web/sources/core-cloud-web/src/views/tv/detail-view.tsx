@@ -19,11 +19,14 @@
 
 import HStack from "ui/h-stack"
 import HomeVideoListView from "./home-video-list-view"
+import TVShowContentView from "./tv-show-content-view"
 
 export default function DetailView({
   selectedSidebarItemKey,
   homeVideos,
-  setHomeVideos
+  setHomeVideos,
+  tvShows,
+  setTVShows
 }: {
   selectedSidebarItemKey: string,
   homeVideos: {
@@ -37,6 +40,14 @@ export default function DetailView({
     title: string,
     artworkURLs: string
     fileID: number
+  }[]>>,
+  tvShows: {
+    id: number,
+    posterURLs: string
+  }[],
+  setTVShows: React.Dispatch<React.SetStateAction<{
+    id: number,
+    posterURLs: string
   }[]>>
 }) {
   return (
@@ -50,6 +61,14 @@ export default function DetailView({
           <HomeVideoListView
             homeVideos={homeVideos}
             setHomeVideos={setHomeVideos}
+          />
+        )
+      }
+      {
+        selectedSidebarItemKey === "tv shows" && (
+          <TVShowContentView
+            tvShows={tvShows}
+            setTVShows={setTVShows}
           />
         )
       }

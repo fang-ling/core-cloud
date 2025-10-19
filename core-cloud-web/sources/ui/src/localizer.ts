@@ -97,6 +97,9 @@ export default class NewLocalizer {
     "Date": { /* Duplicate with the old localizer. */
       "zh-TW": "日期"
     },
+    "Description": {
+      "zh-TW": "描述"
+    },
     "Details": {
       "zh-TW": "詳細資訊"
     },
@@ -114,6 +117,9 @@ export default class NewLocalizer {
     },
     "Duration": {
       "zh-TW": "時長"
+    },
+    "End Year": {
+      "zh-TW": "結束年份"
     },
     "Enter Master Password": {
       "zh-TW": "輸入主密碼"
@@ -169,6 +175,9 @@ export default class NewLocalizer {
     "New Song": {
       "zh-TW": "新歌曲"
     },
+    "New TV Show": {
+      "zh-TW": "新電視節目"
+    },
     "No upcoming songs.": {
       "zh-TW": "沒有即將播放的歌曲。"
     },
@@ -193,6 +202,12 @@ export default class NewLocalizer {
     "Popular": {
       "zh-TW": "熱門"
     },
+    "Poster URL": {
+      "zh-TW": "海報連結"
+    },
+    "Regions of Origin": {
+      "zh-TW": "製作地區"
+    },
     "Sample Rate": {
       "zh-TW": "取樣頻率"
     },
@@ -208,6 +223,15 @@ export default class NewLocalizer {
     "Soundtrack": {
       "zh-TW": "原聲帶"
     },
+    "Starring": {
+      "zh-TW": "主演"
+    },
+    "Start Year": {
+      "zh-TW": "起始年份"
+    },
+    "Studio": {
+      "zh-TW": "製片商"
+    },
     "Tag": {
       "zh-TW": "標籤"
     },
@@ -219,6 +243,9 @@ export default class NewLocalizer {
     },
     "Title": {
       "zh-TW": "名稱"
+    },
+    "Title Logo URL": {
+      "zh-TW": "名稱標誌連結"
     },
     "To allow *X* to access and display your data, you'll need to enter your \
 master password.": {
@@ -233,6 +260,9 @@ master password.": {
     "TV": {
       "zh-TW": "TV"
     },
+    "TV Shows": {
+      "zh-TW": "電視節目"
+    },
     "Unable to create album. Try again later.": {
       "zh-TW": "無法建立專輯。請稍後再試。"
     },
@@ -241,6 +271,9 @@ master password.": {
     },
     "Unable to create song. Try again later.": {
       "zh-TW": "無法建立歌曲。請稍後再試。"
+    },
+    "Unable to create tv show. Try again later.": {
+      "zh-TW": "無法建立電視節目。請稍後再試。"
     },
     "Unable to upload file. Try again later.": {
       "zh-TW": "無法上傳檔案。請稍後再試。"

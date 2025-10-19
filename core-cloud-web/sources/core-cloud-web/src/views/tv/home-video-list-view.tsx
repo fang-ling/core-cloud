@@ -117,7 +117,7 @@ export default function HomeVideoListView({
               gridTemplateClassName={
                 "grid-cols-[repeat(2,minmax(0,1fr))] " +
                   "md:grid-cols-[repeat(3,minmax(0,1fr))] " +
-                  "lg:grid-cols-[repeat(4,minmax(1fr))]"
+                  "lg:grid-cols-[repeat(4,minmax(0,1fr))]"
               }
               overflowClassName="overflow-y-auto"
               paddingClassName="px-6.25 lg:px-10 pb-3.75"
