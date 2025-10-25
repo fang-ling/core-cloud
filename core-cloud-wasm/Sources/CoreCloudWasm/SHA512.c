@@ -80,16 +80,15 @@
   ((UInt64)p[1] << 48) |   \
   ((UInt64)p[2] << 40) |   \
   ((UInt64)p[3] << 32) |   \
-  (p[4] << 24) |           \
-  (p[5] << 16) |           \
-  (p[6] << 8) |            \
-  (p[7]);                  \
+  ((UInt64)p[4] << 24) |   \
+  ((UInt64)p[5] << 16) |   \
+  ((UInt64)p[6] << 8) |    \
+  ((UInt64)p[7]);          \
 })
 
 /*
- * Encode a length (len + 7) / 8 vector of (uint64_t) into a length len
- * vector of (unsigned char) in big-endian form.  Assumes len is a
- * multiple of 4.
+ * Encode a length (len + 7) / 8 vector of (UInt64) into a length len
+ * vector of (UInt8) in big-endian form.  Assumes len is a multiple of 4.
  */
 static inline void be64enc_vector(UInt8* destination,
                                   const UInt64 *source,
@@ -104,8 +103,8 @@ static inline void be64enc_vector(UInt8* destination,
 }
 
 /*
- * Decode a big-endian length len vector of (unsigned char) into a length
- * len/8 vector of (uint64_t).  Assumes len is a multiple of 8.
+ * Decode a big-endian length len vector of (UInt8) into a length len/8 vector
+ * of (UInt64).  Assumes len is a multiple of 8.
  */
 static inline void be64dec_vector(UInt64 *destination,
                                   const UInt8 *source,
@@ -307,19 +306,20 @@ void SHA512Init(struct SHA512Context* context) {
 void SHA512Update(struct SHA512Context* context,
                   TypeReference buffer,
                   Int64 count) {
-  const unsigned char *source = buffer;
+  const UInt8* source = buffer;
 
   /* Number of bytes left in the buffer from previous updates */
   UInt64 r = (context->count[1] >> 3) & 0x7f;
 
   /* Convert the length into a number of bits */
   UInt64 bitlen[2];
-  bitlen[1] = ((uint64_t)count) << 3;
-  bitlen[0] = ((uint64_t)count) >> 61;
+  bitlen[1] = ((UInt64)count) << 3;
+  bitlen[0] = ((UInt64)count) >> 61;
 
   /* Update number of bits */
-  if ((context->count[1] += bitlen[1]) < bitlen[1])
-    context->count[0]++;
+  if ((context->count[1] += bitlen[1]) < bitlen[1]) {
+    context->count[0] += 1;
+  }
   context->count[0] += bitlen[0];
 
   /* Handle the case where we don't need to perform any transforms */
