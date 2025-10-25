@@ -18,17 +18,17 @@ jobs:
         
     - name: Build release
       run: |
-        cd core-cloud-wasm
-        emcc sha512.c -O3 -msimd128 -o sha512.wasm \
+        cd core-cloud-wasm/Sources/CoreCloudWasm
+        emcc SHA512.c -O3 -msimd128 -o SHA512.wasm \
              -s STANDALONE_WASM=1 \
-             -s EXPORTED_FUNCTIONS='["_SHA512_Init","_SHA512_Update","_SHA512_Final","_malloc","_free"]' \
+             -s EXPORTED_FUNCTIONS='["_SHA512Init","_SHA512Update","_SHA512Finalize","_malloc","_free"]' \
              -s EXPORTED_RUNTIME_METHODS='["cwrap","getValue","setValue"]' \
              -Wl,--no-entry
 
     - name: Create artifacts
       run: |
         mkdir result
-        mv core-cloud-wasm/*.wasm result/
+        mv core-cloud-wasm/Sources/CoreCloudWasm/*.wasm result/
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
