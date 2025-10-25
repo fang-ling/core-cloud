@@ -1,8 +1,8 @@
 //
-//  sha512.c
+//  SHA512.c
 //  core-cloud-wasm
 //
-//  Created by Fang Ling on 2025/10/18.
+//  Created by Fang Ling on 2025/10/25.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -16,34 +16,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-
-/*-
- * SPDX-License-Identifier: BSD-2-Clause
- *
- * Copyright (c) 2002 Thomas Moestl <tmm@FreeBSD.org>
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
 
 /*-
  * Copyright 2005 Colin Percival
@@ -72,87 +44,42 @@
  * SUCH DAMAGE.
  */
 
+#include "SHA512.h"
+
+#include <sys/endian.h>
 #include <string.h>
-#include <stdint.h>
-
-#define SHA512_BLOCK_LENGTH    128
-#define SHA512_DIGEST_LENGTH    64
-#define SHA512_DIGEST_STRING_LENGTH  (SHA512_DIGEST_LENGTH * 2 + 1)
-
-/* Alignment-agnostic encode/decode bytestream to/from little/big endian. */
-static __inline uint32_t
-be32dec(const void *pp)
-{
-  uint8_t const *p = (uint8_t const *)pp;
-
-  return (((unsigned)p[0] << 24) | (p[1] << 16) | (p[2] << 8) | p[3]);
-}
-
-static __inline uint64_t
-be64dec(const void *pp)
-{
-  uint8_t const *p = (uint8_t const *)pp;
-
-  return (((uint64_t)be32dec(p) << 32) | be32dec(p + 4));
-}
-
-static __inline void
-be32enc(void *pp, uint32_t u)
-{
-  uint8_t *p = (uint8_t *)pp;
-
-  p[0] = (u >> 24) & 0xff;
-  p[1] = (u >> 16) & 0xff;
-  p[2] = (u >> 8) & 0xff;
-  p[3] = u & 0xff;
-}
-
-static __inline void
-be64enc(void *pp, uint64_t u)
-{
-  uint8_t *p = (uint8_t *)pp;
-
-  be32enc(p, (uint32_t)(u >> 32));
-  be32enc(p + 4, (uint32_t)(u & 0xffffffffU));
-}
-
-typedef struct SHA512Context {
-  uint64_t state[8];
-  uint64_t count[2];
-  uint8_t buf[SHA512_BLOCK_LENGTH];
-} SHA512_CTX;
 
 /*
  * Encode a length (len + 7) / 8 vector of (uint64_t) into a length len
  * vector of (unsigned char) in big-endian form.  Assumes len is a
  * multiple of 4.
  */
-static inline void
-be64enc_vect(unsigned char *dst, const uint64_t *src, size_t len)
-{
-  size_t i;
-
-  for (i = 0; i < len / 8; i++)
-    be64enc(dst + i * 8, src[i]);
-  if (len % 8 == 4)
-    be32enc(dst + i * 8, src[i] >> 32);
+static inline void be64enc_vector(UInt8* destination,
+                                  const UInt64 *source,
+                                  Int64 count) {
+  Int64 i = 0;
+  for (; i < count / 8; i += 1) {
+    be64enc(destination + i * 8, source[i]);
+  }
+  if (count % 8 == 4) {
+    be32enc(destination + i * 8, source[i] >> 32);
+  }
 }
 
 /*
  * Decode a big-endian length len vector of (unsigned char) into a length
  * len/8 vector of (uint64_t).  Assumes len is a multiple of 8.
  */
-static inline void
-be64dec_vect(uint64_t *dst, const unsigned char *src, size_t len)
-{
-  size_t i;
-
-  for (i = 0; i < len / 8; i++)
-    dst[i] = be64dec(src + i * 8);
+static inline void be64dec_vector(UInt64 *destination,
+                                  const UInt8 *source,
+                                  Int64 count) {
+  for (Int64 i = 0; i < count / 8; i += 1) {
+    destination[i] = be64dec(source + i * 8);
+  }
 }
 
 /* SHA512 round constants. */
-static const uint64_t K[80] = {
+static const UInt64 K[80] = {
   0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL,
   0xb5c0fbcfec4d3b2fULL, 0xe9b5dba58189dbbcULL,
   0x3956c25bf348b538ULL, 0x59f111f1b605d019ULL,
@@ -197,22 +124,22 @@ static const uint64_t K[80] = {
 
 /* Elementary functions used by SHA512 */
 #define Ch(x, y, z)  ((x & (y ^ z)) ^ z)
-#define Maj(x, y, z)  ((x & (y | z)) | (y & z))
-#define SHR(x, n)  (x >> n)
-#define ROTR(x, n)  ((x >> n) | (x << (64 - n)))
-#define S0(x)    (ROTR(x, 28) ^ ROTR(x, 34) ^ ROTR(x, 39))
-#define S1(x)    (ROTR(x, 14) ^ ROTR(x, 18) ^ ROTR(x, 41))
-#define s0(x)    (ROTR(x, 1) ^ ROTR(x, 8) ^ SHR(x, 7))
-#define s1(x)    (ROTR(x, 19) ^ ROTR(x, 61) ^ SHR(x, 6))
+#define Maj(x, y, z) ((x & (y | z)) | (y & z))
+#define SHR(x, n)    (x >> n)
+#define ROTR(x, n)   ((x >> n) | (x << (64 - n)))
+#define S0(x)        (ROTR(x, 28) ^ ROTR(x, 34) ^ ROTR(x, 39))
+#define S1(x)        (ROTR(x, 14) ^ ROTR(x, 18) ^ ROTR(x, 41))
+#define s0(x)        (ROTR(x, 1) ^ ROTR(x, 8) ^ SHR(x, 7))
+#define s1(x)        (ROTR(x, 19) ^ ROTR(x, 61) ^ SHR(x, 6))
 
 /* SHA512 round function */
-#define RND(a, b, c, d, e, f, g, h, k)      \
-  h += S1(e) + Ch(e, f, g) + k;      \
-  d += h;            \
+#define RND(a, b, c, d, e, f, g, h, k) \
+  h += S1(e) + Ch(e, f, g) + k;        \
+  d += h;                              \
   h += S0(a) + Maj(a, b, c);
 
 /* Adjusted round function for rotating state */
-#define RNDr(S, W, i, ii)      \
+#define RNDr(S, W, i, ii)                \
   RND(S[(80 - i) % 8], S[(81 - i) % 8],  \
       S[(82 - i) % 8], S[(83 - i) % 8],  \
       S[(84 - i) % 8], S[(85 - i) % 8],  \
@@ -220,30 +147,29 @@ static const uint64_t K[80] = {
       W[i + ii] + K[i + ii])
 
 /* Message schedule computation */
-#define MSCH(W, ii, i)        \
-  W[i + ii + 16] = s1(W[i + ii + 14]) + W[i + ii + 9] + \
-                   s0(W[i + ii + 1]) + W[i + ii]
+#define MSCH(W, ii, i)                  \
+  W[i + ii + 16] = s1(W[i + ii + 14]) + \
+                   W[i + ii + 9] +      \
+                   s0(W[i + ii + 1]) +  \
+                   W[i + ii]
 
 /*
  * SHA512 block compression function.  The 512-bit state is transformed via
  * the 512-bit input block to produce a new state.
  */
-static void
-SHA512_Transform(uint64_t * state,
-                 const unsigned char block[SHA512_BLOCK_LENGTH])
-{
-  uint64_t W[80];
-  uint64_t S[8];
-  int i;
+static void SHA512Transform(UInt64* state,
+                            const UInt8 block[SHA512_BLOCK_LENGTH]) {
+  UInt64 W[80];
+  UInt64 S[8];
 
   /* 1. Prepare the first part of the message schedule W. */
-  be64dec_vect(W, block, SHA512_BLOCK_LENGTH);
+  be64dec_vector(W, block, SHA512_BLOCK_LENGTH);
 
   /* 2. Initialize working variables. */
   memcpy(S, state, SHA512_DIGEST_LENGTH);
 
   /* 3. Mix. */
-  for (i = 0; i < 80; i += 16) {
+  for (Int32 i = 0; i < 80; i += 16) {
     RNDr(S, W, 0, i);
     RNDr(S, W, 1, i);
     RNDr(S, W, 2, i);
@@ -261,8 +187,9 @@ SHA512_Transform(uint64_t * state,
     RNDr(S, W, 14, i);
     RNDr(S, W, 15, i);
 
-    if (i == 64)
+    if (i == 64) {
       break;
+    }
     MSCH(W, 0, i);
     MSCH(W, 1, i);
     MSCH(W, 2, i);
@@ -282,126 +209,117 @@ SHA512_Transform(uint64_t * state,
   }
 
   /* 4. Mix local working variables into global state */
-  for (i = 0; i < 8; i++)
+  for (Int32 i = 0; i < 8; i += 1) {
     state[i] += S[i];
+  }
 }
 
-static unsigned char PAD[SHA512_BLOCK_LENGTH] = {
+static UInt8 PAD[SHA512_BLOCK_LENGTH] = {
   0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
 /* Add padding and terminating bit-count. */
-static void
-SHA512_Pad(SHA512_CTX * ctx)
-{
-  size_t r;
-
+static void SHA512Pad(struct SHA512Context *context) {
   /* Figure out how many bytes we have buffered. */
-  r = (ctx->count[1] >> 3) & 0x7f;
+  UInt64 r = (context->count[1] >> 3) & 0x7f;
 
   /* Pad to 112 mod 128, transforming if we finish a block en route. */
   if (r < 112) {
     /* Pad to 112 mod 128. */
-    memcpy(&ctx->buf[r], PAD, 112 - r);
+    memcpy(&context->buffer[r], PAD, 112 - r);
   } else {
     /* Finish the current block and mix. */
-    memcpy(&ctx->buf[r], PAD, 128 - r);
-    SHA512_Transform(ctx->state, ctx->buf);
+    memcpy(&context->buffer[r], PAD, 128 - r);
+    SHA512Transform(context->state, context->buffer);
 
     /* The start of the final block is all zeroes. */
-    memset(&ctx->buf[0], 0, 112);
+    memset(&context->buffer[0], 0, 112);
   }
 
   /* Add the terminating bit-count. */
-  be64enc_vect(&ctx->buf[112], ctx->count, 16);
+  be64enc_vector(&context->buffer[112], context->count, 16);
 
   /* Mix in the final block. */
-  SHA512_Transform(ctx->state, ctx->buf);
+  SHA512Transform(context->state, context->buffer);
 }
 
 /* SHA-512 initialization.  Begins a SHA-512 operation. */
-void
-SHA512_Init(SHA512_CTX * ctx)
-{
-
+void SHA512Init(struct SHA512Context* context) {
   /* Zero bits processed so far */
-  ctx->count[0] = ctx->count[1] = 0;
+  context->count[0] = context->count[1] = 0;
 
   /* Magic initialization constants */
-  ctx->state[0] = 0x6a09e667f3bcc908ULL;
-  ctx->state[1] = 0xbb67ae8584caa73bULL;
-  ctx->state[2] = 0x3c6ef372fe94f82bULL;
-  ctx->state[3] = 0xa54ff53a5f1d36f1ULL;
-  ctx->state[4] = 0x510e527fade682d1ULL;
-  ctx->state[5] = 0x9b05688c2b3e6c1fULL;
-  ctx->state[6] = 0x1f83d9abfb41bd6bULL;
-  ctx->state[7] = 0x5be0cd19137e2179ULL;
+  context->state[0] = 0x6a09e667f3bcc908ULL;
+  context->state[1] = 0xbb67ae8584caa73bULL;
+  context->state[2] = 0x3c6ef372fe94f82bULL;
+  context->state[3] = 0xa54ff53a5f1d36f1ULL;
+  context->state[4] = 0x510e527fade682d1ULL;
+  context->state[5] = 0x9b05688c2b3e6c1fULL;
+  context->state[6] = 0x1f83d9abfb41bd6bULL;
+  context->state[7] = 0x5be0cd19137e2179ULL;
 }
 
 /* Add bytes into the hash */
-void
-SHA512_Update(SHA512_CTX * ctx, const void *in, size_t len)
-{
-  uint64_t bitlen[2];
-  uint64_t r;
-  const unsigned char *src = in;
+void SHA512Update(struct SHA512Context* context,
+                  TypeReference buffer,
+                  Int64 count) {
+  const unsigned char *source = buffer;
 
   /* Number of bytes left in the buffer from previous updates */
-  r = (ctx->count[1] >> 3) & 0x7f;
+  UInt64 r = (context->count[1] >> 3) & 0x7f;
 
   /* Convert the length into a number of bits */
-  bitlen[1] = ((uint64_t)len) << 3;
-  bitlen[0] = ((uint64_t)len) >> 61;
+  UInt64 bitlen[2];
+  bitlen[1] = ((uint64_t)count) << 3;
+  bitlen[0] = ((uint64_t)count) >> 61;
 
   /* Update number of bits */
-  if ((ctx->count[1] += bitlen[1]) < bitlen[1])
-    ctx->count[0]++;
-  ctx->count[0] += bitlen[0];
+  if ((context->count[1] += bitlen[1]) < bitlen[1])
+    context->count[0]++;
+  context->count[0] += bitlen[0];
 
   /* Handle the case where we don't need to perform any transforms */
-  if (len < SHA512_BLOCK_LENGTH - r) {
-    memcpy(&ctx->buf[r], src, len);
+  if (count < SHA512_BLOCK_LENGTH - r) {
+    memcpy(&context->buffer[r], source, count);
     return;
   }
 
   /* Finish the current block */
-  memcpy(&ctx->buf[r], src, SHA512_BLOCK_LENGTH - r);
-  SHA512_Transform(ctx->state, ctx->buf);
-  src += SHA512_BLOCK_LENGTH - r;
-  len -= SHA512_BLOCK_LENGTH - r;
+  memcpy(&context->buffer[r], source, SHA512_BLOCK_LENGTH - r);
+  SHA512Transform(context->state, context->buffer);
+  source += SHA512_BLOCK_LENGTH - r;
+  count -= SHA512_BLOCK_LENGTH - r;
 
   /* Perform complete blocks */
-  while (len >= SHA512_BLOCK_LENGTH) {
-    SHA512_Transform(ctx->state, src);
-    src += SHA512_BLOCK_LENGTH;
-    len -= SHA512_BLOCK_LENGTH;
+  while (count >= SHA512_BLOCK_LENGTH) {
+    SHA512Transform(context->state, source);
+    source += SHA512_BLOCK_LENGTH;
+    count -= SHA512_BLOCK_LENGTH;
   }
 
   /* Copy left over data into buffer */
-  memcpy(ctx->buf, src, len);
+  memcpy(context->buffer, source, count);
 }
 
 /*
  * SHA-512 finalization.  Pads the input data, exports the hash value,
  * and clears the context state.
  */
-void
-SHA512_Final(unsigned char digest[static SHA512_DIGEST_LENGTH], SHA512_CTX *ctx)
-{
-
+void SHA512Finalize(struct SHA512Context* context,
+                    UInt8 digest[static SHA512_DIGEST_LENGTH]) {
   /* Add padding */
-  SHA512_Pad(ctx);
+  SHA512Pad(context);
 
   /* Write the hash */
-  be64enc_vect(digest, ctx->state, SHA512_DIGEST_LENGTH);
+  be64enc_vector(digest, context->state, SHA512_DIGEST_LENGTH);
 
   /* Clear the context state */
-  memset(ctx, 0, sizeof(*ctx));
+  memset(context, 0, sizeof(*context));
 }
