@@ -146,7 +146,7 @@ extension CoreCloudServer {
   static let SCRYPT_PARALLELISM = 1
   static let SCRYPT_OUTPUT_BYTE_COUNT = 256 / 8
 
-  static let COOKIE_NAME = "CoreCloudServerJWT"
+  static let COOKIE_NAME = "CoreCloudJWT"
   static let COOKIE_MAX_AGE = 86400
 
   static let APPLICATION_TOKEN_COOKIE_NAME = "CoreCloudServerApplicationToken"
@@ -161,6 +161,7 @@ extension CoreCloudServer {
     static let certificate = "CERTIFICATE"
     static let privateKey = "PRIVATE_KEY"
     static let disks = "DISKS"
+    static let cookieDomain = "COOKIE_DOMAIN"
   }
 }
 

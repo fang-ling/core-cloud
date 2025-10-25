@@ -70,7 +70,11 @@ struct UserTokenController: RouteCollection {
         headers: .init([(
           "Set-Cookie",
           "\(CoreCloudServer.COOKIE_NAME)=\(token); " +
-          "Path=/; " +
+          "Path=/; " + (
+            Environment.get(CoreCloudServer.Keys.cookieDomain) != nil
+              ? "Domain=\(Environment.get(CoreCloudServer.Keys.cookieDomain)!);"
+              : ""
+          ) +
           "HttpOnly; " + (
             insertRequest.rememberMe
               ? "Max-Age=\(CoreCloudServer.COOKIE_MAX_AGE); "
