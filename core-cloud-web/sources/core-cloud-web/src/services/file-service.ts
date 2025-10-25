@@ -52,22 +52,22 @@ namespace FileService {
     onSuccess: () => void
   }) {
     /* Load wasm */
-    const wasmResponse = await fetch("/sha512.wasm")
+    const wasmResponse = await fetch("/SHA512.wasm")
     const wasmBytes = await wasmResponse.arrayBuffer()
     const { instance: wasmInstance } = await WebAssembly.instantiate(wasmBytes)
     const wasm = wasmInstance.exports
 
     /* Compute hash */
     const {
-      SHA512_Init,
-      SHA512_Update,
-      SHA512_Final,
+      SHA512Init,
+      SHA512Update,
+      SHA512Finalize,
       malloc,
       memory,
       free
     } = wasm as any
     const contextPointer = malloc(8 * 10 + 128 /* sizeof(SHA512_CTX) */)
-    SHA512_Init(contextPointer)
+    SHA512Init(contextPointer)
 
     const chunkSize = 4 * 1024 * 1024
     let offset = 0
@@ -79,14 +79,14 @@ namespace FileService {
       const dataPointer = malloc(data.length)
       new Uint8Array(memory.buffer, dataPointer, data.length)
         .set(data)
-      SHA512_Update(contextPointer, dataPointer, data.length)
+      SHA512Update(contextPointer, dataPointer, BigInt(data.length))
       free(dataPointer)
 
       offset += chunkSize
     }
 
     const digestPointer = malloc(64 /* 512/8 */)
-    SHA512_Final(digestPointer, contextPointer)
+    SHA512Finalize(contextPointer, digestPointer)
     const digest = new Uint8Array(memory.buffer, digestPointer, 64 /* 512/8 */)
     request.checksum = btoa(String.fromCharCode(...digest))
 
