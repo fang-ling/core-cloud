@@ -28,6 +28,10 @@
  */
 typedef uint8_t UInt8;
 /**
+ * A 32-bit unsigned integer value type.
+ */
+typedef uint32_t UInt32;
+/**
  * A 64-bit unsigned integer value type.
  */
 typedef uint64_t UInt64;

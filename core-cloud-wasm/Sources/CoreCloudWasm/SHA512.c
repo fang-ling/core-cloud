@@ -46,8 +46,45 @@
 
 #include "SHA512.h"
 
-#include <sys/endian.h>
 #include <string.h>
+
+/* Endian convertion functions. */
+#define be32enc(buffer, u)     \
+  do {                         \
+    UInt8* p = buffer;         \
+    UInt32 v = u;              \
+                               \
+    p[0] = (u >> 24) & 0xff;   \
+    p[1] = (u >> 16) & 0xff;   \
+    p[2] = (u >> 8) & 0xff;    \
+    p[3] = u & 0xff;           \
+  } while (0)
+#define be64enc(buffer, u)     \
+  do {                         \
+    UInt8* p = buffer;         \
+    UInt64 v = u;              \
+                               \
+    p[0] = (u >> 56) & 0xff;   \
+    p[1] = (u >> 48) & 0xff;   \
+    p[2] = (u >> 40) & 0xff;   \
+    p[3] = (u >> 32) & 0xff;   \
+    p[4] = (u >> 24) & 0xff;   \
+    p[5] = (u >> 16) & 0xff;   \
+    p[6] = (u >> 8) & 0xff;    \
+    p[7] = u & 0xff;           \
+  } while (0)
+#define be64dec(buffer) ({ \
+  const UInt8* p = buffer; \
+                           \
+  ((UInt64)p[0] << 56) |   \
+  ((UInt64)p[1] << 48) |   \
+  ((UInt64)p[2] << 40) |   \
+  ((UInt64)p[3] << 32) |   \
+  (p[4] << 24) |           \
+  (p[5] << 16) |           \
+  (p[6] << 8) |            \
+  (p[7]);                  \
+})
 
 /*
  * Encode a length (len + 7) / 8 vector of (uint64_t) into a length len
