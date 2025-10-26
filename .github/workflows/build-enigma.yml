@@ -25,7 +25,6 @@ jobs:
         run: |
           cd core-cloud-enigma
           swift build -c release \
-            --target CoreCloudEnigma \
             --swift-sdk x86_64-swift-linux-musl \
             -Xswiftc -cross-module-optimization 
             
