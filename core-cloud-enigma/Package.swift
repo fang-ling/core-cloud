@@ -46,6 +46,11 @@ let package = Package(
         .product(name: "Vapor", package: "vapor")
       ]
     ),
-    .executableTarget(name: "CoreCloudEnigmaClient")
+    .executableTarget(
+      name: "CoreCloudEnigmaClient",
+      dependencies: [
+        .product(name: "Crypto", package: "swift-crypto")
+      ]
+    )
   ]
 )
