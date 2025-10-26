@@ -115,4 +115,63 @@ struct TVShowService {
       throw TVShow.Error.databaseError
     }
   }
+
+  /**
+   * Retrieves tv show details based on the specified tv show id and user id.
+   *
+   * - Parameters:
+   *   - id: The unique identifier for the tv show to retrieve.
+   *   - userID: The unique identifier for the user requesting the tv show.
+   *   - database: The database instance used to perform the query.
+   *
+   * - Returns: A tuple containing the details of the tv show.
+   *
+   * - Throws:
+   *   - ``TVShow.Error/databaseError``: if there is an issue accessing the
+   *                                     database.
+   *   - ``TVShow.Error/noSuchTVShow``: if the tv show is not found.
+   */
+  func getTVShow(
+    with id: TVShow.IDValue,
+    for userID: User.IDValue,
+    on database: Database
+  ) async throws -> (
+    artworkURLs: String,
+    titleLogoURLs: String?,
+    title: String,
+    starring: String,
+    startYear: Int64,
+    endYear: Int64,
+    region: String,
+    description: String,
+    studio: String,
+    genre: String
+  ) {
+    do {
+      guard let tvShow = try await TVShow.query(on: database)
+        .filter(\.$user.$id == userID)
+        .filter(\.$id == id)
+        .first()
+      else {
+        throw TVShow.Error.noSuchTVShow
+      }
+
+      return (
+        artworkURLs: tvShow.artworkURLs,
+        titleLogoURLs: tvShow.titleLogoURLs,
+        title: tvShow.title,
+        starring: tvShow.starring,
+        startYear: tvShow.startYear,
+        endYear: tvShow.endYear,
+        region: tvShow.region,
+        description: tvShow.description,
+        studio: tvShow.studio,
+        genre: tvShow.genre
+      )
+    } catch TVShow.Error.noSuchTVShow {
+      throw TVShow.Error.noSuchTVShow
+    } catch {
+      throw TVShow.Error.databaseError
+    }
+  }
 }

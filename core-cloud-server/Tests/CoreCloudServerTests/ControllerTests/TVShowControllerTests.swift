@@ -44,6 +44,14 @@ extension ControllerTests {
       )
 
       try await app.testing().test(
+        .GET,
+        "api/tv-show",
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
+
+      try await app.testing().test(
         .POST,
         "api/user",
         beforeRequest: { request async throws in
@@ -122,6 +130,28 @@ extension ControllerTests {
         },
         afterResponse: { response async throws in
           #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/tv-show?id=1",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.COOKIE_NAME,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .ok)
+
+          let tvShow = try response.content.decode(
+            TVShow.Singular.Output.Retrieval.self
+          )
+          #expect(tvShow.genre == "Drama")
+          #expect(tvShow.startYear == 2019)
         }
       )
 

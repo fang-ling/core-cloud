@@ -33,6 +33,11 @@ struct TVShowController: RouteCollection {
       .grouped("api")
       .grouped("tv-shows")
       .get(use: fetchTVShowsHandler)
+
+    routes
+      .grouped("api")
+      .grouped("tv-show")
+      .get(use: fetchTVShowHandler)
   }
 
   /**
@@ -152,6 +157,77 @@ struct TVShowController: RouteCollection {
           )
         )
       )
+    } catch TVShow.Error.databaseError {
+      return Response(status: .serviceUnavailable)
+    } catch {
+      return Response(status: .internalServerError)
+    }
+  }
+
+  /**
+   * - URL: GET /api/tv-show
+   *
+   * - Response Codes:
+   *   - 200 OK: The tv show is returned.
+   *   - 401 Unauthorized: The authentication is required and has failed.
+   *   - 404 Not Found: The tv show is not found.
+   *   - 500 Internal Server Error: A response indicating an error occurred on
+   *                                the server.
+   *   - 503 Service Unavailable: A response indicating that the server is not
+   *                              ready to handle the request.
+   */
+  func fetchTVShowHandler(request: Request) async -> Response {
+    let userID: User.IDValue
+    do {
+      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
+      let id = try await userTokenService.verifyUserToken(
+        from: jwt ?? ""
+      ) { token in
+        try await request.jwt.verify(token)
+      }
+      userID = id
+    } catch {
+      return Response(status: .unauthorized)
+    }
+
+    let fetchRequest: TVShow.Singular.Input.Retrieval
+    do {
+      fetchRequest = try request.query.decode(
+        TVShow.Singular.Input.Retrieval.self
+      )
+    } catch {
+      return Response(status: .badRequest)
+    }
+
+    do {
+      let tvShow = try await tvShowService.getTVShow(
+        with: fetchRequest.id,
+        for: userID,
+        on: request.db
+      )
+
+      return try Response(
+        status: .ok,
+        headers: .init([("Content-Type", "application/json")]),
+        body: .init(
+          data: CoreCloudServer.encoder.encode(
+            TVShow.Singular.Output.Retrieval(
+              artworkURLs: tvShow.artworkURLs,
+              titleLogoURLs: tvShow.titleLogoURLs,
+              title: tvShow.title,
+              starring: tvShow.starring,
+              startYear: tvShow.startYear,
+              endYear: tvShow.endYear,
+              region: tvShow.region,
+              description: tvShow.description,
+              studio: tvShow.studio,
+              genre: tvShow.genre
+            )
+          )
+        )
+      )
+    } catch TVShow.Error.noSuchTVShow {
+      return Response(status: .notFound)
     } catch TVShow.Error.databaseError {
       return Response(status: .serviceUnavailable)
     } catch {

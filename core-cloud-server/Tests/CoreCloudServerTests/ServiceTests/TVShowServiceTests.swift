@@ -259,5 +259,87 @@ extension ServiceTests {
         #expect(tvShows.count == 1)
       }
     }
+
+    @Test
+    func testGetTVShow() async throws {
+      let tvShowService = TVShowService()
+
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        await #expect(throws: TVShow.Error.noSuchTVShow) {
+          try await tvShowService.getTVShow(
+            with: 1,
+            for: 1,
+            on: app.db
+          )
+        }
+
+        let eva = User(
+          firstName: "Eva",
+          lastName: "Chan",
+          username: "eva@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await eva.save(on: app.db)
+
+        await #expect(throws: TVShow.Error.noSuchTVShow) {
+          try await tvShowService.getTVShow(
+            with: 1,
+            for: eva.requireID(),
+            on: app.db
+          )
+        }
+
+        let tvShow = try TVShow(
+          title: "Chernobyl",
+          starring: "Jared Harris,Stellan Skarsgård,Emily Watson",
+          genre: "Drama",
+          startYear: 2019,
+          endYear: 2019,
+          region: "United States,Russia",
+          description: (
+            "Starring Jared Harris, Stellan Skarsgard and Emily Watson, " +
+            #""Chernobyl" tells the story of the 1986 nuclear accident in "# +
+            "this HBO Miniseries."
+          ),
+          posterURLs: "https://example.com/1.png",
+          artworkURLs: "https://example.com/2.png",
+          studio: "HBO",
+          userID: eva.requireID()
+        )
+        try await tvShow.save(on: app.db)
+
+        let tvShowDetail = try await tvShowService.getTVShow(
+          with: tvShow.requireID(),
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(tvShowDetail.artworkURLs == "https://example.com/2.png")
+        #expect(tvShowDetail.genre == "Drama")
+
+        let alice = User(
+          firstName: "Alice",
+          lastName: "Ou",
+          username: "alice@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await alice.save(on: app.db)
+
+        await #expect(throws: TVShow.Error.noSuchTVShow) {
+          try await tvShowService.getTVShow(
+            with: tvShow.requireID(),
+            for: alice.requireID(),
+            on: app.db
+          )
+        }
+      }
+    }
   }
 }

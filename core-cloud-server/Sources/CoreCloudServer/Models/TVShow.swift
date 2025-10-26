@@ -128,6 +128,7 @@ extension TVShow {
 extension TVShow {
   enum Error: Swift.Error {
     case databaseError
+    case noSuchTVShow
   }
 }
 
@@ -138,6 +139,7 @@ extension TVShow {
 
 extension TVShow.Singular {
   enum Input { }
+  enum Output { }
 }
 
 extension TVShow.Plural {
@@ -158,6 +160,25 @@ extension TVShow.Singular.Input {
     var artworkURLs: String
     var titleLogoURLs: String?
     var studio: String
+  }
+
+  struct Retrieval: Codable {
+    var id: Int64
+  }
+}
+
+extension TVShow.Singular.Output {
+  struct Retrieval: Codable {
+    var artworkURLs: String
+    var titleLogoURLs: String?
+    var title: String
+    var starring: String
+    var startYear: Int64
+    var endYear: Int64
+    var region: String
+    var description: String
+    var studio: String
+    var genre: String
   }
 }
 
