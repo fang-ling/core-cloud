@@ -19,6 +19,7 @@
 
 import useTVShowContentView from "@/view-models/tv/tv-show-content-view"
 import TVShowListView from "./tv-show-list-view"
+import TVShowDetailView from "./tv-show-detail-view"
 
 export default function TVShowContentView({
   tvShows,
@@ -49,7 +50,10 @@ export default function TVShowContentView({
 
       {
         viewModel.selectedTVShow && (
-          <></>
+          <TVShowDetailView
+            tvShow={viewModel.selectedTVShow}
+            setTVShow={viewModel.setSelectedTVShow}
+          />
         )
       }
     </>

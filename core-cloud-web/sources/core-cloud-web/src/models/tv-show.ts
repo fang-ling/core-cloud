@@ -33,6 +33,25 @@ namespace TVShow {
         titleLogoURLs?: string
         studio: string
       }
+
+      export type Retrieval = {
+        id: string
+      }
+    }
+
+    export namespace Output {
+      export type Retrieval = {
+        artworkURLs: string
+        titleLogoURLs?: string
+        title: string
+        starring: string
+        startYear: number
+        endYear: number
+        region: string
+        description: string
+        studio: string
+        genre: string
+      }
     }
   }
 

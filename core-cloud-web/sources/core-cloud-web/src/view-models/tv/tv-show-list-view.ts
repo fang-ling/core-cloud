@@ -47,7 +47,15 @@ export default function useTVShowListView({
     )
   }
 
+  function tvShowDidSelect(selectedTVShow: {
+    id: number,
+    posterURLs: string
+  }) {
+    setSelectedTVShow(selectedTVShow)
+  }
+
   return {
-    viewDidAppear
+    viewDidAppear,
+    tvShowDidSelect
   }
 }

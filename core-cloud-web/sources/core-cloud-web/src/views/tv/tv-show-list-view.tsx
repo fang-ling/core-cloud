@@ -120,32 +120,8 @@ export default function TVShowListView({
                         transitionClassName={
                           "transition-opacity duration-100 ease-[ease-in]"
                         }
-                      >
-                        {/* Detail button */}
-                        {/*<Button
-                          widthClassName="w-7.5"
-                          heightClassName="h-7.5"
-                          backgroundStyleClassName={
-                            "bg-music-systemStandardThinMaterialSover " +
-                              "hover:bg-systemBlue " +
-                              "dark:backdrop-saturate-180 " +
-                              "backdrop-saturate-190 backdrop-blur-[60px]"
-                          }
-                          borderClassName="rounded-full"
-                          positionClassName="absolute bottom-2.5 right-2.5"
-                          propagationStopped={true}
-                          action={() => {
-
-                          }}
-                        >
-                          <Image
-                            systemName="ellipsis"
-                            widthClassName="w-4"
-                            marginClassName="ml-0.25"
-                            foregroundStyleClassName="fill-white"
-                          />
-                          </Button>*/}
-                      </HStack>
+                        onClick={() => viewModel.tvShowDidSelect(tvShow)}
+                      />
                     </ZStack>
                   </VStack>
                 ))

@@ -24,6 +24,16 @@ export default function useTVShowContentView() {
     id: number,
     posterURLs: string,
     /* These fields are retrieved later. */
+    artworkURLs?: string,
+    titleLogoURLs?: string,
+    title?: string,
+    starring?: string,
+    startYear?: number,
+    endYear?: number,
+    region?: string,
+    description?: string,
+    studio?: string,
+    genre?: string
   } | undefined>(undefined)
 
   return {
