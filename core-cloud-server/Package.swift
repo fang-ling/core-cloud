@@ -22,7 +22,7 @@
 import PackageDescription
 
 let dependencies: [(String, PackageDescription.Version)] = [
-  ("https://github.com/apple/swift-crypto.git", "4.0.0"),
+  ("https://github.com/apple/swift-crypto.git", "4.1.0"),
   ("https://github.com/vapor/fluent.git", "4.13.0"),
   ("https://github.com/vapor/fluent-sqlite-driver.git", "4.8.1"),
   ("https://github.com/vapor/jwt.git", "5.1.2"),
