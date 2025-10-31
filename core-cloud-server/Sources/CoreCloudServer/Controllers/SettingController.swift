@@ -26,11 +26,13 @@ struct SettingController: RouteCollection {
     routes
       .grouped("api")
       .grouped("setting")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchSettingHandler)
 
     routes
       .grouped("api")
       .grouped("setting")
+      .grouped(AuthenticatorMiddleware())
       .patch(use: modifySettingHandler)
   }
 
@@ -50,18 +52,7 @@ struct SettingController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchSettingHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let userToken = try await request.jwt.verify(
-        jwt ?? "",
-        as: UserToken.self
-      )
-      guard let id = User.IDValue(userToken.subject.value) else {
-        return Response(status: .unauthorized)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 
@@ -119,18 +110,7 @@ struct SettingController: RouteCollection {
    *                              ready to handle the request.
    */
   func modifySettingHandler(request: Request) async -> HTTPStatus {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let userToken = try await request.jwt.verify(
-        jwt ?? "",
-        as: UserToken.self
-      )
-      guard let id = User.IDValue(userToken.subject.value) else {
-        return .unauthorized
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return .unauthorized
     }
 

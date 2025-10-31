@@ -21,22 +21,24 @@ import Vapor
 
 struct TVShowController: RouteCollection {
   let tvShowService = TVShowService()
-  let userTokenService = UserTokenService()
 
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("api")
       .grouped("tv-show")
+      .grouped(AuthenticatorMiddleware())
       .post(use: insertTVShowHandler)
 
     routes
       .grouped("api")
       .grouped("tv-shows")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchTVShowsHandler)
 
     routes
       .grouped("api")
       .grouped("tv-show")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchTVShowHandler)
   }
 
@@ -55,16 +57,7 @@ struct TVShowController: RouteCollection {
    *                              ready to handle the request.
    */
   func insertTVShowHandler(request: Request) async -> HTTPStatus {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return .unauthorized
     }
 
@@ -114,16 +107,7 @@ struct TVShowController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchTVShowsHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 
@@ -177,16 +161,7 @@ struct TVShowController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchTVShowHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 

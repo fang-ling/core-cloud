@@ -26,11 +26,13 @@ struct LocationController: RouteCollection {
     routes
       .grouped("api")
       .grouped("location")
+      .grouped(AuthenticatorMiddleware())
       .post(use: insertLocationHandler)
 
     routes
       .grouped("api")
       .grouped("locations")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchLocationsHandler)
   }
 
@@ -49,18 +51,7 @@ struct LocationController: RouteCollection {
    *                              ready to handle the request.
    */
   func insertLocationHandler(request: Request) async -> HTTPStatus {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let userToken = try await request.jwt.verify(
-        jwt ?? "",
-        as: UserToken.self
-      )
-      guard let id = User.IDValue(userToken.subject.value) else {
-        return .unauthorized
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return .unauthorized
     }
 
@@ -101,18 +92,7 @@ struct LocationController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchLocationsHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let userToken = try await request.jwt.verify(
-        jwt ?? "",
-        as: UserToken.self
-      )
-      guard let id = User.IDValue(userToken.subject.value) else {
-        return Response(status: .unauthorized)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 

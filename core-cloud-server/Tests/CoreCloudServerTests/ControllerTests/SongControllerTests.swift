@@ -91,7 +91,7 @@ extension ControllerTests {
           cookie = response
             .headers
             .setCookie?
-            .all[CoreCloudServer.COOKIE_NAME]
+            .all[CoreCloudServer.cookieName]
           #expect(cookie?.string != nil)
           #expect(cookie?.path == "/")
           #expect(cookie?.maxAge == nil)
@@ -105,7 +105,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -136,7 +136,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -157,7 +157,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -180,7 +180,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -197,7 +197,7 @@ extension ControllerTests {
           token = response
             .headers
             .setCookie?
-            .all[CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME]
+            .all[CoreCloudServer.applicationTokenCookieName]
           #expect(cookie?.string != nil)
           #expect(cookie?.path == "/")
           #expect(cookie?.maxAge == nil)
@@ -222,10 +222,10 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             ), (
-              CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME,
+              CoreCloudServer.applicationTokenCookieName,
               token!
             )
           )
@@ -242,7 +242,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -284,10 +284,10 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             ), (
-              CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME,
+              CoreCloudServer.applicationTokenCookieName,
               token!
             )
           )
@@ -304,7 +304,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -346,10 +346,10 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             ), (
-              CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME,
+              CoreCloudServer.applicationTokenCookieName,
               token!
             )
           )
@@ -366,7 +366,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -397,7 +397,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -423,7 +423,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -454,7 +454,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -485,7 +485,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -501,7 +501,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -517,7 +517,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -550,7 +550,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -580,7 +580,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -604,7 +604,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )
@@ -656,7 +656,7 @@ extension ControllerTests {
           cookie = response
             .headers
             .setCookie?
-            .all[CoreCloudServer.COOKIE_NAME]
+            .all[CoreCloudServer.cookieName]
           #expect(cookie?.string != nil)
           #expect(cookie?.path == "/")
           #expect(cookie?.maxAge == nil)
@@ -670,7 +670,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.COOKIE_NAME,
+              CoreCloudServer.cookieName,
               cookie!
             )
           )

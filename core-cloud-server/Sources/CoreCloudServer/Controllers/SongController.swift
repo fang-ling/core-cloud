@@ -23,27 +23,30 @@ struct SongController: RouteCollection {
   let albumService = AlbumService()
   let fileService = FileService()
   let songService = SongService()
-  let userTokenService = UserTokenService()
 
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("api")
       .grouped("song")
+      .grouped(AuthenticatorMiddleware())
       .post(use: insertSongHandler)
 
     routes
       .grouped("api")
       .grouped("songs")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchSongsHandler)
 
     routes
       .grouped("api")
       .grouped("song")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchSongHandler)
 
     routes
       .grouped("api")
       .grouped("song")
+      .grouped(AuthenticatorMiddleware())
       .patch(use: modifySongHandler)
   }
 
@@ -62,16 +65,7 @@ struct SongController: RouteCollection {
    *                              ready to handle the request.
    */
   func insertSongHandler(request: Request) async -> HTTPStatus {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return .unauthorized
     }
 
@@ -152,16 +146,7 @@ struct SongController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchSongsHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 
@@ -222,16 +207,7 @@ struct SongController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchSongHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 
@@ -296,16 +272,7 @@ struct SongController: RouteCollection {
    *                              ready to handle the request.
    */
   func modifySongHandler(request: Request) async -> HTTPStatus {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return .unauthorized
     }
 

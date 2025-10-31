@@ -147,10 +147,10 @@ extension CoreCloudServer {
   static let SCRYPT_PARALLELISM = 1
   static let SCRYPT_OUTPUT_BYTE_COUNT = 256 / 8
 
-  static let COOKIE_NAME = "CoreCloudJWT"
-  static let COOKIE_MAX_AGE = 86400
+  static let cookieName = "CoreCloudJWT"
+  static let cookieMaxAge = 86400
 
-  static let APPLICATION_TOKEN_COOKIE_NAME = "CoreCloudServerApplicationToken"
+  static let applicationTokenCookieName = "CoreCloudServerApplicationToken"
 
   static let CHUNK_SIZE: Int64 = 4 * 1024 * 1024
 }

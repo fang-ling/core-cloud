@@ -23,12 +23,12 @@ import Vapor
 
 struct FileController: RouteCollection {
   let fileService = FileService()
-  let userTokenService = UserTokenService()
 
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("ws")
       .grouped("file")
+      .grouped(AuthenticatorMiddleware())
       .webSocket(
         maxFrameSize: WebSocketMaxFrameSize(integerLiteral: 4 * 1024 * 1024),
         onUpgrade: insertFileHandler
@@ -37,16 +37,19 @@ struct FileController: RouteCollection {
     routes
       .grouped("api")
       .grouped("file")
+      .grouped(AuthenticatorMiddleware())
       .on(.POST, body: .stream, use: insertFileHandler)
 
     routes
       .grouped("api")
       .grouped("file")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchFileHandler)
 
     routes
       .grouped("api")
       .grouped("files")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchFilesHandler)
   }
 
@@ -126,16 +129,7 @@ struct FileController: RouteCollection {
       }
     }
 
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       request.logger.notice("JWT verify failed: \(request.cookies)")
       try? await webSocket.close()
       return
@@ -143,7 +137,7 @@ struct FileController: RouteCollection {
 
     guard let token = request
       .cookies
-      .all[CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME]?
+      .all[CoreCloudServer.applicationTokenCookieName]?
       .string,
           let decryptionKeySealedBoxKeyData = Data(base64Encoded: token)
     else {
@@ -370,22 +364,15 @@ struct FileController: RouteCollection {
       }
     }
 
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    /* Using guard crashes the 6.2 compiler—only God knows why. */
+    let userID = request.userID ?? -1
+    if userID == -1 {
       return .unauthorized
     }
 
     guard let token = request
       .cookies
-      .all[CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME]?
+      .all[CoreCloudServer.applicationTokenCookieName]?
       .string,
           let decryptionKeySealedBoxKeyData = Data(base64Encoded: token)
     else {
@@ -535,22 +522,13 @@ struct FileController: RouteCollection {
   }
 
   func fetchFileHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 
     guard let token = request
       .cookies
-      .all[CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME]?
+      .all[CoreCloudServer.applicationTokenCookieName]?
       .string,
           let decryptionKeySealedBoxKeyData = Data(base64Encoded: token)
     else {
@@ -737,16 +715,7 @@ struct FileController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchFilesHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 

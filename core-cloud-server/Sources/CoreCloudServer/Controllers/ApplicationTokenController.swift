@@ -27,11 +27,13 @@ struct ApplicationTokenController: RouteCollection {
     routes
       .grouped("api")
       .grouped("application-token")
+      .grouped(AuthenticatorMiddleware())
       .post(use: insertApplicationTokenHandler)
 
     routes
       .grouped("api")
       .grouped("application-token")
+      .grouped(AuthenticatorMiddleware())
       .on(.HEAD, use: peekApplicationTokenHandler)
   }
 
@@ -50,18 +52,7 @@ struct ApplicationTokenController: RouteCollection {
    *                              ready to handle the request.
    */
   func insertApplicationTokenHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let userToken = try await request.jwt.verify(
-        jwt ?? "",
-        as: UserToken.self
-      )
-      guard let id = User.IDValue(userToken.subject.value) else {
-        return Response(status: .unauthorized)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 
@@ -91,7 +82,7 @@ struct ApplicationTokenController: RouteCollection {
         status: .created,
         headers: .init([(
           "Set-Cookie",
-          "\(CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME)=\(tokenString); " +
+          "\(CoreCloudServer.applicationTokenCookieName)=\(tokenString); " +
           "Path=/; " +
           "HttpOnly; " + (
             request.application.environment == .production
@@ -118,16 +109,13 @@ struct ApplicationTokenController: RouteCollection {
    *   - 401 Unauthorized: The authentication is required and has failed.
    */
   func peekApplicationTokenHandler(request: Request) async -> HTTPStatus {
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      try await request.jwt.verify(jwt ?? "", as: UserToken.self)
-    } catch {
+    guard request.userID != nil else {
       return .unauthorized
     }
 
     guard let _ = request
       .cookies
-      .all[CoreCloudServer.APPLICATION_TOKEN_COOKIE_NAME]?
+      .all[CoreCloudServer.applicationTokenCookieName]?
       .string
     else {
       return .noContent

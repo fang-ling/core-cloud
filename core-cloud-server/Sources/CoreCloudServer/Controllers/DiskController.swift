@@ -26,6 +26,7 @@ struct DiskController: RouteCollection {
     routes
       .grouped("api")
       .grouped("disks")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchDisksHandler)
   }
 
@@ -39,10 +40,7 @@ struct DiskController: RouteCollection {
    *                                the server.
    */
   func fetchDisksHandler(request: Request) async -> Response {
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      try await request.jwt.verify(jwt ?? "", as: UserToken.self)
-    } catch {
+    guard request.userID != nil else {
       return Response(status: .unauthorized)
     }
 

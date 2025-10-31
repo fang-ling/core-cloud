@@ -21,22 +21,24 @@ import Vapor
 
 struct AlbumController: RouteCollection {
   let albumService = AlbumService()
-  let userTokenService = UserTokenService()
 
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("api")
       .grouped("album")
+      .grouped(AuthenticatorMiddleware())
       .post(use: insertAlbumHandler)
 
     routes
       .grouped("api")
       .grouped("albums")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchAlbumsHandler)
 
     routes
       .grouped("api")
       .grouped("album")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchAlbumHandler)
   }
 
@@ -55,16 +57,7 @@ struct AlbumController: RouteCollection {
    *                              ready to handle the request.
    */
   func insertAlbumHandler(request: Request) async -> HTTPStatus {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return .unauthorized
     }
 
@@ -108,16 +101,7 @@ struct AlbumController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchAlbumsHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 
@@ -175,16 +159,7 @@ struct AlbumController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchAlbumHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 

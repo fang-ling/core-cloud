@@ -22,22 +22,24 @@ import Vapor
 struct HomeVideoController: RouteCollection {
   let fileService = FileService()
   let homeVideoService = HomeVideoService()
-  let userTokenService = UserTokenService()
 
   func boot(routes: any RoutesBuilder) throws {
     routes
       .grouped("api")
       .grouped("home-video")
+      .grouped(AuthenticatorMiddleware())
       .post(use: insertHomeVideoHandler)
 
     routes
       .grouped("api")
       .grouped("home-videos")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchHomeVideosHandler)
 
     routes
       .grouped("api")
       .grouped("home-video")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchHomeVideoHandler)
   }
 
@@ -56,16 +58,7 @@ struct HomeVideoController: RouteCollection {
    *                              ready to handle the request.
    */
   func insertHomeVideoHandler(request: Request) async -> HTTPStatus {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return .unauthorized
     }
 
@@ -135,16 +128,7 @@ struct HomeVideoController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchHomeVideosHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 
@@ -201,16 +185,7 @@ struct HomeVideoController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchHomeVideoHandler(request: Request) async -> Response {
-    let userID: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let id = try await userTokenService.verifyUserToken(
-        from: jwt ?? ""
-      ) { token in
-        try await request.jwt.verify(token)
-      }
-      userID = id
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 

@@ -37,6 +37,7 @@ struct UserController: RouteCollection {
     routes
       .grouped("api")
       .grouped("user")
+      .grouped(AuthenticatorMiddleware())
       .get(use: fetchUserHandler)
   }
 
@@ -141,20 +142,12 @@ struct UserController: RouteCollection {
    *                              ready to handle the request.
    */
   func fetchUserHandler(request: Request) async -> Response {
-    let id: User.IDValue
-    do {
-      let jwt = request.cookies.all[CoreCloudServer.COOKIE_NAME]?.string
-      let userToken = try await request.jwt.verify(
-        jwt ?? "",
-        as: UserToken.self
-      )
-      id = Int64(userToken.subject.value) ?? -1
-    } catch {
+    guard let userID = request.userID else {
       return Response(status: .unauthorized)
     }
 
     do {
-      let detail = try await userService.getUser(with: id, on: request.db)
+      let detail = try await userService.getUser(with: userID, on: request.db)
 
       return try Response(
         status: .ok,
