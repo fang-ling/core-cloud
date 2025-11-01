@@ -134,7 +134,7 @@ struct EpisodeService {
             continue
           }
 
-          if entry[0] == "tvShowID", let tvShowID = Int64(entry[1]) {
+          if entry[0] == "episodeID", let tvShowID = Int64(entry[1]) {
             query = query.filter(\.$tvShow.$id == tvShowID)
           }
         }

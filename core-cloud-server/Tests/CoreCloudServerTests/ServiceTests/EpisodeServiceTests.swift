@@ -308,7 +308,7 @@ extension ServiceTests {
         episodes = try await episodeService.getEpisodes(
           for: eva.requireID(),
           fields: ["title"],
-          filters: ["tvShowID_EQUALS_1"],
+          filters: ["episodeID_EQUALS_1"],
           on: app.db
         )
         #expect(episodes.count == 1)
@@ -317,7 +317,7 @@ extension ServiceTests {
         episodes = try await episodeService.getEpisodes(
           for: eva.requireID(),
           fields: ["title"],
-          filters: ["tvShowID_EQUALS_2"],
+          filters: ["episodeID_EQUALS_2"],
           on: app.db
         )
         #expect(episodes.isEmpty)

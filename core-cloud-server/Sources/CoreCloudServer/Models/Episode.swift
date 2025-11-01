@@ -148,3 +148,60 @@ extension Episode {
     case databaseError
   }
 }
+
+extension Episode {
+  enum Singular { }
+  enum Plural { }
+}
+
+extension Episode.Singular {
+  enum Input { }
+}
+
+extension Episode.Plural {
+  enum Input { }
+  enum Output { }
+}
+
+extension Episode.Singular.Input {
+  struct Insertion: Codable {
+    var title: String
+    var artworkURLs: String
+    var description: String
+    var date: Int64
+    var episodeNumber: Int64
+    var seasonNumber: Int64
+    var duration: Int64
+    var width: Int64
+    var height: Int64
+    var isHDR: Bool
+    var videoCodec: String
+    var audioCodec: String
+    var fileID: Int64
+    var tvShowID: Int64
+  }
+}
+
+extension Episode.Plural.Input {
+  struct Retrieval: Codable {
+    var fields: String
+    var filters: String
+  }
+}
+
+extension Episode.Plural.Output {
+  struct Retrieval: Codable {
+    var id: Int64
+    var title: String?
+    var artworkURLs: String?
+    var description: String?
+    var date: Int64?
+    var episodeNumber: Int64?
+    var seasonNumber: Int64?
+    var duration: Int64?
+    var width: Int64?
+    var height: Int64?
+    var isHDR: Bool?
+    var fileID: Int64?
+  }
+}

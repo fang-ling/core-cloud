@@ -1,8 +1,8 @@
 //
-//  HomeVideoControllerTests.swift
+//  EpisodeControllerTests.swift
 //  core-cloud-server
 //
-//  Created by Fang Ling on 2025/10/5.
+//  Created by Fang Ling on 2025/11/1.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -21,17 +21,17 @@
 import Testing
 import VaporTesting
 
-extension HomeVideo.Singular.Input.Insertion: Content { }
+extension Episode.Singular.Input.Insertion: Content { }
 
 extension ControllerTests {
-  @Test("HomeVideoControllerTests")
-  func testHomeVideoController() async throws {
+  @Test("EpisodeControllerTests")
+  func testEpisodeController() async throws {
     try await withApp(configure: CoreCloudServer.configure) { app in
-      try? FileManager.default.removeItem(atPath: "/tmp/h-v-controller-test")
+      try? FileManager.default.removeItem(atPath: "/tmp/e-controller-test")
 
       try await app.testing().test(
         .POST,
-        "api/home-video",
+        "api/episode",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -39,15 +39,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/home-videos",
-        afterResponse: { response async throws in
-          #expect(response.status == .unauthorized)
-        }
-      )
-
-      try await app.testing().test(
-        .GET,
-        "api/home-video",
+        "api/episodes",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -101,7 +93,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/home-video",
+        "api/episode",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -110,21 +102,21 @@ extension ControllerTests {
             )
           )
           try request.content.encode(
-            HomeVideo.Singular.Input.Insertion(
-              title: "test",
-              cast: "Alice",
-              director: "Lorna",
-              genre: "Vlog",
-              tags: "",
-              date: 19358,
-              duration: 19342,
-              artworkURLs: "https://example.com/1.png",
+            Episode.Singular.Input.Insertion(
+              title: "1:23:45",
+              artworkURLs: "https://exmaple.com/1-1.png",
+              description: "April 26, 1986, USSR. An early-morning...",
+              date: 1761961321000,
+              episodeNumber: 1,
+              seasonNumber: 1,
+              duration: 3600,
               width: 1920,
               height: 1080,
               isHDR: false,
               videoCodec: "H.264",
               audioCodec: "ALAC",
-              fileID: 1
+              fileID: 1,
+              tvShowID: 1
             )
           )
         },
@@ -135,7 +127,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/home-videos?fields=title",
+        "api/episodes?fields=title&filters=episodeID_EQUALS_1",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -147,10 +139,10 @@ extension ControllerTests {
         afterResponse: { response async throws in
           #expect(response.status == .ok)
 
-          let homeVideos = try response.content.decode(
-            [HomeVideo.Plural.Output.Retrieval].self
+          let episodes = try response.content.decode(
+            [Episode.Plural.Output.Retrieval].self
           )
-          #expect(homeVideos.isEmpty)
+          #expect(episodes.isEmpty)
         }
       )
 
@@ -167,7 +159,7 @@ extension ControllerTests {
           try request.content.encode(
             Location.Singular.Input.Insertion(
               name: "Tank2",
-              path: "/tmp/h-v-controller-test"
+              path: "/tmp/e-controller-test"
             )
           )
         },
@@ -241,7 +233,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/home-video",
+        "api/episode",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -250,21 +242,21 @@ extension ControllerTests {
             )
           )
           try request.content.encode(
-            HomeVideo.Singular.Input.Insertion(
-              title: "test",
-              cast: "Alice",
-              director: "Lorna",
-              genre: "Vlog",
-              tags: "",
-              date: 19358,
-              duration: 19342,
-              artworkURLs: "https://example.com/1.png",
+            Episode.Singular.Input.Insertion(
+              title: "1:23:45",
+              artworkURLs: "https://exmaple.com/1-1.png",
+              description: "April 26, 1986, USSR. An early-morning...",
+              date: 1761961321000,
+              episodeNumber: 1,
+              seasonNumber: 1,
+              duration: 3600,
               width: 1920,
               height: 1080,
               isHDR: false,
               videoCodec: "H.264",
               audioCodec: "ALAC",
-              fileID: 1
+              fileID: 1,
+              tvShowID: 1
             )
           )
         },
@@ -306,7 +298,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/home-video",
+        "api/episode",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -315,21 +307,21 @@ extension ControllerTests {
             )
           )
           try request.content.encode(
-            HomeVideo.Singular.Input.Insertion(
-              title: "test",
-              cast: "Alice",
-              director: "Lorna",
-              genre: "Vlog",
-              tags: "",
-              date: 19358,
-              duration: 19342,
-              artworkURLs: "https://example.com/1.png",
+            Episode.Singular.Input.Insertion(
+              title: "1:23:45",
+              artworkURLs: "https://exmaple.com/1-1.png",
+              description: "April 26, 1986, USSR. An early-morning...",
+              date: 1761961321000,
+              episodeNumber: 1,
+              seasonNumber: 1,
+              duration: 3600,
               width: 1920,
               height: 1080,
               isHDR: false,
               videoCodec: "H.264",
               audioCodec: "ALAC",
-              fileID: 2
+              fileID: 2,
+              tvShowID: 1
             )
           )
         },
@@ -371,7 +363,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/home-video",
+        "api/episode",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -380,21 +372,56 @@ extension ControllerTests {
             )
           )
           try request.content.encode(
-            HomeVideo.Singular.Input.Insertion(
-              title: "test",
-              cast: "Alice",
-              director: "Lorna",
-              genre: "Vlog",
-              tags: "",
-              date: 19358,
-              duration: 19342,
-              artworkURLs: "https://example.com/1.png",
+            Episode.Singular.Input.Insertion(
+              title: "1:23:45",
+              artworkURLs: "https://exmaple.com/1-1.png",
+              description: "April 26, 1986, USSR. An early-morning...",
+              date: 1761961321000,
+              episodeNumber: 1,
+              seasonNumber: 1,
+              duration: 3600,
               width: 1920,
               height: 1080,
               isHDR: false,
               videoCodec: "H.264",
               audioCodec: "ALAC",
-              fileID: 3
+              fileID: 3,
+              tvShowID: 1
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .serviceUnavailable)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/tv-show",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.cookieName,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            TVShow.Singular.Input.Insertion(
+              title: "Chernobyl",
+              starring: "Jared Harris,Stellan Skarsgård,Emily Watson",
+              genre: "Drama",
+              startYear: 2019,
+              endYear: 2019,
+              region: "United States,Russia",
+              description: (
+                "Starring Jared Harris, Stellan Skarsgard and Emily Watson, " +
+                #""Chernobyl" tells the story of the 1986 nuclear accident "# +
+                "in this HBO Miniseries."
+              ),
+              posterURLs: "https://example.com/1.png",
+              artworkURLs: "https://example.com/2.png",
+              titleLogoURLs: "https://example.com/3.png",
+              studio: "HBO"
             )
           )
         },
@@ -405,7 +432,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/home-video",
+        "api/episode",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -414,21 +441,55 @@ extension ControllerTests {
             )
           )
           try request.content.encode(
-            HomeVideo.Singular.Input.Insertion(
-              title: "test",
-              cast: "Alice",
-              director: "Lorna",
-              genre: "Vlog",
-              tags: "",
-              date: 19358,
-              duration: 19342,
-              artworkURLs: "https://example.com/1.png",
+            Episode.Singular.Input.Insertion(
+              title: "1:23:45",
+              artworkURLs: "https://exmaple.com/1-1.png",
+              description: "April 26, 1986, USSR. An early-morning...",
+              date: 1761961321000,
+              episodeNumber: 1,
+              seasonNumber: 1,
+              duration: 3600,
               width: 1920,
               height: 1080,
               isHDR: false,
               videoCodec: "H.264",
               audioCodec: "ALAC",
-              fileID: 3
+              fileID: 3,
+              tvShowID: 1
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/episode",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.cookieName,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            Episode.Singular.Input.Insertion(
+              title: "1:23:45",
+              artworkURLs: "https://exmaple.com/1-1.png",
+              description: "April 26, 1986, USSR. An early-morning...",
+              date: 1761961321000,
+              episodeNumber: 1,
+              seasonNumber: 1,
+              duration: 3600,
+              width: 1920,
+              height: 1080,
+              isHDR: false,
+              videoCodec: "H.264",
+              audioCodec: "ALAC",
+              fileID: 3,
+              tvShowID: 1
             )
           )
         },
@@ -439,7 +500,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/home-videos?fields=title,fileID",
+        "api/episodes?fields=title,fileID,date&filters=episodeID_EQUALS_1",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -451,19 +512,20 @@ extension ControllerTests {
         afterResponse: { response async throws in
           #expect(response.status == .ok)
 
-          let homeVideos = try response.content.decode(
-            [HomeVideo.Plural.Output.Retrieval].self
+          let episodes = try response.content.decode(
+            [Episode.Plural.Output.Retrieval].self
           )
-          #expect(homeVideos.count == 1)
-          #expect(homeVideos.first?.id == 1)
-          #expect(homeVideos.first?.title == "test")
-          #expect(homeVideos.first?.fileID == 3)
+          #expect(episodes.count == 1)
+          #expect(episodes.first?.id == 1)
+          #expect(episodes.first?.title == "1:23:45")
+          #expect(episodes.first?.date == 1761961321000)
+          #expect(episodes.first?.description == nil)
         }
       )
 
       try await app.testing().test(
         .GET,
-        "api/home-video?fields=cast,audioCodec&id=1",
+        "api/episodes?fields=title,fileID&filters=episodeID_EQUALS_2",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -475,12 +537,10 @@ extension ControllerTests {
         afterResponse: { response async throws in
           #expect(response.status == .ok)
 
-          let homeVideo = try response.content.decode(
-            HomeVideo.Singular.Output.Retrieval.self
+          let episodes = try response.content.decode(
+            [Episode.Plural.Output.Retrieval].self
           )
-          #expect(homeVideo.cast == "Alice")
-          #expect(homeVideo.audioCodec == "ALAC")
-          #expect(homeVideo.videoCodec == nil)
+          #expect(episodes.isEmpty)
         }
       )
     }

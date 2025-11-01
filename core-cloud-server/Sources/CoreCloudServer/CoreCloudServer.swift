@@ -123,7 +123,7 @@ struct CoreCloudServer {
     app.migrations.add(FileMigrationV2())
     app.migrations.add(HomeVideoMigrationV1())
     app.migrations.add(TVShowMigrationV1())
-    /*app.migrations.add(EpisodeMigrationV1())*/
+    app.migrations.add(EpisodeMigrationV1())
     try await app.autoMigrate()
 
     /* Routes */
@@ -138,6 +138,7 @@ struct CoreCloudServer {
     try app.routes.register(collection: AlbumController())
     try app.routes.register(collection: HomeVideoController())
     try app.routes.register(collection: TVShowController())
+    try app.routes.register(collection: EpisodeController())
   }
 }
 
