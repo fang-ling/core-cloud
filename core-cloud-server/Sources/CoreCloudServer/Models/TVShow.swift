@@ -192,5 +192,8 @@ extension TVShow.Plural.Output {
   struct Retrieval: Codable {
     var id: Int64
     var posterURLs: String?
+    var title: String?
+    var startYear: Int64?
+    var endYear: Int64?
   }
 }

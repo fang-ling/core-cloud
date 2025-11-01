@@ -101,7 +101,10 @@ struct TVShowService {
     on database: Database
   ) async throws -> [(
     id: Int64,
-    posterURLs: String?
+    posterURLs: String?,
+    title: String?,
+    startYear: Int64?,
+    endYear: Int64?
   )] {
     do {
       return try await TVShow.query(on: database)
@@ -109,7 +112,10 @@ struct TVShowService {
         .all()
         .map { tvShow in (
           id: try tvShow.requireID(),
-          posterURLs: fields.contains("posterURLs") ? tvShow.posterURLs : nil
+          posterURLs: fields.contains("posterURLs") ? tvShow.posterURLs : nil,
+          title: fields.contains("title") ? tvShow.title : nil,
+          startYear: fields.contains("startYear") ? tvShow.startYear : nil,
+          endYear: fields.contains("endYear") ? tvShow.endYear : nil
         )}
     } catch {
       throw TVShow.Error.databaseError
