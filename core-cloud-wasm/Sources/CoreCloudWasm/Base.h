@@ -47,7 +47,9 @@ typedef int32_t Int32;
 typedef int64_t Int64;
 
 /* MARK: - Floating-Point Values */
-
+/**
+ * A 32-bit floating point type.
+ */
 typedef float Float32;
 
 /* MARK: - Other Data Types */
