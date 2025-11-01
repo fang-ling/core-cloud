@@ -17,7 +17,10 @@
 //  limitations under the License.
 //
 
+import EpisodeService from "@/services/episode-service"
 import TVShowService from "@/services/tv-show-service"
+import { useState } from "react"
+import { useBinding } from "ui/binding"
 
 export default function useTVShowDetailView({
   tvShow,
@@ -52,6 +55,23 @@ export default function useTVShowDetailView({
     genre?: string
   } | undefined>>
 }) {
+  const isNewEpisodeSheetPresented = useBinding(false)
+  const [episodes, setEpisodes] = useState<{
+    id: number,
+    title: string,
+    description: string,
+    date: number,
+    duration: number,
+    width: number,
+    height: number,
+    isHDR: boolean,
+    episodeNumber: number,
+    seasonNumber: number,
+    artworkURLs: string,
+    fileID: number
+  }[]>([])
+  const isEpisodeDescriptionSheetPresented = useBinding(false)
+
   /* MARK: - Event handlers */
   async function viewDidAppear1() {
     const detail = await TVShowService.fetchTVShow({
@@ -74,12 +94,83 @@ export default function useTVShowDetailView({
     }
   }
 
+  async function viewDidAppear2() {
+    await updateEpisodes()
+  }
+
   function backButtonDidClick() {
     setTVShow(undefined)
   }
 
+  async function newEpisodeDidCreate() {
+    await updateEpisodes()
+  }
+
+  function newEpisodeButtonDidClick() {
+    isNewEpisodeSheetPresented.toggle()
+  }
+
+  function showEpisodeDescriptionButtonDidClick() {
+    isEpisodeDescriptionSheetPresented.toggle()
+  }
+
+  /* MARK: - Utilities */
+  async function updateEpisodes() {
+    const newEpisodes = await EpisodeService.fetchEpisodes({
+      fields: [
+        "id",
+        "title",
+        "description",
+        "date",
+        "duration",
+        "width",
+        "height",
+        "isHDR",
+        "episodeNumber",
+        "seasonNumber",
+        "artworkURLs",
+        "fileID"
+      ]
+        .join(","),
+      filters: `tvShowID_EQUALS_${tvShow.id}`
+    })
+
+    setEpisodes(
+      newEpisodes
+        .sort((lhs, rhs) => {
+          return (
+            (lhs.seasonNumber ?? 0) - (rhs.seasonNumber ?? 0) ||
+              (lhs.episodeNumber ?? 0) - (rhs.episodeNumber ?? 0)
+          )
+        })
+        .map(episode => {
+          return {
+            id: episode.id,
+            title: episode.title ?? "",
+            description: episode.description ?? "",
+            date: episode.date ?? 0,
+            duration: episode.duration ?? 0,
+            width: episode.width ?? 0,
+            height: episode.height ?? 0,
+            isHDR: episode.isHDR ?? false,
+            episodeNumber: episode.episodeNumber ?? 0,
+            seasonNumber: episode.seasonNumber ?? 0,
+            artworkURLs: episode.artworkURLs ?? "",
+            fileID: episode.fileID ?? 0
+          }
+        })
+    )
+  }
+
   return {
+    isNewEpisodeSheetPresented,
+    isEpisodeDescriptionSheetPresented,
+    episodes,
     viewDidAppear1,
-    backButtonDidClick
+    viewDidAppear2,
+    backButtonDidClick,
+    newEpisodeDidCreate,
+    newEpisodeButtonDidClick,
+    showEpisodeDescriptionButtonDidClick
   }
 }

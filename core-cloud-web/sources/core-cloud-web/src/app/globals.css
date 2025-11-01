@@ -76,7 +76,9 @@
   --theme-color-gray5: hsl(240, 10.6, 90.8);
   --theme-color-gray6: #f2f2f7;
   --theme-color-labelPrimary: rgba(0, 0, 0, 0.88);
+  --theme-color-labelPrimaryOnDark: rgba(255, 255, 255, 0.85);
   --theme-color-labelSecondary: rgba(0, 0, 0, 0.56);
+  --theme-color-labelSecondaryOnDark: rgba(255, 255, 255, 0.55);
   --theme-color-labelTertiary: rgba(0, 0, 0, 0.48);
   --theme-color-labelQuaternary: rgba(0, 0, 0, 0.32);
   --theme-color-separator: rgb(209, 209, 214);
@@ -153,7 +155,9 @@
     --theme-color-gray5: hsl(240, 1.9, 20.8);
     --theme-color-gray6: #2c2c2e;
     --theme-color-labelPrimary: hsla(0, 0, 100, 0.98);
+    --theme-color-labelPrimaryOnDark: rgba(255, 255, 255, 0.85);
     --theme-color-labelSecondary: hsla(0, 0, 100, 0.66);
+    --theme-color-labelSecondary: rgba(255, 255, 255, 0.55);
     --theme-color-labelTertiary: hsla(0, 0, 100, 0.5);
     --theme-color-labelQuaternary: hsla(0, 0, 100, 0.42);
     --theme-color-separator: #343436;
@@ -199,7 +203,9 @@
   --color-gray5: var(--theme-color-gray5);
   --color-gray6: var(--theme-color-gray6);
   --color-labelPrimary: var(--theme-color-labelPrimary);
+  --color-labelPrimaryOnDark: var(--theme-color-labelPrimaryOnDark);
   --color-labelSecondary: var(--theme-color-labelSecondary);
+  --color-labelSecondaryOnDark: var(--theme-color-labelSecondaryOnDark);
   --color-labelTertiary: var(--theme-color-labelTertiary);
   --color-labelQuaternary: var(--theme-color-labelQuaternary);
   --color-separator: var(--theme-color-separator);

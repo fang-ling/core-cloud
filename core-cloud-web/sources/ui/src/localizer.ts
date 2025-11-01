@@ -55,6 +55,9 @@ export default class NewLocalizer {
     "Albums": {
       "zh-TW": "專輯"
     },
+    "Anime": {
+      "zh-TW": "日本動畫"
+    },
     "Apple MPEG-4 Audio": {
       "zh-TW": "Apple MPEG-4 音訊"
     },
@@ -127,6 +130,9 @@ export default class NewLocalizer {
     "Enter your master password": {
       "zh-TW": "輸入你的主密碼"
     },
+    "Episode Number": {
+      "zh-TW": "單集"
+    },
     "File": {
       "zh-TW": "檔案"
     },
@@ -165,6 +171,9 @@ export default class NewLocalizer {
     },
     "New Album": {
       "zh-TW": "新專輯"
+    },
+    "New Episode": {
+      "zh-TW": "新劇集"
     },
     "New File": {
       "zh-TW": "新檔案"
@@ -214,6 +223,9 @@ export default class NewLocalizer {
     "Sample Size": {
       "zh-TW": "取樣大小"
     },
+    "Season Number": {
+      "zh-TW": "季"
+    },
     "Shuffle": {
       "zh-TW": "隨機播放"
     },
@@ -260,11 +272,17 @@ master password.": {
     "TV": {
       "zh-TW": "TV"
     },
+    "TV Show": {
+      "zh-TW": "電視節目"
+    },
     "TV Shows": {
       "zh-TW": "電視節目"
     },
     "Unable to create album. Try again later.": {
       "zh-TW": "無法建立專輯。請稍後再試。"
+    },
+    "Unable to create episode. Try again later.": {
+      "zh-TW": "無法建立劇集。請稍後再試。"
     },
     "Unable to create home video. Try again later.": {
       "zh-TW": "無法建立本機影片。請稍後再試。"

@@ -20,11 +20,22 @@
 /**
  * Constants that define how a view's content fills the available space.
  */
-enum ContentMode {
+export default class ContentMode {
+  public readonly className: string
+
+  private constructor(className: string) {
+    this.className = className
+  }
+
   /**
    * An option that resizes the content so it's all within the available space,
    * both vertically and horizontally.
    */
-  fit
+  public static readonly fit = new ContentMode("object-contain")
+
+  /**
+   * An option that resizes the content so it occupies all available space, both
+   * vertically and horizontally.
+   */
+  public static readonly fill = new ContentMode("object-cover")
 }
-export default ContentMode

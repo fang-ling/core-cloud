@@ -17,7 +17,6 @@
 //  limitations under the License.
 //
 
-import React from "react"
 import ContentMode from "./content-mode"
 
 /**
@@ -68,9 +67,8 @@ export default function AsyncImage({
           `${widthClassName} ${heightClassName} ${marginClassName} ` +
             `${borderClassName} select-none ${shadowClassName} ` +
             `${positionClassName} ${opacityClassName} ` +
-            `${transformClassName} ${foregroundStyleClassName} ` + (
-              contentMode === ContentMode.fit ? "object-contain" : ""
-            )
+            `${transformClassName} ${foregroundStyleClassName} ` +
+            `${contentMode?.className ?? ""}`
         }
       />
     </picture>

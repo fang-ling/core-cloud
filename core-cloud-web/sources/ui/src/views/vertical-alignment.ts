@@ -31,4 +31,9 @@ export default class VerticalAlignment {
    * A guide that marks the vertical center of the view.
    */
   public static readonly center = new VerticalAlignment("items-center")
+
+  /**
+   * A guide that marks the top edge of the view.
+   */
+  public static readonly top = new VerticalAlignment("items-start")
 }

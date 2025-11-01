@@ -35,7 +35,8 @@ export default function Text({
   truncationClassName = "",
   paddingClassName = "",
   wrapClassName = "",
-  fontDesignClassName = ""
+  fontDesignClassName = "",
+  style
 }: {
   /**
    * The key for the localized text.
@@ -69,7 +70,8 @@ export default function Text({
   truncationClassName?: string,
   paddingClassName?: string,
   wrapClassName?: string,
-  fontDesignClassName?: string
+  fontDesignClassName?: string,
+  style?: React.CSSProperties
 }) {
   return (
     <p
@@ -82,6 +84,7 @@ export default function Text({
       dangerouslySetInnerHTML={
         verbatimContent ? { __html: verbatimContent } : undefined
       }
+      style={style}
     >
       {textKey && NewLocalizer.default.localize(textKey)}
     </p>

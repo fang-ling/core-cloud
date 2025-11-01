@@ -17,12 +17,20 @@
 //  limitations under the License.
 //
 
-import React from "react"
-
 /**
  * A flexible space that expands along the major axis of its containing stack
  * layout, or on both axes if not contained in a stack.
  */
-export default function Spacer() {
-  return <div className="grow" />
+export default function Spacer({
+  visibilityClassName
+}: {
+  visibilityClassName?: string
+}) {
+  return (
+    <div
+      className={
+        `grow ${visibilityClassName}`
+      }
+    />
+  )
 }

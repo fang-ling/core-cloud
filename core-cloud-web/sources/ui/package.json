@@ -22,6 +22,7 @@
     "./text-field": "./src/views/text-field.tsx",
     "./toggle": "./src/views/toggle.tsx",
     "./v-stack": "./src/views/v-stack.tsx",
+    "./vertical-alignment": "./src/views/vertical-alignment.ts",
     "./z-stack": "./src/views/z-stack.tsx"
   }
 }
