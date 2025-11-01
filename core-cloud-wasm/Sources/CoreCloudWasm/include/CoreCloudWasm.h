@@ -20,6 +20,7 @@
 #ifndef CoreCloudWasm_h
 #define CoreCloudWasm_h
 
+#include "../DCT32.h"
 #include "../SHA512.h"
 
 #endif /* CoreCloudWasm_h */

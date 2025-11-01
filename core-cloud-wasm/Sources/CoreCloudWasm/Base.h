@@ -46,6 +46,10 @@ typedef int32_t Int32;
  */
 typedef int64_t Int64;
 
+/* MARK: - Floating-Point Values */
+
+typedef float Float32;
+
 /* MARK: - Other Data Types */
 /**
  * An untyped "generic" reference to any object.

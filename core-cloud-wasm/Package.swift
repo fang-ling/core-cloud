@@ -23,12 +23,16 @@ import PackageDescription
 
 let package = Package(
   name: "core-cloud-wasm",
+  dependencies: [
+    .package(url: "https://github.com/apple/swift-numerics", exact: "1.1.1")
+  ],
   targets: [
     .target(name: "CoreCloudWasm"),
     .testTarget(
       name: "CoreCloudWasmTests",
       dependencies: [
-        .target(name: "CoreCloudWasm")
+        .target(name: "CoreCloudWasm"),
+        .product(name: "Numerics", package: "swift-numerics")
       ]
     )
   ]

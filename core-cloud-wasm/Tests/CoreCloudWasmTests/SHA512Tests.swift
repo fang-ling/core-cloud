@@ -22,7 +22,7 @@ import Foundation
 import Testing
 
 @Test
-func testSHA512() throws {
+func testSHA512() {
   var context1 = SHA512Context()
 
   SHA512Init(&context1)
