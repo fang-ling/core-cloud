@@ -34,6 +34,7 @@ struct BodyguardMiddleware: AsyncMiddleware {
         return request.redirect(to: "/home")
       }
     } catch {
+      request.logger.notice("Invalid token: \(error)")
       /* If not logged in and want to see the protected page */
       if (
         request.url.path.starts(with: "/home") ||
