@@ -128,7 +128,7 @@ export default function TableView({
                 >
                   {
                     file.kind === "Application Library"
-                      ? Localizer.default().localize(file.name)
+                      ? NewLocalizer.default.localize(file.name)
                       : file.name
                   }
                 </td>

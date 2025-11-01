@@ -25,6 +25,7 @@ import UIProgress from "../ui-progress"
 import TableView from "./table-view"
 import Measurement from "foundation/measurement"
 import { UnitInformationStorage } from "foundation/unit"
+import NewLocalizer from "ui/localizer"
 
 export default function DetailView({
   currentSidebarKey,
@@ -114,7 +115,7 @@ export default function DetailView({
               symbolName={symbolName}
             />
             {
-              Localizer.default().localize(
+              NewLocalizer.default.localize(
                 viewModel.navigationStack[viewModel.navigationStack.length-1]
               )
             }
