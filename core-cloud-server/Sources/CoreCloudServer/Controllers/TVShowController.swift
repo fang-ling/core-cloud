@@ -135,10 +135,7 @@ struct TVShowController: RouteCollection {
             tvShows.map { tvShow in
               TVShow.Plural.Output.Retrieval(
                 id: tvShow.id,
-                posterURLs: tvShow.posterURLs,
-                title: tvShow.title,
-                startYear: tvShow.startYear,
-                endYear: tvShow.endYear
+                posterURLs: tvShow.posterURLs
               )
             }
           )
