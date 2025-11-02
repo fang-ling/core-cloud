@@ -22,7 +22,12 @@ import CryptoKit
 #else
 import Crypto
 #endif
+
 import Foundation
+
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 @main
 struct CoreCloudEnigmaClient {
