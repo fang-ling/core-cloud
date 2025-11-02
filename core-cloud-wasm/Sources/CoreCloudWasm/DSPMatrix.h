@@ -1,5 +1,5 @@
 //
-//  DSP.h
+//  DSPMatrix.h
 //  core-cloud-wasm
 //
 //  Created by Fang Ling on 2025/11/2.
@@ -17,10 +17,18 @@
 //  limitations under the License.
 //
 
-#ifndef DSP_h
-#define DSP_h
+#ifndef DSPMatrix_h
+#define DSPMatrix_h
 
-#include "DSPDCT.h"
-#include "DSPMatrix.h"
+#include "Base.h"
 
-#endif /* DSP_h */
+/**
+ * Transposes a 32x32, single-precision matrix.
+ *
+ * - Parameters:
+ *   - input: The input matrix.
+ *   - output: The output matrix.
+ */
+void DSPMatrixTranspose32x32(const Float32* input, Float32* output);
+
+#endif /* DSPMatrix_h */

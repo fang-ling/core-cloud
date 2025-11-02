@@ -118,7 +118,7 @@
 #define ADD(a, b) value##a += value##b
 
 /* DCT32 without 1/sqrt(2) coef zero scaling. */
-void DSPDCT32Execute(const Float32 *input, Float32 *output) {
+void DSPDCT32Execute(const Float32* input, Float32* output) {
   Float32 alpha;
   Float32 beta;
   Float32 value0;

@@ -62,6 +62,6 @@
  *   - input: Single-precision input vector that contains 32 elements.
  *   - output: Single-precision output vector that contains 32 elements.
  */
-void DSPDCT32Execute(const Float32 *input, Float32 *output);
+void DSPDCT32Execute(const Float32* input, Float32* output);
 
 #endif /* DSPDCT_h */

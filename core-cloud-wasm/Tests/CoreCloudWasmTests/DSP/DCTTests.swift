@@ -1,5 +1,5 @@
 //
-//  DCT32Tests.swift
+//  DCTTests.swift
 //  core-cloud-wasm
 //
 //  Created by Fang Ling on 2025/11/1.
