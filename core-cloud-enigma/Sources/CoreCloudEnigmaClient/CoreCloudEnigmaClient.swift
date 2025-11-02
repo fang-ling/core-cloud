@@ -109,7 +109,10 @@ struct CoreCloudEnigmaClient {
         options: []
       )
 
-      _ = try await URLSession.shared.data(for: request)
+      let (_, response) = try await URLSession.shared.data(for: request)
+      if let httpResponse = response as? HTTPURLResponse {
+        print("Result Status Code: \(httpResponse.statusCode)")
+      }
     } else {
       print(
         """
