@@ -28,21 +28,21 @@ func testDCT32() {
   var output = [Float32](repeating: 0, count: 32)
 
   var input = [Float32](repeating: 0, count: 32)
-  DCT32Execute(&input, &output)
+  DSPDCT32Execute(&input, &output)
   var result = dct32.transform(input)
   for i in 0 ..< 32 {
     #expect(output[i].isApproximatelyEqual(to: result[i]))
   }
 
   input = (0 ..< 32).map({ Float32($0) })
-  DCT32Execute(&input, &output)
+  DSPDCT32Execute(&input, &output)
   result = dct32.transform(input)
   for i in 0 ..< 32 {
     #expect(output[i].isApproximatelyEqual(to: result[i]))
   }
 
   input = (0 ..< 32).reversed().map({ Float32($0) })
-  DCT32Execute(&input, &output)
+  DSPDCT32Execute(&input, &output)
   result = dct32.transform(input)
   for i in 0 ..< 32 {
     #expect(output[i].isApproximatelyEqual(to: result[i]))

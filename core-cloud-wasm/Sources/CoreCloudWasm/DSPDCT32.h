@@ -1,5 +1,5 @@
 //
-//  DCT32.h
+//  DSPDCT32.h
 //  core-cloud-wasm
 //
 //  Created by Fang Ling on 2025/11/1.
@@ -41,8 +41,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef DCT32_h
-#define DCT32_h
+#ifndef DSPDCT32_h
+#define DSPDCT32_h
 
 #include "Base.h"
 
@@ -62,6 +62,6 @@
  *   - input: Single-precision input vector that contains 32 elements.
  *   - output: Single-precision output vector that contains 32 elements.
  */
-void DCT32Execute(const Float32 *input, Float32 *output);
+void DSPDCT32Execute(const Float32 *input, Float32 *output);
 
-#endif /* DCT32_h */
+#endif /* DSPDCT32_h */

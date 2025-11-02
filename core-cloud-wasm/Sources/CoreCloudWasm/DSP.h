@@ -1,8 +1,8 @@
 //
-//  CoreCloudWasm.h
+//  DSP.h
 //  core-cloud-wasm
 //
-//  Created by Fang Ling on 2025/10/25.
+//  Created by Fang Ling on 2025/11/2.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 //  limitations under the License.
 //
 
-#ifndef CoreCloudWasm_h
-#define CoreCloudWasm_h
+#ifndef DSP_h
+#define DSP_h
 
-#include "../DSP.h"
-#include "../SHA512.h"
+#include "DSPDCT32.h"
 
-#endif /* CoreCloudWasm_h */
+#endif /* DSP_h */
