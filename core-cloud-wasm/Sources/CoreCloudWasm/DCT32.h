@@ -57,7 +57,11 @@
  *
  *     For 0 <= k < 32
  *       H[k] = sum(h[j] * cos(k * (j+1/2) * pi / 32, 0 <= j < 32)
+ *
+ * - Parameters:
+ *   - input: Single-precision input vector that contains 32 elements.
+ *   - output: Single-precision output vector that contains 32 elements.
  */
-void DCT32(const Float32 *vector, Float32 *result);
+void DCT32Execute(const Float32 *input, Float32 *output);
 
 #endif /* DCT32_h */

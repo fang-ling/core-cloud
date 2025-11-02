@@ -94,8 +94,8 @@
 }
 
 #define BF0(a, b, c, s) {              \
-  alpha = vector[a] + vector[b];       \
-  beta = vector[a] - vector[b];        \
+  alpha = input[a] + input[b];         \
+  beta = input[a] - input[b];          \
   value##a = alpha;                    \
   value##b = MULH3(beta, c, 1 << (s)); \
 }
@@ -118,7 +118,7 @@
 #define ADD(a, b) value##a += value##b
 
 /* DCT32 without 1/sqrt(2) coef zero scaling. */
-void DCT32(const Float32 *vector, Float32 *result) {
+void DCT32Execute(const Float32 *input, Float32 *output) {
   Float32 alpha;
   Float32 beta;
   Float32 value0;
@@ -265,22 +265,22 @@ void DCT32(const Float32 *vector, Float32 *result) {
   ADD(13, 11);
   ADD(11, 15);
 
-  result[ 0] = value0;
-  result[16] = value1;
-  result[ 8] = value2;
-  result[24] = value3;
-  result[ 4] = value4;
-  result[20] = value5;
-  result[12] = value6;
-  result[28] = value7;
-  result[ 2] = value8;
-  result[18] = value9;
-  result[10] = value10;
-  result[26] = value11;
-  result[ 6] = value12;
-  result[22] = value13;
-  result[14] = value14;
-  result[30] = value15;
+  output[ 0] = value0;
+  output[16] = value1;
+  output[ 8] = value2;
+  output[24] = value3;
+  output[ 4] = value4;
+  output[20] = value5;
+  output[12] = value6;
+  output[28] = value7;
+  output[ 2] = value8;
+  output[18] = value9;
+  output[10] = value10;
+  output[26] = value11;
+  output[ 6] = value12;
+  output[22] = value13;
+  output[14] = value14;
+  output[30] = value15;
 
   ADD(24, 28);
   ADD(28, 26);
@@ -290,20 +290,20 @@ void DCT32(const Float32 *vector, Float32 *result) {
   ADD(29, 27);
   ADD(27, 31);
 
-  result[ 1] = value16 + value24;
-  result[17] = value17 + value25;
-  result[ 9] = value18 + value26;
-  result[25] = value19 + value27;
-  result[ 5] = value20 + value28;
-  result[21] = value21 + value29;
-  result[13] = value22 + value30;
-  result[29] = value23 + value31;
-  result[ 3] = value24 + value20;
-  result[19] = value25 + value21;
-  result[11] = value26 + value22;
-  result[27] = value27 + value23;
-  result[ 7] = value28 + value18;
-  result[23] = value29 + value19;
-  result[15] = value30 + value17;
-  result[31] = value31;
+  output[ 1] = value16 + value24;
+  output[17] = value17 + value25;
+  output[ 9] = value18 + value26;
+  output[25] = value19 + value27;
+  output[ 5] = value20 + value28;
+  output[21] = value21 + value29;
+  output[13] = value22 + value30;
+  output[29] = value23 + value31;
+  output[ 3] = value24 + value20;
+  output[19] = value25 + value21;
+  output[11] = value26 + value22;
+  output[27] = value27 + value23;
+  output[ 7] = value28 + value18;
+  output[23] = value29 + value19;
+  output[15] = value30 + value17;
+  output[31] = value31;
 }
