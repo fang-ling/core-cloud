@@ -1,5 +1,5 @@
 //
-//  DSPDCT32.c
+//  DSPDCT.c
 //  core-cloud-wasm
 //
 //  Created by Fang Ling on 2025/11/1.
@@ -41,7 +41,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "DSPDCT32.h"
+#include "DSPDCT.h"
 
 #define MULH3(x, y, s) ((s)*(y)*(x))
 

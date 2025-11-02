@@ -20,6 +20,6 @@
 #ifndef DSP_h
 #define DSP_h
 
-#include "DSPDCT32.h"
+#include "DSPDCT.h"
 
 #endif /* DSP_h */

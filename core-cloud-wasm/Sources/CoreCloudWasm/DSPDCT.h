@@ -1,5 +1,5 @@
 //
-//  DSPDCT32.h
+//  DSPDCT.h
 //  core-cloud-wasm
 //
 //  Created by Fang Ling on 2025/11/1.
@@ -41,8 +41,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef DSPDCT32_h
-#define DSPDCT32_h
+#ifndef DSPDCT_h
+#define DSPDCT_h
 
 #include "Base.h"
 
@@ -64,4 +64,4 @@
  */
 void DSPDCT32Execute(const Float32 *input, Float32 *output);
 
-#endif /* DSPDCT32_h */
+#endif /* DSPDCT_h */
