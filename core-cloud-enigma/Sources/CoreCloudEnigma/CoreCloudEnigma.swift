@@ -17,6 +17,8 @@
 //  limitations under the License.
 //
 
+import Fluent
+import FluentSQLiteDriver
 import JWT
 import NIOSSL
 import Vapor
@@ -42,6 +44,13 @@ struct CoreCloudEnigma {
   }
 
   static func configure(_ app: Application) async throws {
+    /* Database configuration */
+    if app.environment == .testing {
+      app.databases.use(.sqlite(.memory), as: .sqlite)
+    } else {
+      app.databases.use(.sqlite(.file("core-cloud-enigma.sqlite")), as: .sqlite)
+    }
+
     /* JWT */
     if app.environment == .testing {
       await app.jwt.keys.add(hmac: "!!!TOP_SECRET!!!", digestAlgorithm: .sha512)
@@ -66,6 +75,10 @@ struct CoreCloudEnigma {
         )
       )
     }
+
+    /* Migrations */
+    app.migrations.add(KeyMigrationV1())
+    try await app.autoMigrate()
 
     /* Routes */
     try app.routes.register(collection: Route())

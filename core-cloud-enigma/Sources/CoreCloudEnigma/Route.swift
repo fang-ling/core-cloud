@@ -17,21 +17,23 @@
 //  limitations under the License.
 //
 
+import Fluent
 import Vapor
 
 struct Route: RouteCollection {
   func boot(routes: any RoutesBuilder) throws {
-    routes.get(":filename", use: getHandler)
+    routes
+      .grouped(AuthenticatorMiddleware())
+      .get(":filename", use: getHandler)
+
+    routes
+      .grouped("api")
+      .grouped("key")
+      .grouped(AuthenticatorMiddleware())
+      .post(use: insertKeyHandler)
   }
 
   func getHandler(request: Request) async -> Response {
-    do {
-      let jwt = request.cookies.all[CoreCloudEnigma.cookieName]?.string
-      try await request.jwt.verify(jwt ?? "", as: UserToken.self)
-    } catch {
-      return Response(status: .unauthorized)
-    }
-
     guard let filename = request.parameters.get("filename") else {
       return Response(status: .badRequest)
     }
@@ -60,8 +62,11 @@ struct Route: RouteCollection {
 
     let cleartext: Data
     do {
-      let buffer = try await request.fileio.collectFile(at: "Keys/\(name)")
-      let key = SymmetricKey(data: Data(buffer: buffer))
+      let keyData = try await Key.query(on: request.db)
+        .filter(\.$name == name)
+        .first()?
+        .data
+      let key = SymmetricKey(data: keyData ?? Data())
 
       cleartext = try AES.GCM.open(.init(combined: ciphertext), using: key)
     } catch {
@@ -78,5 +83,23 @@ struct Route: RouteCollection {
     response.body = .init(data: cleartext)
 
     return response
+  }
+
+  func insertKeyHandler(request: Request) async -> HTTPStatus {
+    guard
+      let input = try? request.content.decode(
+        Key.Singular.Input.Insertion.self
+      ),
+      let data = Data(base64Encoded: input.base64EncodedData)
+    else {
+      return .badRequest
+    }
+
+    let key = Key(name: input.name, data: data)
+    guard (try? await key.save(on: request.db)) != nil else {
+      return .serviceUnavailable
+    }
+
+    return .created
   }
 }
