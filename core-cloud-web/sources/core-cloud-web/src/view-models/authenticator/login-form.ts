@@ -21,7 +21,6 @@
 
 import { useState } from "react"
 import UserTokenService from "../../services/user-token-service"
-import { useRouter } from "next/navigation"
 import Localizer from "@/localizer"
 import { useBinding } from "ui/binding"
 
@@ -36,7 +35,6 @@ export default function useLoginForm() {
   const isRememberMe = useBinding(false)
   const [isPasswordPresented, setIsPasswordPresented] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
-  const router = useRouter()
 
   /* MARK: Event handlers */
   async function handleContinueButtonClick() {
@@ -59,9 +57,9 @@ export default function useLoginForm() {
       )
       if (isSuccess) {
         if (window.location.hash === "") {
-          router.push("/home")
+          window.location.replace("/home")
         } else {
-          router.push(window.location.hash.substring(1))
+          window.location.replace(window.location.hash.substring(1))
         }
       } else {
         setErrorMessage(
