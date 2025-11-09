@@ -108,6 +108,9 @@ struct CoreCloudServer {
       )
     }
 
+    // Commands
+    app.asyncCommands.use(VersionCommand(), as: "version")
+
     /* Migrations */
     app.migrations.add(UserMigrationV1())
     app.migrations.add(SettingMigrationV1())
@@ -124,6 +127,7 @@ struct CoreCloudServer {
     app.migrations.add(HomeVideoMigrationV1())
     app.migrations.add(TVShowMigrationV1())
     app.migrations.add(EpisodeMigrationV1())
+    /*app.migrations.add(VerificationCodeMigrationV1())*/
     try await app.autoMigrate()
 
     /* Routes */
