@@ -26,6 +26,11 @@ struct BodyguardMiddleware: AsyncMiddleware {
   ) async throws -> Response {
     let token = request.cookies.all[CoreCloudServer.cookieName]?.string
 
+    // Bypass JWT verification for APIs.
+    if request.url.path.starts(with: "/api/") {
+      return try await next.respond(to: request)
+    }
+
     do {
       try await request.jwt.verify(token ?? "", as: UserToken.self)
 
@@ -34,7 +39,7 @@ struct BodyguardMiddleware: AsyncMiddleware {
         return request.redirect(to: "/home")
       }
     } catch {
-      request.logger.notice("Invalid token: \(error)")
+      request.logger.notice("Invalid token: \(error), url: \(request.url)")
       /* If not logged in and want to see the protected page */
       if (
         request.url.path.starts(with: "/home") ||
