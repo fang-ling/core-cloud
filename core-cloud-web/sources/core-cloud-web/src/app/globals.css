@@ -93,6 +93,8 @@
   --theme-color-systemRed: hsl(0, 100, 44.5);
   --theme-color-systemWhite: hsl(0, 0, 100);
   --theme-color-systemYellow: rgb(255, 205, 0);
+  --tv-cardBackgroundColor: rgb(255, 255, 255);
+  --tv-opaqueShelfBG: rgb(242, 242, 242);
 
   /* EFFECTS */
   --music-shadow-playerContainer:
@@ -172,6 +174,8 @@
     --theme-color-systemRed: hsl(358, 100, 59.4);
     --theme-color-systemWhite: hsl(0, 0, 100);
     --theme-color-systemYellow: rgb(255, 214, 10);
+    --tv-cardBackgroundColor: rgba(255, 255, 255, 0.1);
+    --tv-opaqueShelfBG: rgb(43, 43, 43);
 
     /* EFFECTS */
     --music-shadow-playerContainer:
@@ -265,6 +269,9 @@
   --color-sk-button-color: var(--sk-button-color);
   --color-sk-button-background-hover: var(--sk-button-background-hover);
   --color-sk-button-background-active: var(--sk-button-background-active);
+
+  --color-tv-cardBackgroundColor: var(--tv-cardBackgroundColor);
+  --color-tv-opaqueShelfBG: var(--tv-opaqueShelfBG);
 
   /* EFFECTS */
   --shadow-music-playerContainer: var(--music-shadow-playerContainer);

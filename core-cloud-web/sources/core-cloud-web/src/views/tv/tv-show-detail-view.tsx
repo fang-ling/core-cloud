@@ -325,13 +325,12 @@ export default function TVShowDetailView({
               />
               <Text verbatimContent={episode.title} />
               <Text verbatimContent={episode.description} />
-              <Text verbatimContent={episode.title} />
               <Text
                 verbatimContent={new Date(episode.date).toLocaleDateString()}
               />
               <Text verbatimContent={episode.duration.toString()} />
-              <Text verbatimContent={episode.episodeNumber.toString()} />
-              <Text verbatimContent={episode.seasonNumber.toString()} />
+              <Text verbatimContent={"E" + episode.episodeNumber.toString()} />
+              <Text verbatimContent={"S" + episode.seasonNumber.toString()} />
               <a
                 href={`/api/file?id=${episode.fileID}&application=TV`}
                 target="_blank"
@@ -342,12 +341,53 @@ export default function TVShowDetailView({
           ))
         }
 
-        <Text
-          verbatimContent={tvShow.region}
-        />
-        <Text
-          verbatimContent={tvShow.studio}
-        />
+        {/* About */}
+        <VStack
+          widthClassName="w-full"
+          paddingClassName="pt-11 px-6.25 md:px-10"
+          backgroundStyleClassName="bg-tv-opaqueShelfBG"
+        >
+          <Text
+            textKey="About"
+            fontSizeClassName="text-base"
+            fontWeightClassName="font-bold"
+            foregroundStyleClassName="text-labelPrimary"
+            lineHeightClassName="leading-5"
+            marginClassName="mb-3"
+          />
+
+          <HStack widthClassName="w-full">
+            <VStack
+              widthClassName="w-full md:w-1/3"
+              borderClassName="rounded-xl"
+              paddingClassName="p-4"
+              backgroundStyleClassName="bg-tv-cardBackgroundColor"
+            >
+              <Text
+                verbatimContent={tvShow.title}
+                fontSizeClassName="text-base"
+                fontWeightClassName="font-bold"
+                foregroundStyleClassName="text-labelPrimary"
+                lineHeightClassName="leading-5"
+                marginClassName="mb-1"
+              />
+              <Text
+                textKey={tvShow.genre}
+                fontSizeClassName="text-[11px]"
+                foregroundStyleClassName="text-labelSecondary"
+                lineHeightClassName="leading-3.25"
+                marginClassName="mb-1"
+              />
+            </VStack>
+          </HStack>
+
+          <Text
+            verbatimContent={tvShow.region}
+          />
+          <Text
+            verbatimContent={tvShow.studio}
+          />
+        </VStack>
 
       </VStack>
 
