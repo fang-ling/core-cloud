@@ -26,7 +26,7 @@ let dependencies: [(String, PackageDescription.Version)] = [
   ("https://github.com/vapor/fluent.git", "4.13.0"),
   ("https://github.com/vapor/fluent-sqlite-driver.git", "4.8.1"),
   ("https://github.com/vapor/jwt.git", "5.1.2"),
-  ("https://github.com/vapor/vapor.git", "4.117.0")
+  ("https://github.com/vapor/vapor.git", "4.119.0")
 ]
 
 let package = Package(
