@@ -1,5 +1,5 @@
 //
-//  SHA512.h
+//  Crypto_SHA512.h
 //  core-cloud-wasm
 //
 //  Created by Fang Ling on 2025/10/25.
@@ -43,20 +43,16 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SHA512_h
-#define SHA512_h
+#ifndef Crypto_SHA512_h
+#define Crypto_SHA512_h
 
 #include "Base.h"
 
-#define SHA512_BLOCK_LENGTH          128
-#define SHA512_DIGEST_LENGTH         64
-#define SHA512_DIGEST_STRING_LENGTH  (SHA512_DIGEST_LENGTH * 2 + 1)
-
-struct SHA512Context {
-  UInt64 state[8];
-  UInt64 count[2];
-  UInt8 buffer[SHA512_BLOCK_LENGTH];
-};
+/**
+ * An implementation of Secure Hashing Algorithm 2 (SHA-2) hashing with a
+ * 512-bit digest.
+ */
+struct Crypto_SHA512_Context;
 
 /**
  * Creates a SHA512 hash function.
@@ -64,39 +60,40 @@ struct SHA512Context {
  * Initialize a new hash function by calling this method if you want to hash the
  * data iteratively, such as when you don't have a buffer large enough to hold
  * all the data at once. Provide data blocks to the hash function using the
- * ``SHA512Update()`` method. After providing all the data, call
- * ``SHA512Finalize()`` to get the digest.
+ * ``Crypto_SHA512_Update()`` method. After providing all the data, call
+ * ``Crypto_SHA512_Finalize()`` to get the digest.
  */
-void SHA512Init(struct SHA512Context* context);
+void Crypto_SHA512_Init(struct Crypto_SHA512_Context* context);
 
 /**
  * Incrementally updates the hash function with the contents of the buffer.
  *
  * Call this method one or more times to provide data to the hash function in
- * blocks. After providing the last block of data, call the ``SHA512Finalize()``
- * method to get the computed digest. Don't call the update method again after
- * finalizing the hash function.
+ * blocks. After providing the last block of data, call the
+ * ``Crypto_SHA512_Finalize()`` method to get the computed digest. Don't call
+ * the update method again after finalizing the hash function.
  *
  * - Parameters:
  *   - buffer: A pointer to the next block of data for the ongoing digest
  *             calculation.
  *   - count: The number of bytes in the buffer.
  */
-void SHA512Update(struct SHA512Context* context,
-                  TypeReference buffer,
-                  Int64 count);
+void Crypto_SHA512_Update(struct Crypto_SHA512_Context* context,
+                          const UInt8* buffer,
+                          Int64 count);
 
 /**
  * Finalizes the hash function and returns the computed digest.
  *
  * Call this method after you provide the hash function with all the data to
- * hash by making one or more calls to the ``SHA512Update()`` method. After
- * finalizing the hash function, discard it. To compute a new digest, create a
- * new hash function with a call to the ``SHA512Init()`` method.
+ * hash by making one or more calls to the ``Crypto_SHA512_Update()`` method.
+ * After finalizing the hash function, discard it. To compute a new digest,
+ * create a new hash function with a call to the ``Crypto_SHA512_Init()``
+ * method.
  *
  * - Returns: The computed digest of the data.
  */
-void SHA512Finalize(struct SHA512Context* context,
-                    UInt8 digest[static SHA512_DIGEST_LENGTH]);
+void Crypto_SHA512_Finalize(struct Crypto_SHA512_Context* context,
+                            UInt8 digest[static 64]);
 
-#endif /* SHA512_h */
+#endif /* Crypto_SHA512_h */

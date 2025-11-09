@@ -21,6 +21,7 @@
 #define Base_h
 
 #include <stdint.h>
+#include <string.h>
 
 /* MARK: - Unsigned Integers */
 /**
@@ -52,10 +53,27 @@ typedef int64_t Int64;
  */
 typedef float Float32;
 
-/* MARK: - Other Data Types */
+/* MARK: - Working with Byte Order */
+
 /**
- * An untyped "generic" reference to any object.
+ * Converts a 64-bit integer from the host's native byte order to big-endian
+ * format bytes.
+ *
+ * - Parameters:
+ *   - source: The integer whose bytes should be swapped.
+ *   - destination: A byte buffer to be filled with values from the integer with
+ *     its bytes swapped.
  */
-typedef const void* TypeReference;
+void UInt64_BigEndianBytes(const UInt64 source, UInt8* destination);
+
+/**
+ * Creates an integer value from a byte buffer in big-endian format.
+ *
+ * - Parameters:
+ *   - source: A byte buffer in big-endian format.
+ *   - destination: A pointer to an integer where the value converted from the
+ *     byte buffer will be stored.
+ */
+void UInt64_InitBigEndianBytes(const UInt8* source, UInt64* destination);
 
 #endif /* Base_h */

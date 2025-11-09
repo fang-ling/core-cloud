@@ -21,6 +21,6 @@
 #define CoreCloudWasm_h
 
 #include "../DSP.h"
-#include "../SHA512.h"
+#include "../Crypto_SHA512.h"
 
 #endif /* CoreCloudWasm_h */

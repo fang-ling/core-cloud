@@ -1,5 +1,5 @@
 //
-//  SHA512.c
+//  Crypto_SHA512.c
 //  core-cloud-wasm
 //
 //  Created by Fang Ling on 2025/10/25.
@@ -44,75 +44,13 @@
  * SUCH DAMAGE.
  */
 
-#include "SHA512.h"
+#include "Crypto_SHA512.h"
 
-#include <string.h>
-
-/* Endian convertion functions. */
-#define be32enc(buffer, u)     \
-  do {                         \
-    UInt8* p = buffer;         \
-    UInt32 v = u;              \
-                               \
-    p[0] = (u >> 24) & 0xff;   \
-    p[1] = (u >> 16) & 0xff;   \
-    p[2] = (u >> 8) & 0xff;    \
-    p[3] = u & 0xff;           \
-  } while (0)
-#define be64enc(buffer, u)     \
-  do {                         \
-    UInt8* p = buffer;         \
-    UInt64 v = u;              \
-                               \
-    p[0] = (u >> 56) & 0xff;   \
-    p[1] = (u >> 48) & 0xff;   \
-    p[2] = (u >> 40) & 0xff;   \
-    p[3] = (u >> 32) & 0xff;   \
-    p[4] = (u >> 24) & 0xff;   \
-    p[5] = (u >> 16) & 0xff;   \
-    p[6] = (u >> 8) & 0xff;    \
-    p[7] = u & 0xff;           \
-  } while (0)
-#define be64dec(buffer) ({ \
-  const UInt8* p = buffer; \
-                           \
-  ((UInt64)p[0] << 56) |   \
-  ((UInt64)p[1] << 48) |   \
-  ((UInt64)p[2] << 40) |   \
-  ((UInt64)p[3] << 32) |   \
-  ((UInt64)p[4] << 24) |   \
-  ((UInt64)p[5] << 16) |   \
-  ((UInt64)p[6] << 8) |    \
-  ((UInt64)p[7]);          \
-})
-
-/*
- * Encode a length (len + 7) / 8 vector of (UInt64) into a length len
- * vector of (UInt8) in big-endian form.  Assumes len is a multiple of 4.
- */
-static inline void be64enc_vector(UInt8* destination,
-                                  const UInt64 *source,
-                                  Int64 count) {
-  Int64 i = 0;
-  for (; i < count / 8; i += 1) {
-    be64enc(destination + i * 8, source[i]);
-  }
-  if (count % 8 == 4) {
-    be32enc(destination + i * 8, source[i] >> 32);
-  }
-}
-
-/*
- * Decode a big-endian length len vector of (UInt8) into a length len/8 vector
- * of (UInt64).  Assumes len is a multiple of 8.
- */
-static inline void be64dec_vector(UInt64 *destination,
-                                  const UInt8 *source,
-                                  Int64 count) {
-  for (Int64 i = 0; i < count / 8; i += 1) {
-    destination[i] = be64dec(source + i * 8);
-  }
-}
+struct Crypto_SHA512_Context {
+  UInt64 state[8];
+  UInt64 count[2];
+  UInt8 buffer[128];
+};
 
 /* SHA512 round constants. */
 static const UInt64 K[80] = {
@@ -193,16 +131,17 @@ static const UInt64 K[80] = {
  * SHA512 block compression function.  The 512-bit state is transformed via
  * the 512-bit input block to produce a new state.
  */
-static void SHA512Transform(UInt64* state,
-                            const UInt8 block[SHA512_BLOCK_LENGTH]) {
+static void Crypto_SHA512_Transform(UInt64* state, const UInt8 block[128]) {
   UInt64 W[80];
   UInt64 S[8];
 
   /* 1. Prepare the first part of the message schedule W. */
-  be64dec_vector(W, block, SHA512_BLOCK_LENGTH);
+  for (Int32 i = 0; i < 16; i += 1) {
+    UInt64_InitBigEndianBytes(block + i * 8, &W[i]);
+  }
 
   /* 2. Initialize working variables. */
-  memcpy(S, state, SHA512_DIGEST_LENGTH);
+  memcpy(S, state, 64);
 
   /* 3. Mix. */
   for (Int32 i = 0; i < 80; i += 16) {
@@ -250,7 +189,7 @@ static void SHA512Transform(UInt64* state,
   }
 }
 
-static UInt8 PAD[SHA512_BLOCK_LENGTH] = {
+static UInt8 PAD[128] = {
   0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -262,7 +201,7 @@ static UInt8 PAD[SHA512_BLOCK_LENGTH] = {
 };
 
 /* Add padding and terminating bit-count. */
-static void SHA512Pad(struct SHA512Context *context) {
+static void Crypto_SHA512_Pad(struct Crypto_SHA512_Context *context) {
   /* Figure out how many bytes we have buffered. */
   UInt64 r = (context->count[1] >> 3) & 0x7f;
 
@@ -273,21 +212,23 @@ static void SHA512Pad(struct SHA512Context *context) {
   } else {
     /* Finish the current block and mix. */
     memcpy(&context->buffer[r], PAD, 128 - r);
-    SHA512Transform(context->state, context->buffer);
+    Crypto_SHA512_Transform(context->state, context->buffer);
 
     /* The start of the final block is all zeroes. */
     memset(&context->buffer[0], 0, 112);
   }
 
   /* Add the terminating bit-count. */
-  be64enc_vector(&context->buffer[112], context->count, 16);
+  for (Int32 i = 0; i < 2; i += 1) {
+    UInt64_BigEndianBytes(context->count[i], &context->buffer[112] + i * 8);
+  }
 
   /* Mix in the final block. */
-  SHA512Transform(context->state, context->buffer);
+  Crypto_SHA512_Transform(context->state, context->buffer);
 }
 
 /* SHA-512 initialization.  Begins a SHA-512 operation. */
-void SHA512Init(struct SHA512Context* context) {
+void Crypto_SHA512_Init(struct Crypto_SHA512_Context* context) {
   /* Zero bits processed so far */
   context->count[0] = context->count[1] = 0;
 
@@ -303,9 +244,9 @@ void SHA512Init(struct SHA512Context* context) {
 }
 
 /* Add bytes into the hash */
-void SHA512Update(struct SHA512Context* context,
-                  TypeReference buffer,
-                  Int64 count) {
+void Crypto_SHA512_Update(struct Crypto_SHA512_Context* context,
+                          const UInt8* buffer,
+                          Int64 count) {
   const UInt8* source = buffer;
 
   /* Number of bytes left in the buffer from previous updates */
@@ -323,22 +264,22 @@ void SHA512Update(struct SHA512Context* context,
   context->count[0] += bitlen[0];
 
   /* Handle the case where we don't need to perform any transforms */
-  if (count < SHA512_BLOCK_LENGTH - r) {
+  if (count < 128 - r) {
     memcpy(&context->buffer[r], source, count);
     return;
   }
 
   /* Finish the current block */
-  memcpy(&context->buffer[r], source, SHA512_BLOCK_LENGTH - r);
-  SHA512Transform(context->state, context->buffer);
-  source += SHA512_BLOCK_LENGTH - r;
-  count -= SHA512_BLOCK_LENGTH - r;
+  memcpy(&context->buffer[r], source, 128 - r);
+  Crypto_SHA512_Transform(context->state, context->buffer);
+  source += 128 - r;
+  count -= 128 - r;
 
   /* Perform complete blocks */
-  while (count >= SHA512_BLOCK_LENGTH) {
-    SHA512Transform(context->state, source);
-    source += SHA512_BLOCK_LENGTH;
-    count -= SHA512_BLOCK_LENGTH;
+  while (count >= 128) {
+    Crypto_SHA512_Transform(context->state, source);
+    source += 128;
+    count -= 128;
   }
 
   /* Copy left over data into buffer */
@@ -349,13 +290,15 @@ void SHA512Update(struct SHA512Context* context,
  * SHA-512 finalization.  Pads the input data, exports the hash value,
  * and clears the context state.
  */
-void SHA512Finalize(struct SHA512Context* context,
-                    UInt8 digest[static SHA512_DIGEST_LENGTH]) {
+void Crypto_SHA512_Finalize(struct Crypto_SHA512_Context* context,
+                            UInt8 digest[static 64]) {
   /* Add padding */
-  SHA512Pad(context);
+  Crypto_SHA512_Pad(context);
 
   /* Write the hash */
-  be64enc_vector(digest, context->state, SHA512_DIGEST_LENGTH);
+  for (Int32 i = 0; i < 8; i += 1) {
+    UInt64_BigEndianBytes(context->state[i], digest + i * 8);
+  }
 
   /* Clear the context state */
   memset(context, 0, sizeof(*context));
