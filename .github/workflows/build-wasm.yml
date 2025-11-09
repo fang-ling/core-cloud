@@ -21,7 +21,7 @@ jobs:
         cd core-cloud-wasm/Sources/CoreCloudWasm
         emcc SHA512.c -O3 -msimd128 -o SHA512.wasm \
              -s STANDALONE_WASM=1 \
-             -s EXPORTED_FUNCTIONS='["_SHA512Init","_SHA512Update","_SHA512Finalize","_malloc","_free"]' \
+             -s EXPORTED_FUNCTIONS='["_Crypto_SHA512_Init","_Crypto_SHA512_Update","_Crypto_SHA512_Finalize","_malloc","_free"]' \
              -s EXPORTED_RUNTIME_METHODS='["cwrap","getValue","setValue"]' \
              -Wl,--no-entry
 
