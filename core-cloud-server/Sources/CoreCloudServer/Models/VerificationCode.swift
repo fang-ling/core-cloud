@@ -27,6 +27,9 @@ final class VerificationCode: Model, @unchecked Sendable {
   @Field(key: FieldKeys.secretSealedBox)
   var secretSealedBox: Data
 
+  @Field(key: FieldKeys.secretSealedBoxKeySealedBox)
+  var secretSealedBoxKeySealedBox: Data
+
   @Field(key: FieldKeys.digest)
   var digest: Int64
 
@@ -35,6 +38,9 @@ final class VerificationCode: Model, @unchecked Sendable {
 
   @Field(key: FieldKeys.interval)
   var interval: Int64
+
+  @Parent(key: FieldKeys.passwordID)
+  var password: Password
 
   @Parent(key: FieldKeys.userID)
   var user: User
@@ -50,18 +56,22 @@ final class VerificationCode: Model, @unchecked Sendable {
   init(
     id: Int64? = nil,
     secretSealedBox: Data,
+    secretSealedBoxKeySealedBox: Data,
     digest: Int64,
     digits: Int64,
     interval: Int64,
+    passwordID: Password.IDValue,
     userID: User.IDValue,
     createdAt: Date? = nil,
     updatedAt: Date? = nil
   ) {
     self.id = id
     self.secretSealedBox = secretSealedBox
+    self.secretSealedBoxKeySealedBox = secretSealedBoxKeySealedBox
     self.digest = digest
     self.digits = digits
     self.interval = interval
+    self.$password.id = passwordID
     self.$user.id = userID
     self.createdAt = createdAt
     self.updatedAt = updatedAt
@@ -74,9 +84,13 @@ extension VerificationCode {
   enum FieldKeys {
     static let id: FieldKey = "id"
     static let secretSealedBox: FieldKey = "secret_sealed_box"
+    static let secretSealedBoxKeySealedBox: FieldKey = (
+      "secret_sealed_box_key_sealed_box"
+    )
     static let digest: FieldKey = "digest"
     static let digits: FieldKey = "digits"
     static let interval: FieldKey = "interval"
+    static let passwordID: FieldKey = "password_id"
     static let userID: FieldKey = "user_id"
     static let createdAt: FieldKey = "created_at"
     static let updatedAt: FieldKey = "updated_at"
@@ -128,5 +142,35 @@ extension VerificationCode {
     case cryptoError
     case databaseError
     case noSuchVerificationCode
+  }
+}
+
+extension VerificationCode {
+  enum Singular { }
+  enum Plural { }
+}
+
+extension VerificationCode.Singular {
+  enum Input { }
+  enum Output { }
+}
+
+extension VerificationCode.Singular.Input {
+  struct Insertion: Codable {
+    var base32EncodedSecret: String
+    var digest: String
+    var digits: Int64
+    var interval: Int64
+    var passwordID: Int64
+  }
+
+  struct Retrieval: Codable {
+    var id: Int64
+  }
+}
+
+extension VerificationCode.Singular.Output {
+  struct Retrieval: Codable {
+    var verificationCode: String
   }
 }

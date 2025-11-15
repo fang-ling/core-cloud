@@ -24,7 +24,7 @@ struct BodyguardMiddleware: AsyncMiddleware {
     to request: Request,
     chainingTo next: any AsyncResponder
   ) async throws -> Response {
-    let token = request.cookies.all[CoreCloudServer.cookieName]?.string
+    let token = request.cookies.all[CoreCloudServer.Cookie.Keys.jwt]?.string
 
     // Bypass JWT verification for APIs.
     if request.url.path.starts(with: "/api/") {

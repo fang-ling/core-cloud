@@ -24,11 +24,22 @@ struct VerificationCodeMigrationV1: AsyncMigration {
 
   func prepare(on database: any FluentKit.Database) async throws {
     try await database.schema(VerificationCode.schema)
-      .field(VerificationCode.FieldKeys.id, .int64, .identifier(auto: true))
+      .field(VerificationCode.FieldKeys.id, .int64, .identifier(auto: false))
       .field(VerificationCode.FieldKeys.secretSealedBox, .data, .required)
+      .field(
+        VerificationCode.FieldKeys.secretSealedBoxKeySealedBox,
+        .data,
+        .required
+      )
       .field(VerificationCode.FieldKeys.digest, .int64, .required)
       .field(VerificationCode.FieldKeys.digits, .int64, .required)
       .field(VerificationCode.FieldKeys.interval, .int64, .required)
+      .field(
+        VerificationCode.FieldKeys.passwordID,
+        .int64,
+        .required,
+        .references(Password.schema, Password.FieldKeys.id)
+      )
       .field(
         VerificationCode.FieldKeys.userID,
         .int64,
@@ -37,6 +48,7 @@ struct VerificationCodeMigrationV1: AsyncMigration {
       )
       .field(VerificationCode.FieldKeys.createdAt, .datetime)
       .field(VerificationCode.FieldKeys.updatedAt, .datetime)
+      .unique(on: VerificationCode.FieldKeys.passwordID)
       .create()
   }
 

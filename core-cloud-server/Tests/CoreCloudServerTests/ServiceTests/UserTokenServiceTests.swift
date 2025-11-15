@@ -45,10 +45,10 @@ extension ServiceTests {
         let key = try KDF.Scrypt.deriveKey(
           from: Data("Top-2-Secret".utf8),
           salt: salt.withUnsafeBytes({ Data($0) }),
-          outputByteCount: CoreCloudServer.SCRYPT_OUTPUT_BYTE_COUNT,
-          rounds: CoreCloudServer.SCRYPT_ROUNDS,
-          blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
-          parallelism: CoreCloudServer.SCRYPT_PARALLELISM
+          outputByteCount: CoreCloudServer.Scrypt.outputByteCount,
+          rounds: CoreCloudServer.Scrypt.rounds,
+          blockSize: CoreCloudServer.Scrypt.blockSize,
+          parallelism: CoreCloudServer.Scrypt.parallelism
         )
 
         let alice = User(
@@ -99,10 +99,10 @@ extension ServiceTests {
         let key = try KDF.Scrypt.deriveKey(
           from: Data("Top-2-Secret".utf8),
           salt: salt.withUnsafeBytes({ Data($0) }),
-          outputByteCount: CoreCloudServer.SCRYPT_OUTPUT_BYTE_COUNT,
-          rounds: CoreCloudServer.SCRYPT_ROUNDS,
-          blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
-          parallelism: CoreCloudServer.SCRYPT_PARALLELISM
+          outputByteCount: CoreCloudServer.Scrypt.outputByteCount,
+          rounds: CoreCloudServer.Scrypt.rounds,
+          blockSize: CoreCloudServer.Scrypt.blockSize,
+          parallelism: CoreCloudServer.Scrypt.parallelism
         )
 
         let alice = User(

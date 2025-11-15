@@ -1,8 +1,8 @@
 //
-//  AlbumMigrationV1.swift
+//  PasswordMigrationV1.swift
 //  core-cloud-server
 //
-//  Created by Fang Ling on 2025/9/9.
+//  Created by Fang Ling on 2025/11/13.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,36 +19,30 @@
 
 import Fluent
 
-struct AlbumMigrationV1: AsyncMigration {
-  var name = "AlbumMigrationV1"
+struct PasswordMigrationV1: AsyncMigration {
+  var name = "PasswordMigrationV1"
 
   func prepare(on database: any Database) async throws {
-    try await database.schema(Album.schema)
-      .field(Album.FieldKeys.id, .int64, .identifier(auto: false))
-      .field(Album.FieldKeys.name, .string, .required)
-      .field(Album.FieldKeys.artist, .string, .required)
-      .field(Album.FieldKeys.genre, .string, .required)
-      .field(Album.FieldKeys.year, .int64, .required)
-      .field(Album.FieldKeys.artworkURLs, .string, .required)
+    try await database.schema(Password.schema)
+      .field(Password.FieldKeys.id, .int64, .identifier(auto: false))
+      .field(Password.FieldKeys.label, .string, .required)
+      .field(Password.FieldKeys.username, .string)
+      .field(Password.FieldKeys.keySealedBox, .data, .required)
+      .field(Password.FieldKeys.keySealedBoxKeySealedBox, .data, .required)
+      .field(Password.FieldKeys.notes, .string)
       .field(
-        Album.FieldKeys.userID,
+        Password.FieldKeys.userID,
         .int64,
         .required,
         .references(User.schema, User.FieldKeys.id)
       )
-      .field(Album.FieldKeys.createdAt, .datetime)
-      .field(Album.FieldKeys.updatedAt, .datetime)
-      .unique(
-        on: Album.FieldKeys.name,
-        Album.FieldKeys.artist,
-        Album.FieldKeys.year,
-        Album.FieldKeys.userID
-      )
+      .field(VerificationCode.FieldKeys.createdAt, .datetime)
+      .field(VerificationCode.FieldKeys.updatedAt, .datetime)
       .create()
   }
 
   func revert(on database: any Database) async throws {
-    try await database.schema(Album.schema)
+    try await database.schema(Password.schema)
       .delete()
   }
 }

@@ -24,7 +24,7 @@ struct LocationMigrationV1: AsyncMigration {
 
   func prepare(on database: any FluentKit.Database) async throws {
     try await database.schema(Location.schema)
-      .field(Location.FieldKeys.id, .int64, .identifier(auto: true))
+      .field(Location.FieldKeys.id, .int64, .identifier(auto: false))
       .field(Location.FieldKeys.name, .string, .required)
       .field(Location.FieldKeys.path, .string, .required)
       .field(

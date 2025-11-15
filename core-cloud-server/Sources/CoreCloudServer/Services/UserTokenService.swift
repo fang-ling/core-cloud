@@ -58,10 +58,10 @@ struct UserTokenService {
       let derivedKey = try KDF.Scrypt.deriveKey(
         from: Data(password.utf8),
         salt: user.salt,
-        outputByteCount: 256 / 8,
-        rounds: CoreCloudServer.SCRYPT_ROUNDS,
-        blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
-        parallelism: CoreCloudServer.SCRYPT_PARALLELISM
+        outputByteCount: CoreCloudServer.Scrypt.outputByteCount,
+        rounds: CoreCloudServer.Scrypt.rounds,
+        blockSize: CoreCloudServer.Scrypt.blockSize,
+        parallelism: CoreCloudServer.Scrypt.parallelism
       )
       if user.key != derivedKey.withUnsafeBytes({ Data($0) }) {
         throw UserError.invalidCredentials

@@ -86,10 +86,10 @@ struct UserService {
       key = try KDF.Scrypt.deriveKey(
         from: Data(password.utf8),
         salt: salt.withUnsafeBytes({ Data($0) }),
-        outputByteCount: CoreCloudServer.SCRYPT_OUTPUT_BYTE_COUNT,
-        rounds: CoreCloudServer.SCRYPT_ROUNDS,
-        blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
-        parallelism: CoreCloudServer.SCRYPT_PARALLELISM
+        outputByteCount: CoreCloudServer.Scrypt.outputByteCount,
+        rounds: CoreCloudServer.Scrypt.rounds,
+        blockSize: CoreCloudServer.Scrypt.blockSize,
+        parallelism: CoreCloudServer.Scrypt.parallelism
       )
     } catch {
       throw UserError.cryptoError
@@ -101,10 +101,10 @@ struct UserService {
       let masterKeySealedBoxKey = try KDF.Scrypt.deriveKey(
         from: Data(masterPassword.utf8),
         salt: masterKeySealedBoxSalt.withUnsafeBytes({ Data($0) }),
-        outputByteCount: CoreCloudServer.SCRYPT_OUTPUT_BYTE_COUNT,
-        rounds: CoreCloudServer.SCRYPT_ROUNDS,
-        blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
-        parallelism: CoreCloudServer.SCRYPT_PARALLELISM
+        outputByteCount: CoreCloudServer.Scrypt.outputByteCount,
+        rounds: CoreCloudServer.Scrypt.rounds,
+        blockSize: CoreCloudServer.Scrypt.blockSize,
+        parallelism: CoreCloudServer.Scrypt.parallelism
       )
 
       let masterKey = SymmetricKey(size: .bits256)
@@ -228,10 +228,10 @@ struct UserService {
       let key = try KDF.Scrypt.deriveKey(
         from: Data(masterPassword.utf8),
         salt: user.masterKeySealedBoxSalt,
-        outputByteCount: CoreCloudServer.SCRYPT_OUTPUT_BYTE_COUNT,
-        rounds: CoreCloudServer.SCRYPT_ROUNDS,
-        blockSize: CoreCloudServer.SCRYPT_BLOCK_SIZE,
-        parallelism: CoreCloudServer.SCRYPT_PARALLELISM
+        outputByteCount: CoreCloudServer.Scrypt.outputByteCount,
+        rounds: CoreCloudServer.Scrypt.rounds,
+        blockSize: CoreCloudServer.Scrypt.blockSize,
+        parallelism: CoreCloudServer.Scrypt.parallelism
       )
 
       return try SymmetricKey(

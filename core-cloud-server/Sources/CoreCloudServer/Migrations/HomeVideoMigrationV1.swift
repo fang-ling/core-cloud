@@ -24,7 +24,7 @@ struct HomeVideoMigrationV1: AsyncMigration {
 
   func prepare(on database: any Database) async throws {
     try await database.schema(HomeVideo.schema)
-      .field(HomeVideo.FieldKeys.id, .int64, .identifier(auto: true))
+      .field(HomeVideo.FieldKeys.id, .int64, .identifier(auto: false))
       .field(HomeVideo.FieldKeys.title, .string, .required)
       .field(HomeVideo.FieldKeys.cast, .string, .required)
       .field(HomeVideo.FieldKeys.director, .string, .required)

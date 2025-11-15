@@ -1,8 +1,8 @@
 //
-//  TVShowControllerTests.swift
+//  PasswordControllerTests.swift
 //  core-cloud-server
 //
-//  Created by Fang Ling on 2025/10/19.
+//  Created by Fang Ling on 2025/11/15.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@
 import Testing
 import VaporTesting
 
-extension TVShow.Singular.Input.Insertion: Content { }
+extension Password.Singular.Input.Insertion: Content { }
 
 extension ControllerTests {
-  @Test("TVShowControllerTests")
-  func testTVShowController() async throws {
+  @Test("PasswordControllerTests")
+  func testPasswordController() async throws {
     try await withApp(configure: CoreCloudServer.configure) { app in
       try await app.testing().test(
         .POST,
-        "api/tv-show",
+        "api/password",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -37,7 +37,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/tv-shows",
+        "api/passwords",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -45,7 +45,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/tv-show",
+        "api/password",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -99,7 +99,40 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/tv-show",
+        "api/password",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/password",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
+
+      var token: HTTPCookies.Value?
+      try await app.testing().test(
+        .POST,
+        "api/application-token",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -109,22 +142,44 @@ extension ControllerTests {
           )
 
           try request.content.encode(
-            TVShow.Singular.Input.Insertion(
-              title: "Chernobyl",
-              starring: "Jared Harris,Stellan Skarsgård,Emily Watson",
-              genre: "Drama",
-              startYear: 2019,
-              endYear: 2019,
-              region: "United States,Russia",
-              description: (
-                "Starring Jared Harris, Stellan Skarsgard and Emily Watson, " +
-                #""Chernobyl" tells the story of the 1986 nuclear accident "# +
-                "in this HBO Miniseries."
-              ),
-              posterURLs: "https://example.com/1.png",
-              artworkURLs: "https://example.com/2.png",
-              titleLogoURLs: "https://example.com/3.png",
-              studio: "HBO"
+            ApplicationToken.Singular.Input.Insertion(
+              masterPassword: "Top--1-Secret"
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+
+          token = response
+            .headers
+            .setCookie?
+            .all[CoreCloudServer.Cookie.Keys.applicationToken]
+          #expect(cookie?.string != nil)
+          #expect(cookie?.path == "/")
+          #expect(cookie?.maxAge == nil)
+          #expect(cookie?.isHTTPOnly == true)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/password",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            ), (
+              CoreCloudServer.Cookie.Keys.applicationToken,
+              token!
+            )
+          )
+          try request.content.encode(
+            Password.Singular.Input.Insertion(
+              label: "example.com",
+              username: "Alice",
+              key: "1234567890",
+              notes: "Test"
             )
           )
         },
@@ -133,9 +188,10 @@ extension ControllerTests {
         }
       )
 
+      var passwordID: Int64?
       try await app.testing().test(
         .GET,
-        "api/tv-show?id=1",
+        "api/passwords?fields=label,username,verificationCodeID",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -147,33 +203,59 @@ extension ControllerTests {
         afterResponse: { response async throws in
           #expect(response.status == .ok)
 
-          let tvShow = try response.content.decode(
-            TVShow.Singular.Output.Retrieval.self
+          let passwords = try response.content.decode(
+            [Password.Plural.Output.Retrieval].self
           )
-          #expect(tvShow.genre == "Drama")
-          #expect(tvShow.startYear == 2019)
+          #expect(passwords.count == 1)
+          #expect(passwords.first?.id == 1)
+          #expect(passwords.first?.label == "example.com")
+          #expect(passwords.first?.username == "Alice")
+          #expect(passwords.first?.verificationCodeID == nil)
+
+          passwordID = passwords.first?.id
         }
       )
 
       try await app.testing().test(
         .GET,
-        "api/tv-shows?fields=posterURLs",
+        "api/password?id=19358",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
               CoreCloudServer.Cookie.Keys.jwt,
               cookie!
+            ), (
+              CoreCloudServer.Cookie.Keys.applicationToken,
+              token!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .notFound)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/password?id=\(passwordID!)",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            ), (
+              CoreCloudServer.Cookie.Keys.applicationToken,
+              token!
             )
           )
         },
         afterResponse: { response async throws in
           #expect(response.status == .ok)
 
-          let tvShows = try response.content.decode(
-            [TVShow.Plural.Output.Retrieval].self
+          let password = try response.content.decode(
+            Password.Singular.Output.Retrieval.self
           )
-          #expect(tvShows.count == 1)
-          #expect(tvShows.first?.posterURLs == "https://example.com/1.png")
+          #expect(password.key == "1234567890")
         }
       )
     }

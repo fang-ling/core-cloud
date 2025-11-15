@@ -31,45 +31,57 @@ struct VerificationCodeService {
   /// - Parameters:
   ///   - secret: The raw secret data to be stored for generating verification
   ///     codes.
-  ///   - secretSealedBoxKey: The symmetric key used to encrypt the secret.
+  ///   - secretSealedBoxKeySealedBoxKey: The symmetric key used to encrypt the
+  ///     secret.
   ///   - digest: The hash algorithm used for the verification code (e.g. SHA1,
   ///     SHA256).
   ///   - digits: The number of digits for the verification code (e.g. 6, 8).
   ///   - interval: The time step interval (in seconds) for the TOTP
   ///     verification code.
+  ///   - passwordID: The password ID associated with the verification code.
   ///   - userID: The user ID associated with the verification code.
   ///   - database: The database connection to use for persisting the
   ///     verification code.
   ///
   /// - Throws:
-  ///   - `VerificationCode.Error.cryptoError`: If encryption of the secret
+  ///   - ``VerificationCode.Error/cryptoError``: If encryption of the secret
   ///     fails.
-  ///   - `VerificationCode.Error.databaseError`: If saving the verification
+  ///   - ``VerificationCode.Error/databaseError``: If saving the verification
   ///     code to the database fails.
   func addVerificationCode(
     secret: Data,
-    secretSealedBoxKey: SymmetricKey,
+    secretSealedBoxKeySealedBoxKey: SymmetricKey,
     digest: VerificationCode.Digest,
     digits: VerificationCode.Digits,
     interval: Int64,
+    with passwordID: Password.IDValue,
     for userID: User.IDValue,
     on database: Database
   ) async throws {
+    let secretSealedBoxKey = SymmetricKey(size: .bits256)
+
     guard
       let secretSealedBox = try? AES.GCM.seal(
         secret,
         using: secretSealedBoxKey
       ),
-      let secretSealedBoxData = secretSealedBox.combined
+      let secretSealedBoxData = secretSealedBox.combined,
+      let secretSealedBoxKeySealedBox = try? AES.GCM.seal(
+        secretSealedBoxKey.withUnsafeBytes({ Data($0) }),
+        using: secretSealedBoxKeySealedBoxKey
+      ),
+      let secretSealedBoxKeySealedBoxData = secretSealedBoxKeySealedBox.combined
     else {
       throw VerificationCode.Error.cryptoError
     }
 
     let verificationCode = VerificationCode(
       secretSealedBox: secretSealedBoxData,
+      secretSealedBoxKeySealedBox: secretSealedBoxKeySealedBoxData,
       digest: digest.rawValue,
       digits: digits.rawValue,
       interval: interval,
+      passwordID: passwordID,
       userID: userID
     )
 
@@ -88,8 +100,8 @@ struct VerificationCodeService {
   ///
   /// - Parameters:
   ///   - id: The unique identifier of the verification code.
-  ///   - secretSealedBoxKey: The symmetric key used to decrypt the sealed
-  ///     secret.
+  ///   - secretSealedBoxKeySealedBoxKey: The symmetric key used to decrypt the
+  ///     sealed secret.
   ///   - date: The date and time for which the TOTP should be generated.
   ///   - userID: The user ID associated with the verification code.
   ///   - database: The database connection to use for querying the verification
@@ -98,15 +110,15 @@ struct VerificationCodeService {
   /// - Returns: A string containing the generated verification code.
   ///
   /// - Throws:
-  ///   - `VerificationCode.Error.noSuchVerificationCode`: If no verification
+  ///   - ``VerificationCode.Error/noSuchVerificationCode``: If no verification
   ///     code with the given ID/userID is found.
-  ///   - `VerificationCode.Error.cryptoError`: If decryption of the secret
+  ///   - ``VerificationCode.Error/cryptoError``: If decryption of the secret
   ///     fails.
-  ///   - `VerificationCode.Error.databaseError`: If there is an issue with the
-  ///     verification code's digest or digits in the database.
+  ///   - ``VerificationCode.Error/databaseError``: If there is an issue with
+  ///     the verification code's digest or digits in the database.
   func getVerificationCode(
     with id: VerificationCode.IDValue,
-    secretSealedBoxKey: SymmetricKey,
+    secretSealedBoxKeySealedBoxKey: SymmetricKey,
     date: Date,
     for userID: User.IDValue,
     on database: Database
@@ -120,10 +132,20 @@ struct VerificationCodeService {
     }
 
     guard
+      let secretSealedBoxKeySealedBox = try? AES.GCM.SealedBox(
+        combined: verificationCode.secretSealedBoxKeySealedBox
+      ),
+      let secretSealedBoxKey = try? AES.GCM.open(
+        secretSealedBoxKeySealedBox,
+        using: secretSealedBoxKeySealedBoxKey
+      ),
       let secretSealedBox = try? AES.GCM.SealedBox(
         combined: verificationCode.secretSealedBox
       ),
-      let secret = try? AES.GCM.open(secretSealedBox, using: secretSealedBoxKey)
+      let secret = try? AES.GCM.open(
+        secretSealedBox,
+        using: .init(data: secretSealedBoxKey)
+      )
     else {
       throw VerificationCode.Error.cryptoError
     }

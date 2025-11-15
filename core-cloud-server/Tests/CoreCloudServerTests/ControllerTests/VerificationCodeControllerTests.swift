@@ -1,8 +1,8 @@
 //
-//  HomeVideoControllerTests.swift
+//  VerificationCodeControllerTests.swift
 //  core-cloud-server
 //
-//  Created by Fang Ling on 2025/10/5.
+//  Created by Fang Ling on 2025/11/15.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -21,17 +21,15 @@
 import Testing
 import VaporTesting
 
-extension HomeVideo.Singular.Input.Insertion: Content { }
+extension VerificationCode.Singular.Input.Insertion: Content { }
 
 extension ControllerTests {
-  @Test("HomeVideoControllerTests")
-  func testHomeVideoController() async throws {
+  @Test("VerificationCodeControllerTests")
+  func testVerificationCodeController() async throws {
     try await withApp(configure: CoreCloudServer.configure) { app in
-      try? FileManager.default.removeItem(atPath: "/tmp/h-v-controller-test")
-
       try await app.testing().test(
         .POST,
-        "api/home-video",
+        "api/verification-code",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -39,15 +37,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/home-videos",
-        afterResponse: { response async throws in
-          #expect(response.status == .unauthorized)
-        }
-      )
-
-      try await app.testing().test(
-        .GET,
-        "api/home-video",
+        "api/verification-code",
         afterResponse: { response async throws in
           #expect(response.status == .unauthorized)
         }
@@ -101,7 +91,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/home-video",
+        "api/verification-code",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -109,33 +99,15 @@ extension ControllerTests {
               cookie!
             )
           )
-          try request.content.encode(
-            HomeVideo.Singular.Input.Insertion(
-              title: "test",
-              cast: "Alice",
-              director: "Lorna",
-              genre: "Vlog",
-              tags: "",
-              date: 19358,
-              duration: 19342,
-              artworkURLs: "https://example.com/1.png",
-              width: 1920,
-              height: 1080,
-              isHDR: false,
-              videoCodec: "H.264",
-              audioCodec: "ALAC",
-              fileID: 1
-            )
-          )
         },
         afterResponse: { response async throws in
-          #expect(response.status == .badRequest)
+          #expect(response.status == .unauthorized)
         }
       )
 
       try await app.testing().test(
         .GET,
-        "api/home-videos?fields=title",
+        "api/verification-code",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -145,34 +117,7 @@ extension ControllerTests {
           )
         },
         afterResponse: { response async throws in
-          #expect(response.status == .ok)
-
-          let homeVideos = try response.content.decode(
-            [HomeVideo.Plural.Output.Retrieval].self
-          )
-          #expect(homeVideos.isEmpty)
-        }
-      )
-
-      try await app.testing().test(
-        .POST,
-        "api/location",
-        beforeRequest: { request async throws in
-          request.headers.cookie = .init(
-            dictionaryLiteral: (
-              CoreCloudServer.Cookie.Keys.jwt,
-              cookie!
-            )
-          )
-          try request.content.encode(
-            Location.Singular.Input.Insertion(
-              name: "Tank2",
-              path: "/tmp/h-v-controller-test"
-            )
-          )
-        },
-        afterResponse: { response async throws in
-          #expect(response.status == .created)
+          #expect(response.status == .unauthorized)
         }
       )
 
@@ -208,20 +153,9 @@ extension ControllerTests {
         }
       )
 
-      let twoBytes = Data([UInt8].random(count: 2))
-      let twoByteSHA512 = Data(SHA512.hash(data: twoBytes))
-        .base64EncodedString()
-        .addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-
       try await app.testing().test(
         .POST,
-        "api/file" +
-        "?name=byte" +
-        "&kind=JPEG%20Image" +
-        "&size=2" +
-        "&checksum=\(twoByteSHA512)" +
-        "&application=Music" +
-        "&locationID=1",
+        "api/verification-code",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -232,39 +166,13 @@ extension ControllerTests {
               token!
             )
           )
-          request.body = .init(data: twoBytes)
-        },
-        afterResponse: { response async throws in
-          #expect(response.status == .created)
-        }
-      )
-
-      try await app.testing().test(
-        .POST,
-        "api/home-video",
-        beforeRequest: { request async throws in
-          request.headers.cookie = .init(
-            dictionaryLiteral: (
-              CoreCloudServer.Cookie.Keys.jwt,
-              cookie!
-            )
-          )
           try request.content.encode(
-            HomeVideo.Singular.Input.Insertion(
-              title: "test",
-              cast: "Alice",
-              director: "Lorna",
-              genre: "Vlog",
-              tags: "",
-              date: 19358,
-              duration: 19342,
-              artworkURLs: "https://example.com/1.png",
-              width: 1920,
-              height: 1080,
-              isHDR: false,
-              videoCodec: "H.264",
-              audioCodec: "ALAC",
-              fileID: 1
+            VerificationCode.Singular.Input.Insertion(
+              base32EncodedSecret: "JBSWY3DPEHPK3PXP",
+              digest: "sha1",
+              digits: 10,
+              interval: 28,
+              passwordID: 1
             )
           )
         },
@@ -273,20 +181,9 @@ extension ControllerTests {
         }
       )
 
-      let sixBytes = Data([UInt8].random(count: 6))
-      let sixByteSHA512 = Data(SHA512.hash(data: sixBytes))
-        .base64EncodedString()
-        .addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-
       try await app.testing().test(
         .POST,
-        "api/file" +
-        "?name=byte" +
-        "&kind=MPEG-4%20Movie" +
-        "&size=6" +
-        "&checksum=\(sixByteSHA512)" +
-        "&application=Photos" +
-        "&locationID=1",
+        "api/verification-code",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -297,39 +194,13 @@ extension ControllerTests {
               token!
             )
           )
-          request.body = .init(data: sixBytes)
-        },
-        afterResponse: { response async throws in
-          #expect(response.status == .created)
-        }
-      )
-
-      try await app.testing().test(
-        .POST,
-        "api/home-video",
-        beforeRequest: { request async throws in
-          request.headers.cookie = .init(
-            dictionaryLiteral: (
-              CoreCloudServer.Cookie.Keys.jwt,
-              cookie!
-            )
-          )
           try request.content.encode(
-            HomeVideo.Singular.Input.Insertion(
-              title: "test",
-              cast: "Alice",
-              director: "Lorna",
-              genre: "Vlog",
-              tags: "",
-              date: 19358,
-              duration: 19342,
-              artworkURLs: "https://example.com/1.png",
-              width: 1920,
-              height: 1080,
-              isHDR: false,
-              videoCodec: "H.264",
-              audioCodec: "ALAC",
-              fileID: 2
+            VerificationCode.Singular.Input.Insertion(
+              base32EncodedSecret: "JBSWY3DPEHPK3PXP",
+              digest: "sha1",
+              digits: 6,
+              interval: 28,
+              passwordID: 1
             )
           )
         },
@@ -338,20 +209,9 @@ extension ControllerTests {
         }
       )
 
-      let tenBytes = Data([UInt8].random(count: 10))
-      let tenByteSHA512 = Data(SHA512.hash(data: tenBytes))
-        .base64EncodedString()
-        .addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-
       try await app.testing().test(
         .POST,
-        "api/file" +
-        "?name=byte" +
-        "&kind=MPEG-4%20Movie" +
-        "&size=10" +
-        "&checksum=\(tenByteSHA512)" +
-        "&application=TV" +
-        "&locationID=1",
+        "api/verification-code",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -362,7 +222,42 @@ extension ControllerTests {
               token!
             )
           )
-          request.body = .init(data: tenBytes)
+          try request.content.encode(
+            VerificationCode.Singular.Input.Insertion(
+              base32EncodedSecret: "JBSWY3DPEHPK3PXP",
+              digest: "sha1",
+              digits: 6,
+              interval: 30,
+              passwordID: 1
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .serviceUnavailable)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/password",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            ), (
+              CoreCloudServer.Cookie.Keys.applicationToken,
+              token!
+            )
+          )
+          try request.content.encode(
+            Password.Singular.Input.Insertion(
+              label: "example.com",
+              username: "Alice",
+              key: "1234567890",
+              notes: "Test"
+            )
+          )
         },
         afterResponse: { response async throws in
           #expect(response.status == .created)
@@ -371,30 +266,24 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/home-video",
+        "api/verification-code",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
               CoreCloudServer.Cookie.Keys.jwt,
               cookie!
+            ), (
+              CoreCloudServer.Cookie.Keys.applicationToken,
+              token!
             )
           )
           try request.content.encode(
-            HomeVideo.Singular.Input.Insertion(
-              title: "test",
-              cast: "Alice",
-              director: "Lorna",
-              genre: "Vlog",
-              tags: "",
-              date: 19358,
-              duration: 19342,
-              artworkURLs: "https://example.com/1.png",
-              width: 1920,
-              height: 1080,
-              isHDR: false,
-              videoCodec: "H.264",
-              audioCodec: "ALAC",
-              fileID: 3
+            VerificationCode.Singular.Input.Insertion(
+              base32EncodedSecret: "JBSWY3DPEHPK3PXP",
+              digest: "sha1",
+              digits: 6,
+              interval: 30,
+              passwordID: 1
             )
           )
         },
@@ -405,30 +294,24 @@ extension ControllerTests {
 
       try await app.testing().test(
         .POST,
-        "api/home-video",
+        "api/verification-code",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
               CoreCloudServer.Cookie.Keys.jwt,
               cookie!
+            ), (
+              CoreCloudServer.Cookie.Keys.applicationToken,
+              token!
             )
           )
           try request.content.encode(
-            HomeVideo.Singular.Input.Insertion(
-              title: "test",
-              cast: "Alice",
-              director: "Lorna",
-              genre: "Vlog",
-              tags: "",
-              date: 19358,
-              duration: 19342,
-              artworkURLs: "https://example.com/1.png",
-              width: 1920,
-              height: 1080,
-              isHDR: false,
-              videoCodec: "H.264",
-              audioCodec: "ALAC",
-              fileID: 3
+            VerificationCode.Singular.Input.Insertion(
+              base32EncodedSecret: "JBSWY3DPEHPK3PXP",
+              digest: "sha1",
+              digits: 6,
+              interval: 30,
+              passwordID: 1
             )
           )
         },
@@ -439,48 +322,44 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/home-videos?fields=title,fileID",
+        "api/verification-code?id=2",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
               CoreCloudServer.Cookie.Keys.jwt,
               cookie!
+            ), (
+              CoreCloudServer.Cookie.Keys.applicationToken,
+              token!
             )
           )
         },
         afterResponse: { response async throws in
-          #expect(response.status == .ok)
-
-          let homeVideos = try response.content.decode(
-            [HomeVideo.Plural.Output.Retrieval].self
-          )
-          #expect(homeVideos.count == 1)
-          #expect(homeVideos.first?.id == 1)
-          #expect(homeVideos.first?.title == "test")
-          #expect(homeVideos.first?.fileID == 3)
+          #expect(response.status == .notFound)
         }
       )
 
       try await app.testing().test(
         .GET,
-        "api/home-video?fields=cast,audioCodec&id=1",
+        "api/verification-code?id=1",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
               CoreCloudServer.Cookie.Keys.jwt,
               cookie!
+            ), (
+              CoreCloudServer.Cookie.Keys.applicationToken,
+              token!
             )
           )
         },
         afterResponse: { response async throws in
           #expect(response.status == .ok)
 
-          let homeVideo = try response.content.decode(
-            HomeVideo.Singular.Output.Retrieval.self
+          let verificationCode = try response.content.decode(
+            VerificationCode.Singular.Output.Retrieval.self
           )
-          #expect(homeVideo.cast == "Alice")
-          #expect(homeVideo.audioCodec == "ALAC")
-          #expect(homeVideo.videoCodec == nil)
+          #expect(verificationCode.verificationCode.count == 6)
         }
       )
     }

@@ -51,26 +51,6 @@ struct CoreCloudServer {
       app.databases.use(.sqlite(.file("core-cloud-server.sqlite")), as: .sqlite)
     }
 
-    /* CORS on development. */
-    if app.environment == .development {
-      let corsMiddleware = CORSMiddleware(
-        configuration: CORSMiddleware.Configuration(
-          allowedOrigin: .all,
-          allowedMethods: [.POST, .GET, .PATCH, .DELETE, .HEAD],
-          allowedHeaders: [
-            .accept,
-            .authorization,
-            .contentType,
-            .origin,
-            .xRequestedWith,
-            .userAgent,
-            .accessControlAllowOrigin
-          ]
-        )
-      )
-      app.middleware.use(corsMiddleware, at: .beginning)
-    }
-
     /* JWT */
     if app.environment == .testing {
       await app.jwt.keys.add(hmac: "!!!TOP_SECRET!!!", digestAlgorithm: .sha512)
@@ -127,7 +107,8 @@ struct CoreCloudServer {
     app.migrations.add(HomeVideoMigrationV1())
     app.migrations.add(TVShowMigrationV1())
     app.migrations.add(EpisodeMigrationV1())
-    /*app.migrations.add(VerificationCodeMigrationV1())*/
+    app.migrations.add(PasswordMigrationV1())
+    app.migrations.add(VerificationCodeMigrationV1())
     try await app.autoMigrate()
 
     /* Routes */
@@ -143,19 +124,27 @@ struct CoreCloudServer {
     try app.routes.register(collection: HomeVideoController())
     try app.routes.register(collection: TVShowController())
     try app.routes.register(collection: EpisodeController())
+    try app.routes.register(collection: PasswordController())
+    try app.routes.register(collection: VerificationCodeController())
   }
 }
 
 extension CoreCloudServer {
-  static let SCRYPT_ROUNDS = 256 * 1024
-  static let SCRYPT_BLOCK_SIZE = 8
-  static let SCRYPT_PARALLELISM = 1
-  static let SCRYPT_OUTPUT_BYTE_COUNT = 256 / 8
+  enum Scrypt {
+    static let rounds = 256 * 1024
+    static let blockSize = 8
+    static let parallelism = 1
+    static let outputByteCount = 256 / 8
+  }
 
-  static let cookieName = "CoreCloudJWT"
-  static let cookieMaxAge = 86400
+  enum Cookie {
+    enum Keys {
+      static let jwt = "JWT"
+      static let applicationToken = "APPLICATION_TOKEN"
+    }
 
-  static let applicationTokenCookieName = "CoreCloudServerApplicationToken"
+    static let maxAge = 86400
+  }
 
   static let CHUNK_SIZE: Int64 = 4 * 1024 * 1024
 }

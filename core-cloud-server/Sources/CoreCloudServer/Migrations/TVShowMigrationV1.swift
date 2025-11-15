@@ -24,7 +24,7 @@ struct TVShowMigrationV1: AsyncMigration {
 
   func prepare(on database: any Database) async throws {
     try await database.schema(TVShow.schema)
-      .field(TVShow.FieldKeys.id, .int64, .identifier(auto: true))
+      .field(TVShow.FieldKeys.id, .int64, .identifier(auto: false))
       .field(TVShow.FieldKeys.title, .string, .required)
       .field(TVShow.FieldKeys.starring, .string, .required)
       .field(TVShow.FieldKeys.genre, .string, .required)

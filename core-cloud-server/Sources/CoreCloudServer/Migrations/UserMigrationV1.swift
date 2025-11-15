@@ -24,7 +24,7 @@ struct UserMigrationV1: AsyncMigration {
 
   func prepare(on database: any Database) async throws {
     try await database.schema(User.schema)
-      .field(User.FieldKeys.id, .int64, .identifier(auto: true))
+      .field(User.FieldKeys.id, .int64, .identifier(auto: false))
       .field(User.FieldKeys.firstName, .string, .required)
       .field(User.FieldKeys.lastName, .string, .required)
       .field(User.FieldKeys.username, .string, .required)

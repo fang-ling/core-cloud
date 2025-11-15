@@ -24,7 +24,7 @@ struct FileMigrationV1: AsyncMigration {
 
   func prepare(on database: any Database) async throws {
     try await database.schema(File.schema)
-      .field(File.FieldKeys.id, .int64, .identifier(auto: true))
+      .field(File.FieldKeys.id, .int64, .identifier(auto: false))
       .field(File.FieldKeys.name, .string, .required)
       .field(File.FieldKeys.kind, .string, .required)
       .field(File.FieldKeys.size, .int64, .required)

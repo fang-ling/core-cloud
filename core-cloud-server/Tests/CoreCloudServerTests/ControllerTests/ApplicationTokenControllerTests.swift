@@ -69,7 +69,7 @@ extension ControllerTests {
           cookie = response
             .headers
             .setCookie?
-            .all[CoreCloudServer.cookieName]
+            .all[CoreCloudServer.Cookie.Keys.jwt]
           #expect(cookie?.string != nil)
           #expect(cookie?.path == "/")
           #expect(cookie?.maxAge == nil)
@@ -83,7 +83,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.cookieName,
+              CoreCloudServer.Cookie.Keys.jwt,
               cookie!
             )
           )
@@ -99,7 +99,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.cookieName,
+              CoreCloudServer.Cookie.Keys.jwt,
               cookie!
             )
           )
@@ -122,7 +122,7 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.cookieName,
+              CoreCloudServer.Cookie.Keys.jwt,
               cookie!
             )
           )
@@ -139,7 +139,7 @@ extension ControllerTests {
           token = response
             .headers
             .setCookie?
-            .all[CoreCloudServer.applicationTokenCookieName]
+            .all[CoreCloudServer.Cookie.Keys.applicationToken]
           #expect(cookie?.string != nil)
           #expect(cookie?.path == "/")
           #expect(cookie?.maxAge == nil)
@@ -153,10 +153,10 @@ extension ControllerTests {
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
-              CoreCloudServer.cookieName,
+              CoreCloudServer.Cookie.Keys.jwt,
               cookie!
             ), (
-              CoreCloudServer.applicationTokenCookieName,
+              CoreCloudServer.Cookie.Keys.applicationToken,
               token!
             )
           )

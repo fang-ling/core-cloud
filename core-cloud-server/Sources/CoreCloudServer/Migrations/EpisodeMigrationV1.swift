@@ -24,7 +24,7 @@ struct EpisodeMigrationV1: AsyncMigration {
 
   func prepare(on database: any Database) async throws {
     try await database.schema(Episode.schema)
-      .field(Episode.FieldKeys.id, .int64, .identifier(auto: true))
+      .field(Episode.FieldKeys.id, .int64, .identifier(auto: false))
       .field(Episode.FieldKeys.title, .string, .required)
       .field(Episode.FieldKeys.artworkURLs, .string, .required)
       .field(Episode.FieldKeys.description, .string, .required)

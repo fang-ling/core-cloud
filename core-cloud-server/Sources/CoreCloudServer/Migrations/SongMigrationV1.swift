@@ -24,7 +24,7 @@ struct SongMigrationV1: AsyncMigration {
 
   func prepare(on database: any Database) async throws {
     try await database.schema(Song.schema)
-      .field(Song.FieldKeys.id, .int64, .identifier(auto: true))
+      .field(Song.FieldKeys.id, .int64, .identifier(auto: false))
       .field(Song.FieldKeys.title, .string, .required)
       .field(Song.FieldKeys.artist, .string, .required)
       .field(Song.FieldKeys.Removed.genre, .string, .required)

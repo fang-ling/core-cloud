@@ -137,7 +137,7 @@ struct FileController: RouteCollection {
 
     guard let token = request
       .cookies
-      .all[CoreCloudServer.applicationTokenCookieName]?
+      .all[CoreCloudServer.Cookie.Keys.applicationToken]?
       .string,
           let decryptionKeySealedBoxKeyData = Data(base64Encoded: token)
     else {
@@ -372,7 +372,7 @@ struct FileController: RouteCollection {
 
     guard let token = request
       .cookies
-      .all[CoreCloudServer.applicationTokenCookieName]?
+      .all[CoreCloudServer.Cookie.Keys.applicationToken]?
       .string,
           let decryptionKeySealedBoxKeyData = Data(base64Encoded: token)
     else {
@@ -528,7 +528,7 @@ struct FileController: RouteCollection {
 
     guard let token = request
       .cookies
-      .all[CoreCloudServer.applicationTokenCookieName]?
+      .all[CoreCloudServer.Cookie.Keys.applicationToken]?
       .string,
           let decryptionKeySealedBoxKeyData = Data(base64Encoded: token)
     else {

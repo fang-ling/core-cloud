@@ -64,10 +64,10 @@ extension ControllerTests {
           let cookie = response
             .headers
             .setCookie?
-            .all[CoreCloudServer.cookieName]
+            .all[CoreCloudServer.Cookie.Keys.jwt]
           #expect(cookie?.string != nil)
           #expect(cookie?.path == "/")
-          #expect(cookie?.maxAge == CoreCloudServer.cookieMaxAge)
+          #expect(cookie?.maxAge == CoreCloudServer.Cookie.maxAge)
           #expect(cookie?.isHTTPOnly == true)
         }
       )
@@ -90,7 +90,7 @@ extension ControllerTests {
           let cookie = response
             .headers
             .setCookie?
-            .all[CoreCloudServer.cookieName]
+            .all[CoreCloudServer.Cookie.Keys.jwt]
           #expect(cookie?.string != nil)
           #expect(cookie?.path == "/")
           #expect(cookie?.maxAge == nil)

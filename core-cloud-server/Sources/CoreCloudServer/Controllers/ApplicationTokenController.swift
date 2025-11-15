@@ -82,7 +82,7 @@ struct ApplicationTokenController: RouteCollection {
         status: .created,
         headers: .init([(
           "Set-Cookie",
-          "\(CoreCloudServer.applicationTokenCookieName)=\(tokenString); " +
+          "\(CoreCloudServer.Cookie.Keys.applicationToken)=\(tokenString); " +
           "Path=/; " +
           "HttpOnly; " + (
             request.application.environment == .production
@@ -115,7 +115,7 @@ struct ApplicationTokenController: RouteCollection {
 
     guard let _ = request
       .cookies
-      .all[CoreCloudServer.applicationTokenCookieName]?
+      .all[CoreCloudServer.Cookie.Keys.applicationToken]?
       .string
     else {
       return .noContent

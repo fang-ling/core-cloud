@@ -27,7 +27,7 @@ struct AuthenticatorMiddleware: AsyncMiddleware {
     chainingTo next: any Vapor.AsyncResponder
   ) async throws -> Vapor.Response {
     do {
-      let jwt = request.cookies.all[CoreCloudServer.cookieName]?.string
+      let jwt = request.cookies.all[CoreCloudServer.Cookie.Keys.jwt]?.string
       let id = try await userTokenService.verifyUserToken(
         from: jwt ?? ""
       ) { token in
