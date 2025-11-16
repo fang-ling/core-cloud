@@ -36,9 +36,9 @@ struct VerificationCodeController: RouteCollection {
       .get(use: fetchVerificationCodeHandler)
   }
 
-  func insertVerificationCodeHandler(request: Request) async -> HTTPStatus {
+  func insertVerificationCodeHandler(request: Request) async -> Response {
     guard let userID = request.userID else {
-      return .unauthorized
+      return .init(status: .unauthorized)
     }
 
     guard let token = request
@@ -47,7 +47,7 @@ struct VerificationCodeController: RouteCollection {
       .string,
           let slaveKeyData = Data(base64Encoded: token)
     else {
-      return .unauthorized
+      return .init(status: .unauthorized)
     }
     let slaveKey = SymmetricKey(data: slaveKeyData)
 
@@ -59,7 +59,7 @@ struct VerificationCodeController: RouteCollection {
       input.digits >= 6 && input.digits <= 8,
       input.interval == 30 // Currently supports 30-second interval
     else {
-      return .badRequest
+      return .init(status: .badRequest)
     }
 
     let digest: VerificationCode.Digest = switch input.digest {
@@ -74,7 +74,7 @@ struct VerificationCodeController: RouteCollection {
     }
 
     do {
-      try await verificationCodeService.addVerificationCode(
+      let id = try await verificationCodeService.addVerificationCode(
         secret: secret,
         secretSealedBoxKeySealedBoxKey: slaveKey,
         digest: digest,
@@ -85,13 +85,23 @@ struct VerificationCodeController: RouteCollection {
         on: request.db
       )
 
-      return .created
+      return try .init(
+        status: .created,
+        headers: .init([("Content-Type", "application/json")]),
+        body: .init(
+          data: CoreCloudServer.encoder.encode(
+            VerificationCode.Singular.Output.Insertion(
+              id: id
+            )
+          )
+        )
+      )
     } catch VerificationCode.Error.cryptoError {
-      return .unauthorized
+      return .init(status: .unauthorized)
     } catch VerificationCode.Error.databaseError {
-      return .serviceUnavailable
+      return .init(status: .serviceUnavailable)
     } catch {
-      return .internalServerError
+      return .init(status: .internalServerError)
     }
   }
 

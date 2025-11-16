@@ -22,7 +22,7 @@ import Vapor
 
 struct VerificationCodeService {
   /// Adds a new verification code for a user, securely storing the secret using
-  /// encryption.
+  /// encryption. Returns the newly created verification-code's id.
   ///
   /// This method encrypts the provided secret with the given symmetric key and
   /// creates a new `VerificationCode` record in the database for the specified
@@ -43,6 +43,8 @@ struct VerificationCodeService {
   ///   - database: The database connection to use for persisting the
   ///     verification code.
   ///
+  /// - Returns: The id of the newly created verification code.
+  ///
   /// - Throws:
   ///   - ``VerificationCode.Error/cryptoError``: If encryption of the secret
   ///     fails.
@@ -57,7 +59,7 @@ struct VerificationCodeService {
     with passwordID: Password.IDValue,
     for userID: User.IDValue,
     on database: Database
-  ) async throws {
+  ) async throws -> VerificationCode.IDValue {
     let secretSealedBoxKey = SymmetricKey(size: .bits256)
 
     guard
@@ -87,6 +89,8 @@ struct VerificationCodeService {
 
     do {
       try await verificationCode.save(on: database)
+
+      return try verificationCode.requireID()
     } catch {
       throw VerificationCode.Error.databaseError
     }

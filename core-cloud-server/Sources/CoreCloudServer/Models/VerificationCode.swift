@@ -147,7 +147,6 @@ extension VerificationCode {
 
 extension VerificationCode {
   enum Singular { }
-  enum Plural { }
 }
 
 extension VerificationCode.Singular {
@@ -170,6 +169,10 @@ extension VerificationCode.Singular.Input {
 }
 
 extension VerificationCode.Singular.Output {
+  struct Insertion: Codable {
+    var id: Int64
+  }
+
   struct Retrieval: Codable {
     var verificationCode: String
   }

@@ -76,7 +76,7 @@ extension ServiceTests {
         )
         try await password.save(on: app.db)
 
-        try await verificationCodeService.addVerificationCode(
+        let id = try await verificationCodeService.addVerificationCode(
           secret: Data(count: 32),
           secretSealedBoxKeySealedBoxKey: .init(size: .bits256),
           digest: .sha1,
@@ -88,6 +88,7 @@ extension ServiceTests {
         )
         let verificationCode = try await VerificationCode.query(on: app.db)
           .first()
+        #expect(verificationCode?.id == id)
         #expect(verificationCode?.digest == 0)
         #expect(verificationCode?.digits == 6)
         #expect(verificationCode?.interval == 30)

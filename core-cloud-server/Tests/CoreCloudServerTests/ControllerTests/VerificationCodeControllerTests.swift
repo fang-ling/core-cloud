@@ -264,6 +264,7 @@ extension ControllerTests {
         }
       )
 
+      var verificationCodeID: Int64?
       try await app.testing().test(
         .POST,
         "api/verification-code",
@@ -289,6 +290,13 @@ extension ControllerTests {
         },
         afterResponse: { response async throws in
           #expect(response.status == .created)
+
+          let output = try response.content.decode(
+            VerificationCode.Singular.Output.Insertion.self
+          )
+          #expect(output.id == 1)
+
+          verificationCodeID = output.id
         }
       )
 
@@ -341,7 +349,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/verification-code?id=1",
+        "api/verification-code?id=\(verificationCodeID ?? 1)",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
