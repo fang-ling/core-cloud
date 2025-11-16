@@ -76,6 +76,9 @@ struct CoreCloudEnigma {
       )
     }
 
+    // Commands
+    app.asyncCommands.use(VersionCommand(), as: "version")
+
     /* Migrations */
     app.migrations.add(KeyMigrationV1())
     try await app.autoMigrate()
