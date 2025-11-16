@@ -33,6 +33,11 @@ namespace CoreCloudWeb {
       urls: process.env.NEXT_PUBLIC_TV_ICON_URLS?.split(",") ?? [],
       name: "TV",
       href: "/tv"
+    },
+    {
+      urls: process.env.NEXT_PUBLIC_PASSWORDS_ICON_URLS?.split(",") ?? [],
+      name: "Passwords",
+      href: "/passwords"
     }
   ]
 }
