@@ -62,6 +62,8 @@ struct Crypto_SHA512_Context;
  * all the data at once. Provide data blocks to the hash function using the
  * ``Crypto_SHA512_Update()`` method. After providing all the data, call
  * ``Crypto_SHA512_Finalize()`` to get the digest.
+ *
+ * - Parameter context: A SHA512 hash function.
  */
 void Crypto_SHA512_Init(struct Crypto_SHA512_Context* context);
 
@@ -74,6 +76,7 @@ void Crypto_SHA512_Init(struct Crypto_SHA512_Context* context);
  * the update method again after finalizing the hash function.
  *
  * - Parameters:
+ *   - context: A SHA512 hash function.
  *   - buffer: A pointer to the next block of data for the ongoing digest
  *             calculation.
  *   - count: The number of bytes in the buffer.
@@ -91,7 +94,9 @@ void Crypto_SHA512_Update(struct Crypto_SHA512_Context* context,
  * create a new hash function with a call to the ``Crypto_SHA512_Init()``
  * method.
  *
- * - Returns: The computed digest of the data.
+ * - Parameters:
+ *   - context: A SHA512 hash function.
+ *   - digest: A buffer to store the computed digest of the data.
  */
 void Crypto_SHA512_Finalize(struct Crypto_SHA512_Context* context,
                             UInt8 digest[static 64]);
