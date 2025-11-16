@@ -161,6 +161,7 @@ extension ControllerTests {
         }
       )
 
+      var passwordID: Int64?
       try await app.testing().test(
         .POST,
         "api/password",
@@ -185,10 +186,16 @@ extension ControllerTests {
         },
         afterResponse: { response async throws in
           #expect(response.status == .created)
+
+          let passwordIDOutput = try response.content.decode(
+            Password.Singular.Output.Insertion.self
+          )
+          #expect(passwordIDOutput.id == 1)
+
+          passwordID = passwordIDOutput.id
         }
       )
 
-      var passwordID: Int64?
       try await app.testing().test(
         .GET,
         "api/passwords?fields=label,username,verificationCodeID",
@@ -211,8 +218,6 @@ extension ControllerTests {
           #expect(passwords.first?.label == "example.com")
           #expect(passwords.first?.username == "Alice")
           #expect(passwords.first?.verificationCodeID == nil)
-
-          passwordID = passwords.first?.id
         }
       )
 

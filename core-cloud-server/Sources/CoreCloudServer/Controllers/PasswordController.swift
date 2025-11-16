@@ -42,9 +42,9 @@ struct PasswordController: RouteCollection {
       .get(use: fetchPasswordHandler)
   }
 
-  func insertPasswordHandler(request: Request) async -> HTTPStatus {
+  func insertPasswordHandler(request: Request) async -> Response {
     guard let userID = request.userID else {
-      return .unauthorized
+      return .init(status: .unauthorized)
     }
 
     guard let token = request
@@ -53,18 +53,18 @@ struct PasswordController: RouteCollection {
       .string,
           let slaveKeyData = Data(base64Encoded: token)
     else {
-      return .unauthorized
+      return .init(status: .unauthorized)
     }
     let slaveKey = SymmetricKey(data: slaveKeyData)
 
     guard let input = try? request.content.decode(
       Password.Singular.Input.Insertion.self
     ) else {
-      return .badRequest
+      return .init(status: .badRequest)
     }
 
     do {
-      try await passwordService.addPassword(
+      let passwordID = try await passwordService.addPassword(
         label: input.label,
         username: input.username,
         key: input.key,
@@ -74,13 +74,23 @@ struct PasswordController: RouteCollection {
         on: request.db
       )
 
-      return .created
+      return try .init(
+        status: .created,
+        headers: .init([("Content-Type", "application/json")]),
+        body: .init(
+          data: CoreCloudServer.encoder.encode(
+            Password.Singular.Output.Insertion(
+              id: passwordID
+            )
+          )
+        )
+      )
     } catch Password.Error.cryptoError {
-      return .unauthorized
+      return .init(status: .unauthorized)
     } catch Password.Error.databaseError {
-      return .serviceUnavailable
+      return .init(status: .serviceUnavailable)
     } catch {
-      return .internalServerError
+      return .init(status: .internalServerError)
     }
   }
 
@@ -102,7 +112,7 @@ struct PasswordController: RouteCollection {
         on: request.db
       )
 
-      return try Response(
+      return try .init(
         status: .ok,
         headers: .init([("Content-Type", "application/json")]),
         body: .init(

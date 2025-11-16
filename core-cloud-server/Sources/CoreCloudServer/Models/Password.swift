@@ -131,6 +131,10 @@ extension Password.Singular.Input {
 }
 
 extension Password.Singular.Output {
+  struct Insertion: Codable {
+    var id: Int64
+  }
+
   struct Retrieval: Codable {
     var key: String
   }

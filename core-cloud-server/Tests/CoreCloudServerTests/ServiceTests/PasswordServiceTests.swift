@@ -54,7 +54,7 @@ extension ServiceTests {
         )
         try await eva.save(on: app.db)
 
-        try await passwordService.addPassword(
+        let passwordID = try await passwordService.addPassword(
           label: "example.com",
           username: "Alice",
           key: "1234567890",
@@ -64,6 +64,7 @@ extension ServiceTests {
           on: app.db
         )
         let password = try await Password.query(on: app.db).first()
+        #expect(password?.id == passwordID)
         #expect(password?.label == "example.com")
         #expect(password?.username == "Alice")
         #expect(password?.notes == "Notes")

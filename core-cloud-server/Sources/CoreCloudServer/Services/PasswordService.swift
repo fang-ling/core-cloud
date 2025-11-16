@@ -22,7 +22,8 @@ import Vapor
 
 struct PasswordService {
   /// Adds a new password entry to the database, encrypting the secret and
-  /// safely wrapping the per-item encryption key.
+  /// safely wrapping the per-item encryption key. Returns the newly created
+  /// password's id.
   ///
   /// The sealed values are stored using AES-GCM's combined representation.
   /// To decrypt later, load both blobs, open the DEK with the KEK, reconstruct
@@ -40,6 +41,8 @@ struct PasswordService {
   ///   - userID: The owner of this credential.
   ///   - database: The database connection on which to persist the new record.
   ///
+  /// - Returns: The id of the newly created password.
+  ///
   /// - Throws:
   ///   - ``Password.Error/cryptoError`` if any cryptographic step fails.
   ///   - ``Password.Error/databaseError`` if saving the model to the database
@@ -52,7 +55,7 @@ struct PasswordService {
     notes: String?,
     for userID: User.IDValue,
     on database: Database
-  ) async throws {
+  ) async throws -> Password.IDValue {
     let keySealedBoxKey = SymmetricKey(size: .bits256)
 
     guard
@@ -82,6 +85,8 @@ struct PasswordService {
 
     do {
       try await password.save(on: database)
+
+      return try password.requireID()
     } catch {
       throw Password.Error.databaseError
     }
