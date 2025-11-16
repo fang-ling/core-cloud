@@ -128,8 +128,8 @@ struct VerificationCodeService {
     on database: Database
   ) async throws -> String {
     guard let verificationCode = try? await VerificationCode.query(on: database)
+      .filter(\.$user.$id == userID)
       .filter(\.$id == id)
-      .filter(\.$user.$id == id)
       .first()
     else {
       throw VerificationCode.Error.noSuchVerificationCode
