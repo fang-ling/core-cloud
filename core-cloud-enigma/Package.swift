@@ -25,20 +25,14 @@ let dependencies: [(String, PackageDescription.Version)] = [
   ("https://github.com/apple/swift-crypto.git", "4.0.0"),
   ("https://github.com/vapor/fluent.git", "4.13.0"),
   ("https://github.com/vapor/fluent-sqlite-driver.git", "4.8.1"),
-  ("https://github.com/vapor/jwt.git", "5.1.2")/*,
-  ("https://github.com/vapor/vapor.git", "4.117.0")*/
+  ("https://github.com/vapor/jwt.git", "5.1.2"),
+  ("https://github.com/vapor/vapor.git", "4.119.2")
 ]
 
 let package = Package(
   name: "core-cloud-enigma",
   platforms: [.macOS(.v15)],
-  dependencies: dependencies.map({ .package(url: $0.0, exact: $0.1) }) +
-  [
-    .package(
-      url: "https://github.com/fang-ling/vapor.git",
-      branch: "feature/add-heic-support"
-    )
-  ],
+  dependencies: dependencies.map({ .package(url: $0.0, exact: $0.1) }),
   targets: [
     .executableTarget(
       name: "CoreCloudEnigma",
