@@ -25,7 +25,7 @@ struct AuthenticatorMiddleware: AsyncMiddleware {
     chainingTo next: any AsyncResponder
   ) async throws -> Response {
     do {
-      let jwt = request.cookies.all[CoreCloudEnigma.cookieName]?.string
+      let jwt = request.cookies.all[CoreCloudEnigma.Cookie.Keys.jwt]?.string
       try await request.jwt.verify(jwt ?? "", as: UserToken.self)
     } catch {
       return Response(status: .unauthorized)

@@ -86,7 +86,11 @@ struct CoreCloudEnigma {
 }
 
 extension CoreCloudEnigma {
-  static let cookieName = "CoreCloudJWT"
+  enum Cookie {
+    enum Keys {
+      static let jwt = "JWT"
+    }
+  }
 }
 
 extension CoreCloudEnigma {
