@@ -76,17 +76,17 @@ struct CoreCloudEnigmaClient {
       if CommandLine.arguments.count < 3 {
         print(
           """
-          Missing required argument: API
+          Missing required argument: API_HOST
 
           Usage:
-            CoreCloudEnigmaClient add <API>
+            CoreCloudEnigmaClient add <API_HOST>
                 Reads a decryption key and sends it to the server.
           """
         )
         return
       }
 
-      let api = CommandLine.arguments[2]
+      let api = "https://\(CommandLine.arguments[2])/api/key"
 
       print("Enter filename: ")
       let filename = readLine()!
@@ -100,7 +100,7 @@ struct CoreCloudEnigmaClient {
       var request = URLRequest(url: URL(string: api)!)
       request.httpMethod = "POST"
       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-      request.setValue("CoreCloudJWT=\(jwt)", forHTTPHeaderField: "Cookie")
+      request.setValue("JWT=\(jwt)", forHTTPHeaderField: "Cookie")
       request.httpBody = try JSONSerialization.data(
         withJSONObject: [
           "name": filename,
@@ -124,7 +124,7 @@ struct CoreCloudEnigmaClient {
               matches FILENAME (extension is ignored). Prints the generated
               decryption key.
 
-          CoreCloudEnigmaClient add <API>
+          CoreCloudEnigmaClient add <API_HOST>
               Reads a decryption key and sends it to the server.
         """
       )
