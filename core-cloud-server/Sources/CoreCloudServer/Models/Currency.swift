@@ -95,3 +95,46 @@ extension Currency {
     case databaseError
   }
 }
+
+extension Currency {
+  enum Singular { }
+  enum Plural { }
+}
+
+extension Currency.Singular {
+  enum Input { }
+  enum Output { }
+}
+
+extension Currency.Plural {
+  enum Input { }
+  enum Output { }
+}
+
+extension Currency.Singular.Input {
+  struct Insertion: Codable {
+    var code: String
+    var minorUnit: Int64
+    var symbol: String
+    var symbolPosition: Int64
+  }
+}
+
+extension Currency.Singular.Output {
+  struct Insertion: Codable {
+    var id: Int64
+  }
+}
+
+extension Currency.Plural.Input {
+  struct Retrieval: Codable {
+    var fields: String
+  }
+}
+
+extension Currency.Plural.Output {
+  struct Retrieval: Codable {
+    var id: Int64
+    var code: String?
+  }
+}
