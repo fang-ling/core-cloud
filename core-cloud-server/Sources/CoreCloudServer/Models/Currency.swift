@@ -93,6 +93,7 @@ extension Currency {
 extension Currency {
   enum Error: Swift.Error {
     case databaseError
+    case noSuchCurrency
   }
 }
 

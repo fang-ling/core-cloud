@@ -64,6 +64,54 @@ struct CurrencyService {
     }
   }
 
+  /// Retrieves the details of a currency associated with a specified user.
+  ///
+  /// - Parameters:
+  ///   - id: The identifier of the currency to be retrieved.
+  ///   - userID: The identifier of the user who owns the currency.
+  ///   - database: The database instance where the currency information
+  ///     resides.
+  ///
+  /// - Returns: This function is expected to return the detailed information of
+  ///   the currency, represented as a tuple containing fields relevant to the
+  ///   currency. However, the current implementation does not return any data
+  ///   as it only checks for the existence of the currency.
+  ///
+  /// - Throws:
+  ///   - ``Currency.Error/noSuchCurrency`` if no currency with the specified ID
+  ///     exists for the given user.
+  ///   - ``Currency.Error/databaseError`` if a database error occurs during the
+  ///     query operation.
+  ///
+  /// > Notes: This function currently verifies whether a currency exists for a
+  ///   specified user by checking the count of matching records in the
+  ///   database. If no such currency exists, an error is thrown.
+  ///   In future iterations, this function is planned to return detailed
+  ///   information about the currency instead of returning nothing.
+  func getCurrency(
+    with id: Currency.IDValue,
+    /*fields: [String],*/
+    for userID: User.IDValue,
+    on database: Database
+  ) async throws /*-> (
+    id: Currency.IDValue
+  )*/ {
+    do {
+      let count = try await Currency.query(on: database)
+        .filter(\.$id == id)
+        .filter(\.$user.$id == userID)
+        .count()
+
+      if count <= 0 {
+        throw Currency.Error.noSuchCurrency
+      }
+    } catch Currency.Error.noSuchCurrency {
+      throw Currency.Error.noSuchCurrency
+    } catch {
+      throw Currency.Error.databaseError
+    }
+  }
+
   /// Retrieves a list of currencies associated with a specific user.
   ///
   /// - Parameters:

@@ -84,6 +84,54 @@ extension ServiceTests {
     }
 
     @Test
+    func testGetCurrency() async throws {
+      let currencyService = CurrencyService()
+
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        await #expect(throws: Currency.Error.noSuchCurrency) {
+          try await currencyService.getCurrency(with: 1, for: 1, on: app.db)
+        }
+
+        let eva = User(
+          firstName: "Eva",
+          lastName: "Chan",
+          username: "eva@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await eva.save(on: app.db)
+
+        await #expect(throws: Currency.Error.noSuchCurrency) {
+          try await currencyService.getCurrency(
+            with: 1,
+            for: eva.requireID(),
+            on: app.db
+          )
+        }
+
+        let currency = try Currency(
+          code: "USD",
+          minorUnit: 100,
+          symbol: "$",
+          symbolPosition: Currency.SymbolPosition.leading.rawValue,
+          userID: eva.requireID()
+        )
+        try await currency.save(on: app.db)
+
+        await #expect(throws: Never.self) {
+          try await currencyService.getCurrency(
+            with: 1,
+            for: eva.requireID(),
+            on: app.db
+          )
+        }
+      }
+    }
+
+    @Test
     func testGetCurrencies() async throws {
       let currencyService = CurrencyService()
 
