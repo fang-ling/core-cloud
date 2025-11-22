@@ -113,3 +113,9 @@ extension Account {
     case liability = 1
   }
 }
+
+extension Account {
+  enum Error: Swift.Error {
+    case databaseError
+  }
+}

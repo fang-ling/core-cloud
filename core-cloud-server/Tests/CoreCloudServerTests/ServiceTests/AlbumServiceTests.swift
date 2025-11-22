@@ -26,7 +26,7 @@ extension ServiceTests {
   @Suite("AlbumServiceTests")
   struct AlbumServiceTests {
     @Test
-    func testAddSong() async throws {
+    func testAddAlbum() async throws {
       let albumService = AlbumService()
 
       try await withApp(configure: CoreCloudServer.configure) { app in
