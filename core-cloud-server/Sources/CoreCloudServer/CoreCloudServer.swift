@@ -109,6 +109,7 @@ struct CoreCloudServer {
     app.migrations.add(EpisodeMigrationV1())
     app.migrations.add(PasswordMigrationV1())
     app.migrations.add(VerificationCodeMigrationV1())
+    app.migrations.add(CurrencyMigrationV1())
     try await app.autoMigrate()
 
     /* Routes */
