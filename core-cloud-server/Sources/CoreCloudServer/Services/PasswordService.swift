@@ -126,7 +126,7 @@ struct PasswordService {
     fields: [String],
     on database: Database
   ) async throws -> [(
-    id: User.IDValue,
+    id: Password.IDValue,
     label: String?,
     username: String?,
     verificationCodeID: VerificationCode.IDValue?
