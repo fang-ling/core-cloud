@@ -261,7 +261,187 @@ extension ControllerTests {
         }
       )
 
-      // TODO: Add balance computation logic test
+      try await app.testing().test(
+        .POST,
+        "api/account",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+
+          let type: Account.`Type` = .asset
+          try request.content.encode(
+            Account.Singular.Input.Insertion(
+              title: "Bank of American",
+              subtitle: "Checking",
+              number: "987654321",
+              type: type.rawValue,
+              balance: "0",
+              actualBalance: "0",
+              logoURLs: "https://example.com/1.png",
+              currencyID: 1
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/transaction-category",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+
+          let type: TransactionCategory.`Type` = .expense
+          try request.content.encode(
+            TransactionCategory.Singular.Input.Insertion(
+              name: "Food & Drinks",
+              type: type.rawValue
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+
+          let categoryIDOutput = try response.content.decode(
+            TransactionCategory.Singular.Output.Insertion.self
+          )
+          #expect(categoryIDOutput.id == 1)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/transaction-category",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+
+          let type: TransactionCategory.`Type` = .income
+          try request.content.encode(
+            TransactionCategory.Singular.Input.Insertion(
+              name: "Salary",
+              type: type.rawValue
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+
+          let categoryIDOutput = try response.content.decode(
+            TransactionCategory.Singular.Output.Insertion.self
+          )
+          #expect(categoryIDOutput.id == 2)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/transactions",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+
+          let expenseType: Transaction.`Type` = .expense
+          let incomeType: Transaction.`Type` = .income
+          let transferType: Transaction.`Type` = .transfer
+          try request.content.encode(
+            Transaction.Plural.Input.Insertion(
+              transactions: [
+                Transaction.Plural.Input.Insertion.Item(
+                  description: "Restaurant",
+                  date: Int64(Date().timeIntervalSince1970 * 1000),
+                  notes: "test",
+                  type: expenseType.rawValue,
+                  outAmount: "193.58",
+                  outRefund: "123.33",
+                  outFee: "193.48",
+                  outAccountID: 1,
+                  inAmount: nil,
+                  inAccountID: nil,
+                  transactionCategoryID: 1
+                ),
+                Transaction.Plural.Input.Insertion.Item(
+                  description: "Paycheck",
+                  date: Int64(Date().timeIntervalSince1970 * 1000),
+                  notes: "",
+                  type: incomeType.rawValue,
+                  outAmount: nil,
+                  outRefund: nil,
+                  outFee: nil,
+                  outAccountID: nil,
+                  inAmount: "193.46",
+                  inAccountID: 1,
+                  transactionCategoryID: 2
+                ),
+                Transaction.Plural.Input.Insertion.Item(
+                  description: "Money laundering",
+                  date: Int64(Date().timeIntervalSince1970 * 1000),
+                  notes: "",
+                  type: transferType.rawValue,
+                  outAmount: "193.46",
+                  outRefund: nil,
+                  outFee: nil,
+                  outAccountID: 1,
+                  inAmount: "193.46",
+                  inAccountID: 2,
+                  transactionCategoryID: nil
+                )
+              ]
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/accounts?fields=title,balance",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .ok)
+
+          let accounts = try response.content.decode(
+            [Account.Plural.Output.Retrieval].self
+          )
+          #expect(accounts.count == 2)
+          #expect(accounts.first?.id == 1)
+          #expect(accounts.first?.title == "Chase Bank")
+          #expect(accounts.first?.subtitle == nil)
+          #expect(accounts.first?.balance == "-263.73")
+          #expect(accounts.last?.id == 2)
+          #expect(accounts.last?.title == "Bank of American")
+          #expect(accounts.last?.subtitle == nil)
+          #expect(accounts.last?.balance == "193.46")
+        }
+      )
     }
   }
 }

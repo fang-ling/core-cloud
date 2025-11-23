@@ -22,6 +22,7 @@ import Vapor
 struct AccountController: RouteCollection {
   let accountService = AccountService()
   let currencyService = CurrencyService()
+  let transactionService = TransactionService()
 
   func boot(routes: any RoutesBuilder) throws {
     routes
@@ -117,43 +118,112 @@ struct AccountController: RouteCollection {
         on: request.db
       )
 
+      var accountDTOs = [Account.Plural.Output.Retrieval]()
+      for account in accounts {
+        let balance = (
+          account.balance != nil && account.currencyMinorUnit != nil
+            ? (
+              (
+                Decimal(account.balance!) -
+                Decimal(
+                  try await transactionService.aggregateTransactions(
+                    operation: "SUM,outAmount",
+                    filters: [
+                      "outAccountID_EQUALS_\(account.id)",
+                      "type_EQUALS_\(TransactionType.expense.rawValue)"
+                    ],
+                    for: userID,
+                    on: request.db
+                  ).outAmount ?? 0
+                ) +
+                Decimal(
+                  try await transactionService.aggregateTransactions(
+                    operation: "SUM,outRefund",
+                    filters: [
+                      "outAccountID_EQUALS_\(account.id)",
+                      "type_EQUALS_\(TransactionType.expense.rawValue)"
+                    ],
+                    for: userID,
+                    on: request.db
+                  ).outRefund ?? 0
+                ) -
+                Decimal(
+                  try await transactionService.aggregateTransactions(
+                    operation: "SUM,outFee",
+                    filters: [
+                      "outAccountID_EQUALS_\(account.id)",
+                      "type_EQUALS_\(TransactionType.expense.rawValue)"
+                    ],
+                    for: userID,
+                    on: request.db
+                  ).outFee ?? 0
+                ) +
+                Decimal(
+                  try await transactionService.aggregateTransactions(
+                    operation: "SUM,inAmount",
+                    filters: [
+                      "inAccountID_EQUALS_\(account.id)",
+                      "type_EQUALS_\(TransactionType.income.rawValue)"
+                    ],
+                    for: userID,
+                    on: request.db
+                  ).inAmount ?? 0
+                ) -
+                Decimal(
+                  try await transactionService.aggregateTransactions(
+                    operation: "SUM,outAmount",
+                    filters: [
+                      "outAccountID_EQUALS_\(account.id)",
+                      "type_EQUALS_\(TransactionType.transfer.rawValue)"
+                    ],
+                    for: userID,
+                    on: request.db
+                  ).outAmount ?? 0
+                ) +
+                Decimal(
+                  try await transactionService.aggregateTransactions(
+                    operation: "SUM,inAmount",
+                    filters: [
+                      "inAccountID_EQUALS_\(account.id)",
+                      "type_EQUALS_\(TransactionType.transfer.rawValue)"
+                    ],
+                    for: userID,
+                    on: request.db
+                  ).inAmount ?? 0
+                )
+              ) /
+              Decimal(account.currencyMinorUnit!)
+            ).description
+            : nil
+        )
+        let actualBalance = (
+          account.actualBalance != nil && account.currencyMinorUnit != nil
+            ? (
+              Decimal(account.actualBalance!) /
+              Decimal(account.currencyMinorUnit!)
+            ).description
+            : nil
+        )
+
+        accountDTOs.append(
+          Account.Plural.Output.Retrieval(
+            id: account.id,
+            title: account.title,
+            subtitle: account.subtitle,
+            number: account.number,
+            type: account.type?.rawValue,
+            balance: balance,
+            actualBalance: actualBalance,
+            currencySymbol: account.currencySymbol,
+            currencySymbolPosition: account.currencySymbolPosition?.rawValue
+          )
+        )
+      }
+
       return try .init(
         status: .ok,
         headers: .init([("Content-Type", "application/json")]),
-        body: .init(
-          data: CoreCloudServer.encoder.encode(
-            accounts.map { account in
-              let balance = (
-                account.balance != nil && account.currencyMinorUnit != nil
-                  ? (
-                    Decimal(account.balance!) /
-                    Decimal(account.currencyMinorUnit!)
-                  ).description
-                  : nil
-              )
-              let actualBalance = (
-                account.actualBalance != nil && account.currencyMinorUnit != nil
-                  ? (
-                    Decimal(account.actualBalance!) /
-                    Decimal(account.currencyMinorUnit!)
-                  ).description
-                  : nil
-              )
-
-              return Account.Plural.Output.Retrieval(
-                id: account.id,
-                title: account.title,
-                subtitle: account.subtitle,
-                number: account.number,
-                type: account.type?.rawValue,
-                balance: balance,
-                actualBalance: actualBalance,
-                currencySymbol: account.currencySymbol,
-                currencySymbolPosition: account.currencySymbolPosition?.rawValue
-              )
-            }
-          )
-        )
+        body: .init(data: CoreCloudServer.encoder.encode(accountDTOs))
       )
     } catch Account.Error.databaseError {
       return .init(status: .serviceUnavailable)
@@ -212,4 +282,8 @@ struct AccountController: RouteCollection {
       return .internalServerError
     }
   }
+}
+
+extension AccountController {
+  typealias TransactionType = Transaction.`Type`
 }

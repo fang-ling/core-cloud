@@ -221,7 +221,7 @@ struct TransactionController: RouteCollection {
           transaction.outAmount != nil && outMinorUnit != nil
             ? Int64(
               (
-                Decimal(string: transaction.outAmount!) ?? 0 /
+                (Decimal(string: transaction.outAmount!) ?? 0) *
                 Decimal(outMinorUnit!)
               ).description
             )
@@ -231,7 +231,7 @@ struct TransactionController: RouteCollection {
           transaction.outRefund != nil && outMinorUnit != nil
             ? Int64(
               (
-                Decimal(string: transaction.outRefund!) ?? 0 /
+                (Decimal(string: transaction.outRefund!) ?? 0) *
                 Decimal(outMinorUnit!)
               ).description
             )
@@ -241,7 +241,7 @@ struct TransactionController: RouteCollection {
           transaction.outFee != nil && outMinorUnit != nil
             ? Int64(
               (
-                Decimal(string: transaction.outFee!) ?? 0 /
+                (Decimal(string: transaction.outFee!) ?? 0) *
                 Decimal(outMinorUnit!)
               ).description
             )
@@ -252,7 +252,7 @@ struct TransactionController: RouteCollection {
           transaction.inAmount != nil && inMinorUnit != nil
             ? Int64(
               (
-                Decimal(string: transaction.inAmount!) ?? 0 /
+                (Decimal(string: transaction.inAmount!) ?? 0) *
                 Decimal(inMinorUnit!)
               ).description
             )
