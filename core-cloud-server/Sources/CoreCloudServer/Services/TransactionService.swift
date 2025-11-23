@@ -49,7 +49,7 @@ struct TransactionService {
       outAccountID: Account.IDValue?,
       inAmount: Int64?,
       inAccountID: Account.IDValue?,
-      transactionCategoryID: TransactionCategory.IDValue?,
+      transactionCategoryID: TransactionCategory.IDValue?
     )],
     for userID: User.IDValue,
     on database: Database

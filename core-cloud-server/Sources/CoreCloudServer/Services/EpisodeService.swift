@@ -162,7 +162,7 @@ struct EpisodeService {
           width: fields.contains("width") ? episode.width : nil,
           height: fields.contains("height") ? episode.height : nil,
           isHDR: fields.contains("isHDR") ? episode.isHDR : nil,
-          fileID: fields.contains("fileID") ? episode.$file.id : nil,
+          fileID: fields.contains("fileID") ? episode.$file.id : nil
         )}
     } catch {
       throw Episode.Error.databaseError

@@ -128,7 +128,7 @@ struct HomeVideoService {
           artworkURLs: (
             fields.contains("artworkURLs") ? homeVideo.artworkURLs : nil
           ),
-          fileID: fields.contains("fileID") ? homeVideo.$file.id : nil,
+          fileID: fields.contains("fileID") ? homeVideo.$file.id : nil
         )}
     } catch {
       throw HomeVideoError.databaseError
