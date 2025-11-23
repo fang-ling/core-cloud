@@ -25,7 +25,8 @@ import VaporTesting
 extension ServiceTests {
   @Suite("TransactionServiceTests")
   struct TransactionServiceTests {
-    @Test func testAddTransactions() async throws {
+    @Test
+    func testAddTransactions() async throws {
       let transactionService = TransactionService()
 
       try await withApp(configure: CoreCloudServer.configure) { app in
@@ -128,6 +129,7 @@ extension ServiceTests {
           type: 0,
           userID: eva.requireID()
         )
+        try await category.save(on: app.db)
 
         try await transactionService.addTransactions(
           transactions: [(
@@ -155,8 +157,105 @@ extension ServiceTests {
         #expect(transactions.first?.outAmount == 19358)
         #expect(transactions.first?.outRefund == 12333)
         #expect(transactions.first?.outFee == 19348)
-        #expect(transactions.first?.outAccount?.id == eva.id)
-        #expect(transactions.first?.transactionCategory?.id == category.id)
+        #expect(transactions.first?.$outAccount.id == account.id)
+        #expect(transactions.first?.$transactionCategory.id == category.id)
+      }
+    }
+
+    @Test
+    func testAggregateTransactions() async throws {
+      let transactionService = TransactionService()
+
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        var result = try await transactionService.aggregateTransactions(
+          operation: "SUM,inAmount",
+          filters: [],
+          for: 1,
+          on: app.db
+        )
+        #expect(result.inAmount == nil)
+        #expect(result.outAmount == nil)
+        #expect(result.outRefund == nil)
+        #expect(result.outFee == nil)
+
+        let eva = User(
+          firstName: "Eva",
+          lastName: "Chan",
+          username: "eva@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await eva.save(on: app.db)
+
+        let currency = try Currency(
+          code: "USD",
+          minorUnit: 100,
+          symbol: "$",
+          symbolPosition: 0,
+          userID: eva.requireID()
+        )
+        try await currency.save(on: app.db)
+
+        let category = try TransactionCategory(
+          name: "Food & Drinks",
+          type: 0,
+          userID: eva.requireID()
+        )
+        try await category.save(on: app.db)
+
+        let account = try Account(
+          title: "Chase Bank",
+          subtitle: "Checking",
+          number: "123456789",
+          type: 0,
+          balance: 0,
+          actualBalance: 0,
+          logoURLs: "https://example.com/1.png",
+          currencyID: currency.requireID(),
+          userID: eva.requireID()
+        )
+        try await account.save(on: app.db)
+
+        let transaction = try Transaction(
+          description: "Restaurant",
+          date: Date(),
+          notes: "",
+          type: 0,
+          outAmount: 19358,
+          outRefund: 12333,
+          outFee: 19348,
+          outAccountID: account.requireID(),
+          inAmount: nil,
+          inAccountID: nil,
+          transactionCategoryID: category.requireID(),
+          userID: eva.requireID()
+        )
+        try await transaction.save(on: app.db)
+
+        result = try await transactionService.aggregateTransactions(
+          operation: "SUM,outAmount",
+          filters: ["outAccountID_EQUALS_\(account.requireID())"],
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(result.inAmount == nil)
+        #expect(result.outAmount == 19358)
+        #expect(result.outRefund == nil)
+        #expect(result.outFee == nil)
+
+        result = try await transactionService.aggregateTransactions(
+          operation: "SUM,outAmount",
+          filters: ["outAccountID_EQUALS_3"],
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(result.inAmount == nil)
+        #expect(result.outAmount == nil)
+        #expect(result.outRefund == nil)
+        #expect(result.outFee == nil)
       }
     }
   }
