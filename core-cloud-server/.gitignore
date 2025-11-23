@@ -10,4 +10,6 @@ DerivedData/
 Package.resolved
 .swiftpm/xcode/xcshareddata/xcschemes/core-cloud-server.xcscheme
 .vscode
+.env
+*.sqlite
 Public
