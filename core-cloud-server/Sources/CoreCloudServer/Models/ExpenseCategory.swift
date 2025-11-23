@@ -64,3 +64,10 @@ extension ExpenseCategory {
     static let updatedAt: FieldKey = "updated_at"
   }
 }
+
+extension ExpenseCategory {
+  enum Error: Swift.Error {
+    case databaseError
+    case noSuchExpenseCategory
+  }
+}
