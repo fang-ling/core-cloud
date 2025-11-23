@@ -89,7 +89,12 @@ extension ServiceTests {
 
       try await withApp(configure: CoreCloudServer.configure) { app in
         await #expect(throws: Currency.Error.noSuchCurrency) {
-          try await currencyService.getCurrency(with: 1, for: 1, on: app.db)
+          try await currencyService.getCurrency(
+            with: 1,
+            fields: [],
+            for: 1,
+            on: app.db
+          )
         }
 
         let eva = User(
@@ -107,6 +112,7 @@ extension ServiceTests {
         await #expect(throws: Currency.Error.noSuchCurrency) {
           try await currencyService.getCurrency(
             with: 1,
+            fields: [],
             for: eva.requireID(),
             on: app.db
           )
@@ -121,13 +127,13 @@ extension ServiceTests {
         )
         try await currency.save(on: app.db)
 
-        await #expect(throws: Never.self) {
-          try await currencyService.getCurrency(
-            with: 1,
-            for: eva.requireID(),
-            on: app.db
-          )
-        }
+        let minorUnit = try await currencyService.getCurrency(
+          with: 1,
+          fields: ["minorUnit"],
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(minorUnit == 100)
       }
     }
 
