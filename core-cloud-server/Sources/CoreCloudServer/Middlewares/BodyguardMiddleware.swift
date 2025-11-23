@@ -46,7 +46,8 @@ struct BodyguardMiddleware: AsyncMiddleware {
         request.url.path.starts(with: "/drive") ||
         request.url.path.starts(with: "/music") ||
         request.url.path.starts(with: "/tv") ||
-        request.url.path.starts(with: "/passwords")
+        request.url.path.starts(with: "/passwords") ||
+        request.url.path.starts(with: "/finance")
       ) {
         return request.redirect(to: "/authenticator/#\(request.url.path)")
       }
