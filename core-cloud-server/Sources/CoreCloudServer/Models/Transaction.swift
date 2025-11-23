@@ -124,3 +124,17 @@ extension Transaction {
     static let updatedAt: FieldKey = "updated_at"
   }
 }
+
+extension Transaction {
+  enum `Type`: Int64 {
+    case expense = 0
+    case income = 1
+    case transfer = 2
+  }
+}
+
+extension Transaction {
+  enum Error: Swift.Error {
+    case databaseError
+  }
+}
