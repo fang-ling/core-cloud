@@ -1,5 +1,5 @@
 //
-//  ExpenseCategoryMigrationV1.swift
+//  TransactionCategoryMigrationV1.swift
 //  core-cloud-server
 //
 //  Created by Fang Ling on 2025/11/23.
@@ -19,30 +19,32 @@
 
 import Fluent
 
-struct ExpenseCategoryMigrationV1: AsyncMigration {
-  var name = "ExpenseCategoryMigrationV1"
+struct TransactionCategoryMigrationV1: AsyncMigration {
+  var name = "TransactionCategoryMigrationV1"
 
   func prepare(on database: any Database) async throws {
-    try await database.schema(ExpenseCategory.schema)
-      .field(ExpenseCategory.FieldKeys.id, .int64, .identifier(auto: false))
-      .field(ExpenseCategory.FieldKeys.name, .string, .required)
+    try await database.schema(TransactionCategory.schema)
+      .field(TransactionCategory.FieldKeys.id, .int64, .identifier(auto: false))
+      .field(TransactionCategory.FieldKeys.name, .string, .required)
+      .field(TransactionCategory.FieldKeys.type, .int64, .required)
       .field(
-        ExpenseCategory.FieldKeys.userID,
+        TransactionCategory.FieldKeys.userID,
         .int64,
         .required,
         .references(User.schema, User.FieldKeys.id)
       )
-      .field(ExpenseCategory.FieldKeys.createdAt, .datetime)
-      .field(ExpenseCategory.FieldKeys.updatedAt, .datetime)
+      .field(TransactionCategory.FieldKeys.createdAt, .datetime)
+      .field(TransactionCategory.FieldKeys.updatedAt, .datetime)
       .unique(
-        on: ExpenseCategory.FieldKeys.name,
-        ExpenseCategory.FieldKeys.userID
+        on: TransactionCategory.FieldKeys.name,
+        TransactionCategory.FieldKeys.type,
+        TransactionCategory.FieldKeys.userID
       )
       .create()
   }
 
   func revert(on database: any Database) async throws {
-    try await database.schema(ExpenseCategory.schema)
+    try await database.schema(TransactionCategory.schema)
       .delete()
   }
 }

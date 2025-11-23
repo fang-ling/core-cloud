@@ -1,5 +1,5 @@
 //
-//  ExpenseCategory.swift
+//  TransactionCategory.swift
 //  core-cloud-server
 //
 //  Created by Fang Ling on 2025/11/23.
@@ -20,12 +20,15 @@
 import Fluent
 import Vapor
 
-final class ExpenseCategory: Model, @unchecked Sendable {
+final class TransactionCategory: Model, @unchecked Sendable {
   @ID(custom: FieldKeys.id, generatedBy: .database)
   var id: Int64?
 
   @Field(key: FieldKeys.name)
   var name: String
+
+  @Field(key: FieldKeys.type)
+  var type: Int64
 
   @Parent(key: FieldKeys.userID)
   var user: User
@@ -41,33 +44,43 @@ final class ExpenseCategory: Model, @unchecked Sendable {
   init(
     id: Int64? = nil,
     name: String,
+    type: Int64,
     userID: User.IDValue,
     createdAt: Date? = nil,
     updatedAt: Date? = nil
   ) {
     self.id = id
     self.name = name
+    self.type = type
     self.$user.id = userID
     self.createdAt = createdAt
     self.updatedAt = updatedAt
   }
 }
 
-extension ExpenseCategory {
-  static let schema = "ExpenseCategories"
+extension TransactionCategory {
+  static let schema = "TransactionCategories"
 
   enum FieldKeys {
     static let id: FieldKey = "id"
     static let name: FieldKey = "name"
+    static let type: FieldKey = "type"
     static let userID: FieldKey = "user_id"
     static let createdAt: FieldKey = "created_at"
     static let updatedAt: FieldKey = "updated_at"
   }
 }
 
-extension ExpenseCategory {
+extension TransactionCategory {
+  enum `Type`: Int64 {
+    case expense = 0
+    case income = 1
+  }
+}
+
+extension TransactionCategory {
   enum Error: Swift.Error {
     case databaseError
-    case noSuchExpenseCategory
+    case noSuchTransactionCategory
   }
 }
