@@ -120,3 +120,62 @@ extension Account {
     case noSuchAccount
   }
 }
+
+extension Account {
+  enum Singular { }
+  enum Plural { }
+}
+
+extension Account.Singular {
+  enum Input { }
+  enum Output { }
+}
+
+extension Account.Plural {
+  enum Input { }
+  enum Output { }
+}
+
+extension Account.Singular.Input {
+  struct Insertion: Codable {
+    var title: String
+    var subtitle: String
+    var number: String
+    var type: Int64
+    var balance: String
+    var actualBalance: String
+    var logoURLs: String
+    var currencyID: Int64
+  }
+
+  struct Modification: Codable {
+    var id: Int64
+    var actualBalance: String?
+  }
+}
+
+extension Account.Singular.Output {
+  struct Insertion: Codable {
+    var id: Int64
+  }
+}
+
+extension Account.Plural.Input {
+  struct Retrieval: Codable {
+    var fields: String
+  }
+}
+
+extension Account.Plural.Output {
+  struct Retrieval: Codable {
+    var id: Int64
+    var title: String?
+    var subtitle: String?
+    var number: String?
+    var type: Int64?
+    var balance: String?
+    var actualBalance: String?
+    var currencySymbol: String?
+    var currencySymbolPosition: Int64?
+  }
+}

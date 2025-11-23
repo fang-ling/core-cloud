@@ -129,6 +129,7 @@ struct CoreCloudServer {
     try app.routes.register(collection: PasswordController())
     try app.routes.register(collection: VerificationCodeController())
     try app.routes.register(collection: CurrencyController())
+    try app.routes.register(collection: AccountController())
   }
 }
 
