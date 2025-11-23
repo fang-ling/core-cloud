@@ -38,6 +38,11 @@ namespace CoreCloudWeb {
       urls: process.env.NEXT_PUBLIC_PASSWORDS_ICON_URLS?.split(",") ?? [],
       name: "Passwords",
       href: "/passwords"
+    },
+    {
+      urls: process.env.NEXT_PUBLIC_FINANCE_ICON_URLS?.split(",") ?? [],
+      name: "Finance",
+      href: "/finance"
     }
   ]
 }
