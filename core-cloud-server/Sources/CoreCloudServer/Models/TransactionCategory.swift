@@ -84,3 +84,45 @@ extension TransactionCategory {
     case noSuchTransactionCategory
   }
 }
+
+extension TransactionCategory {
+  enum Singular { }
+  enum Plural { }
+}
+
+extension TransactionCategory.Singular {
+  enum Input { }
+  enum Output { }
+}
+
+extension TransactionCategory.Plural {
+  enum Input { }
+  enum Output { }
+}
+
+extension TransactionCategory.Singular.Input {
+  struct Insertion: Codable {
+    var name: String
+    var type: Int64
+  }
+}
+
+extension TransactionCategory.Singular.Output {
+  struct Insertion: Codable {
+    var id: Int64
+  }
+}
+
+extension TransactionCategory.Plural.Input {
+  struct Retrieval: Codable {
+    var filters: String
+    var fields: String
+  }
+}
+
+extension TransactionCategory.Plural.Output {
+  struct Retrieval: Codable {
+    var id: Int64
+    var name: String?
+  }
+}
