@@ -279,7 +279,7 @@ extension ServiceTests {
           subtitle: "Checking",
           number: "123456789",
           type: type.rawValue,
-          balance: 0,
+          balance: 19358,
           actualBalance: 0,
           logoURLs: "https://example.com/1.png",
           currencyID: currency.requireID(),
@@ -297,8 +297,7 @@ extension ServiceTests {
         #expect(accounts.first?.subtitle == "Checking")
         #expect(accounts.first?.number == "123456789")
         #expect(accounts.first?.currencyMinorUnit == 100)
-
-        // TODO: Add balance computation logic test
+        #expect(accounts.first?.balance == 19358)
       }
     }
   }

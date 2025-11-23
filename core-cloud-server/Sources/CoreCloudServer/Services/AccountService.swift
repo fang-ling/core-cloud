@@ -224,7 +224,7 @@ struct AccountService {
           subtitle: fields.contains("subtitle") ? account.subtitle : nil,
           number: fields.contains("number") ? account.number : nil,
           type: fields.contains("type") ? .init(rawValue: account.type) : nil,
-          balance: 0, // TODO: Add balance computation logic
+          balance: fields.contains("balance") ? account.balance : nil,
           actualBalance: (
             fields.contains("actualBalance")
               ? account.actualBalance
