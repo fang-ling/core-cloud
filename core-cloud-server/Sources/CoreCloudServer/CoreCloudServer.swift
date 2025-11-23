@@ -133,6 +133,7 @@ struct CoreCloudServer {
     try app.routes.register(collection: CurrencyController())
     try app.routes.register(collection: AccountController())
     try app.routes.register(collection: TransactionCategoryController())
+    try app.routes.register(collection: TransactionController())
   }
 }
 
