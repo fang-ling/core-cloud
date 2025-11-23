@@ -139,6 +139,8 @@ struct AccountService {
   ///     `nil.
   ///   - `currencySymbolPosition`: The position of the currency symbol, if
   ///     requested; otherwise, `nil`.
+  ///   - `currencyMinorUnit`: The minor unit of the currency, if the balance or
+  ///     the actual balance is requsted; otherwise, `nil`.
   ///
   /// - Throws:
   ///   ``Account.Error/databaseError`` if the retrieval operation fails.
@@ -155,13 +157,16 @@ struct AccountService {
     balance: Int64?,
     actualBalance: Int64?,
     currencySymbol: String?,
-    currencySymbolPosition: Currency.SymbolPosition?
+    currencySymbolPosition: Currency.SymbolPosition?,
+    currencyMinorUnit: Int64?
   )] {
     do {
       var query = Account.query(on: database)
         .filter(\.$user.$id == userID)
 
-      if fields.contains("currencySymbol") ||
+      if fields.contains("balance") ||
+         fields.contains("actualBalance") ||
+         fields.contains("currencySymbol") ||
          fields.contains("currencySymbolPosition") {
         query = query.with(\.$currency)
       }
@@ -187,6 +192,11 @@ struct AccountService {
           currencySymbolPosition: (
             fields.contains("currencySymbolPosition")
               ? .init(rawValue: account.currency.symbolPosition)
+              : nil
+          ),
+          currencyMinorUnit: (
+            fields.contains("balance") || fields.contains("actualBalance")
+              ? account.currency.minorUnit
               : nil
           )
         )}

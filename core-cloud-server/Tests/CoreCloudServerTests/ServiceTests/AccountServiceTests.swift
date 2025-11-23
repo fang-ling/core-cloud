@@ -221,13 +221,14 @@ extension ServiceTests {
 
         accounts = try await accountService.getAccounts(
           for: 1,
-          fields: ["title", "subtitle", "number"],
+          fields: ["title", "subtitle", "number", "balance"],
           on: app.db
         )
         #expect(accounts.count == 1)
         #expect(accounts.first?.title == "Chase Bank")
         #expect(accounts.first?.subtitle == "Checking")
         #expect(accounts.first?.number == "123456789")
+        #expect(accounts.first?.currencyMinorUnit == 100)
 
         // TODO: Add balance computation logic test
       }
