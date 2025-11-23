@@ -111,6 +111,52 @@ struct AccountService {
   /// Retrieves account information for a specified user.
   ///
   /// - Parameters:
+  ///   - id: The identifier of the account to be retrieved.
+  ///   - fields: An array of strings specifying which fields to include in the
+  ///     response.
+  ///   - userID: The identifier of the user whose account is to be retrieved.
+  ///   - database: The database instance from which to retrieve the accounts.
+  ///
+  /// - Returns: An array of tuples, each containing the following field(s):
+  ///   - `currencyID`: The identifier of the currency, if requsted; otherwise,
+  ///     `nil`.
+  ///
+  /// - Throws:
+  ///   - ``Account.Error/databaseError`` if the retrieval operation fails.
+  ///   - ``Account.Error/noSuchAccount`` if the account is not found.
+  func getAccount(
+    with id: Account.IDValue,
+    fields: [String],
+    for userID: User.IDValue,
+    on database: Database
+  ) async throws -> /*(*/
+    /*currencyID: */Currency.IDValue?
+  /*)*/ {
+    do {
+      guard let account = try await Account.query(on: database)
+        .filter(\.$user.$id == userID)
+        .first()
+      else {
+        throw Account.Error.noSuchAccount
+      }
+
+      return (
+        /*currencyID: */(
+          fields.contains("currencyID")
+            ? account.$currency.id
+            : nil
+          )
+      )
+    } catch Account.Error.noSuchAccount {
+      throw Account.Error.noSuchAccount
+    } catch {
+      throw Account.Error.databaseError
+    }
+  }
+
+  /// Retrieves account information for a specified user.
+  ///
+  /// - Parameters:
   ///   - userID: The identifier of the user whose accounts are to be retrieved.
   ///   - fields: An array of strings specifying which fields to include in the
   ///     response. Possible fields include:

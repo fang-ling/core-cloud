@@ -117,5 +117,6 @@ extension Account {
 extension Account {
   enum Error: Swift.Error {
     case databaseError
+    case noSuchAccount
   }
 }

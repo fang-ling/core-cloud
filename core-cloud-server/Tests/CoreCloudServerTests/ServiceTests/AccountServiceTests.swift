@@ -166,6 +166,74 @@ extension ServiceTests {
     }
 
     @Test
+    func testGetAccount() async throws {
+      let accountService = AccountService()
+
+      try await withApp(configure: CoreCloudServer.configure) { app in
+        await #expect(throws: Account.Error.noSuchAccount) {
+          try await accountService.getAccount(
+            with: 1,
+            fields: [],
+            for: 1,
+            on: app.db
+          )
+        }
+
+        let eva = User(
+          firstName: "Eva",
+          lastName: "Chan",
+          username: "eva@example.com",
+          key: Data(),
+          salt: Data(),
+          masterKeySealedBox: Data(),
+          masterKeySealedBoxSalt: Data(),
+          avatarURLs: "https://example.com/1.png"
+        )
+        try await eva.save(on: app.db)
+
+        await #expect(throws: Account.Error.noSuchAccount) {
+          try await accountService.getAccount(
+            with: 1,
+            fields: [],
+            for: eva.requireID(),
+            on: app.db
+          )
+        }
+
+        let currency = try Currency(
+          code: "USD",
+          minorUnit: 100,
+          symbol: "$",
+          symbolPosition: Currency.SymbolPosition.leading.rawValue,
+          userID: eva.requireID()
+        )
+        try await currency.save(on: app.db)
+
+        let type: Account.`Type` = .asset
+        let account = try Account(
+          title: "Chase Bank",
+          subtitle: "Checking",
+          number: "123456789",
+          type: type.rawValue,
+          balance: 0,
+          actualBalance: 0,
+          logoURLs: "https://example.com/1.png",
+          currencyID: currency.requireID(),
+          userID: eva.requireID()
+        )
+        try await account.save(on: app.db)
+
+        let currencyID = try await accountService.getAccount(
+          with: account.requireID(),
+          fields: ["currencyID"],
+          for: eva.requireID(),
+          on: app.db
+        )
+        #expect(currencyID == currency.id)
+      }
+    }
+
+    @Test
     func testGetAccounts() async throws {
       let accountService = AccountService()
 
