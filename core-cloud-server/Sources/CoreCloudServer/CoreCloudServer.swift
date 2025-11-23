@@ -112,6 +112,7 @@ struct CoreCloudServer {
     app.migrations.add(CurrencyMigrationV1())
     app.migrations.add(AccountMigrationV1())
     app.migrations.add(TransactionCategoryMigrationV1())
+    app.migrations.add(TransactionMigrationV1())
     try await app.autoMigrate()
 
     /* Routes */
