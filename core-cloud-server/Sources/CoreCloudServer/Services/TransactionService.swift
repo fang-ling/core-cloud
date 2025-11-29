@@ -196,7 +196,6 @@ struct TransactionService {
     id: Transaction.IDValue,
     description: String?,
     date: Date?,
-    notes: String?,
     type: Transaction.`Type`?,
     outAmount: Int64?,
     outCurrencySymbol: String?,
@@ -265,7 +264,6 @@ struct TransactionService {
               fields.contains("description") ? transaction.description : nil
             ),
             date: fields.contains("date") ? transaction.date : nil,
-            notes: fields.contains("notes") ? transaction.notes : nil,
             type: (
               fields.contains("type") ? type : nil
             ),

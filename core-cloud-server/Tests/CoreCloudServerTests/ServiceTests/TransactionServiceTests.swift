@@ -135,7 +135,7 @@ extension ServiceTests {
           transactions: [(
             description: "Restaurant",
             date: Date(),
-            notes: "",
+            notes: "test",
             type: .expense,
             outAmount: 19358,
             outRefund: 12333,
@@ -152,7 +152,7 @@ extension ServiceTests {
         #expect(transactions.count == 1)
         #expect(transactions.first?.description == "Restaurant")
         #expect(transactions.first?.date != nil)
-        #expect(transactions.first?.notes == "")
+        #expect(transactions.first?.notes == "test")
         #expect(transactions.first?.type == 0)
         #expect(transactions.first?.outAmount == 19358)
         #expect(transactions.first?.outRefund == 12333)

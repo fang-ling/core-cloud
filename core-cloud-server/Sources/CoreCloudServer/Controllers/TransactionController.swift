@@ -317,7 +317,6 @@ struct TransactionController: RouteCollection {
                     ? Int64(transaction.date!.timeIntervalSince1970 * 1000)
                     : nil
                 ),
-                notes: transaction.notes,
                 type: transaction.type?.rawValue,
                 outAmount: (
                   (

@@ -174,7 +174,6 @@ extension Transaction.Plural.Output {
     var id: Int64
     var description: String?
     var date: Int64?
-    var notes: String?
     var type: Int64?
     var outAmount: String?
     var outCurrencySymbol: String?
