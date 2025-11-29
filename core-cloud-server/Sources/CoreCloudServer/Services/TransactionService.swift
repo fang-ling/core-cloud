@@ -201,9 +201,11 @@ struct TransactionService {
     outAmount: Int64?,
     outCurrencySymbol: String?,
     outCurrencySymbolPosition: Currency.SymbolPosition?,
+    outCurrencyMinorUnit: Int64?,
     inAmount: Int64?,
     inCurrencySymbol: String?,
     inCurrencySymbolPosition: Currency.SymbolPosition?,
+    inCurrencyMinorUnit: Int64?,
     transactionCategoryName: String?
   )] {
     do {
@@ -290,6 +292,11 @@ struct TransactionService {
                 )
                 : nil
             ),
+            outCurrencyMinorUnit: (
+              fields.contains("outAmount")
+                ? transaction.outAccount?.currency.minorUnit
+                : nil
+            ),
             inAmount: (
               fields.contains("inAmount") && type != nil && type != .expense
                 ? transaction.inAmount
@@ -305,6 +312,11 @@ struct TransactionService {
                 ? .init(
                   rawValue: transaction.inAccount?.currency.symbolPosition ?? 99
                 )
+                : nil
+            ),
+            inCurrencyMinorUnit: (
+              fields.contains("inAmount")
+                ? transaction.inAccount?.currency.minorUnit
                 : nil
             ),
             transactionCategoryName: (

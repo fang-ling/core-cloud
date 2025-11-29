@@ -36,6 +36,14 @@ extension ControllerTests {
       )
 
       try await app.testing().test(
+        .GET,
+        "api/transactions",
+        afterResponse: { response async throws in
+          #expect(response.status == .unauthorized)
+        }
+      )
+
+      try await app.testing().test(
         .POST,
         "api/user",
         beforeRequest: { request async throws in
@@ -659,7 +667,7 @@ extension ControllerTests {
               transactions: [
                 Transaction.Plural.Input.Insertion.Item(
                   description: "Money laundering",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
+                  date: 1764362098000,
                   notes: "",
                   type: type.rawValue,
                   outAmount: "193.46",
@@ -676,6 +684,45 @@ extension ControllerTests {
         },
         afterResponse: { response async throws in
           #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/transactions",
+        beforeRequest: { request in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response in
+          let transactions = try response.content.decode(
+            [Transaction.Plural.Output.Retrieval].self
+          )
+          #expect(transactions.count == 3)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/transactions?filters=type_EQUALS_2&fields=date",
+        beforeRequest: { request in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response in
+          let transactions = try response.content.decode(
+            [Transaction.Plural.Output.Retrieval].self
+          )
+          #expect(transactions.count == 1)
+          #expect(transactions.first?.date == 1764362098000)
         }
       )
     }

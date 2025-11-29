@@ -145,6 +145,7 @@ extension Transaction {
 
 extension Transaction.Plural {
   enum Input { }
+  enum Output { }
 }
 
 extension Transaction.Plural.Input {
@@ -164,5 +165,27 @@ extension Transaction.Plural.Input {
       var inAccountID: Int64?
       var transactionCategoryID: Int64?
     }
+  }
+
+  struct Retrieval: Codable {
+    var fields: String?
+    var filters: String?
+  }
+}
+
+extension Transaction.Plural.Output {
+  struct Retrieval: Codable {
+    var id: Int64
+    var description: String?
+    var date: Int64?
+    var notes: String?
+    var type: Int64?
+    var outAmount: String?
+    var outCurrencySymbol: String?
+    var outCurrencySymbolPosition: Int64?
+    var inAmount: String?
+    var inCurrencySymbol: String?
+    var inCurrencySymbolPosition: Int64?
+    var transactionCategoryName: String?
   }
 }

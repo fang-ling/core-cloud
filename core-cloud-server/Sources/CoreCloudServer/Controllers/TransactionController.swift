@@ -31,6 +31,12 @@ struct TransactionController: RouteCollection {
       .grouped("transactions")
       .grouped(AuthenticatorMiddleware())
       .post(use: insertTransactionsHandler)
+
+    routes
+      .grouped("api")
+      .grouped("transactions")
+      .grouped(AuthenticatorMiddleware())
+      .get(use: fetchTransactionsHandler)
   }
 
   func insertTransactionsHandler(request: Request) async -> HTTPStatus {
@@ -275,6 +281,84 @@ struct TransactionController: RouteCollection {
       return .serviceUnavailable
     } catch {
       return .internalServerError
+    }
+  }
+
+  func fetchTransactionsHandler(request: Request) async -> Response {
+    guard let userID = request.userID else {
+      return .init(status: .unauthorized)
+    }
+
+    guard let input = try? request.query.decode(
+      Transaction.Plural.Input.Retrieval.self
+    ) else {
+      return .init(status: .badRequest)
+    }
+
+    do {
+      let transactions = try await transactionService.getTransactions(
+        for: userID,
+        fields: input.fields?.components(separatedBy: ",") ?? [],
+        filters: input.filters?.components(separatedBy: ",") ?? [],
+        on: request.db
+      )
+
+      return try .init(
+        status: .ok,
+        headers: .init([("Content-Type", "application/json")]),
+        body: .init(
+          data: CoreCloudServer.encoder.encode(
+            transactions.map { transaction in
+              Transaction.Plural.Output.Retrieval(
+                id: transaction.id,
+                description: transaction.description,
+                date: (
+                  transaction.date != nil
+                    ? Int64(transaction.date!.timeIntervalSince1970 * 1000)
+                    : nil
+                ),
+                notes: transaction.notes,
+                type: transaction.type?.rawValue,
+                outAmount: (
+                  (
+                    transaction.outAmount != nil &&
+                    transaction.outCurrencyMinorUnit != nil
+                  )
+                    ? (
+                      Decimal(transaction.outAmount!) /
+                      Decimal(transaction.outCurrencyMinorUnit!)
+                    ).description
+                    : nil
+                ),
+                outCurrencySymbol: transaction.outCurrencySymbol,
+                outCurrencySymbolPosition: (
+                  transaction.outCurrencySymbolPosition?.rawValue
+                ),
+                inAmount: (
+                  (
+                    transaction.inAmount != nil &&
+                    transaction.inCurrencyMinorUnit != nil
+                  )
+                    ? (
+                      Decimal(transaction.inAmount!) /
+                      Decimal(transaction.inCurrencyMinorUnit!)
+                    ).description
+                    : nil
+                ),
+                inCurrencySymbol: transaction.inCurrencySymbol,
+                inCurrencySymbolPosition: (
+                  transaction.inCurrencySymbolPosition?.rawValue
+                ),
+                transactionCategoryName: transaction.transactionCategoryName
+              )
+            }
+          )
+        )
+      )
+    } catch Transaction.Error.databaseError {
+      return .init(status: .serviceUnavailable)
+    } catch {
+      return .init(status: .internalServerError)
     }
   }
 }
