@@ -23,15 +23,16 @@
 
   // MARK: - States
   let accounts: {
-    id: number
-    title?: string
-    subtitle?: string
-    number?: String
-    type?: number
-    balance?: string
-    actualBalance?: string
-    currencySymbol?: string
-    currencySymbolPosition?: number
+    id: number,
+    title?: string,
+    subtitle?: string,
+    number?: String,
+    type?: number,
+    balance?: string,
+    actualBalance?: string,
+    currencySymbol?: string,
+    currencySymbolPosition?: number,
+    logoURLs?: string
   }[] | undefined = $state([])
   let isAccountsLoading = $state(false)
 
@@ -52,7 +53,8 @@
         "balance",
         "actualBalance",
         "currencySymbol",
-        "currencySymbolPosition"
+        "currencySymbolPosition",
+        "logoURLs"
       ].join(",")
     })
     isAccountsLoading = false
@@ -67,6 +69,12 @@
   <ul>
     {#each accounts as account (account.id)}
       <li>
+        <img
+          width="32"
+          height="32"
+          src={account.logoURLs?.split(",").pop()}
+          alt="Logo of the account."
+        />
         <span>Title: {account.title} |</span>
         <span>Subtitle: {account.subtitle} |</span>
         <span>Number: {account.number} |</span>

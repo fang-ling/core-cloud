@@ -36,6 +36,7 @@ export namespace Account {
         actualBalance?: string
         currencySymbol?: string
         currencySymbolPosition?: number
+        logoURLs?: string
       }
     }
   }
