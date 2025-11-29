@@ -169,4 +169,153 @@ struct TransactionService {
       throw Transaction.Error.databaseError
     }
   }
+
+  /// Fetches transactions for a specified user from the database, applying the
+  /// given fields and filters.
+  ///
+  /// - Parameters:
+  ///   - userID: The unique identifier of the user whose transactions are being
+  ///     fetched.
+  ///   - fields: An array of strings representing the fields to be included in
+  ///     the transaction results.
+  ///   - filters: An array of strings used to filter the results based on
+  ///     specific criteria.
+  ///   - database: The database instance to query transactions from.
+  ///
+  /// - Returns: An array of tuples containing transaction details.
+  ///
+  /// - Throws:
+  ///   - ``Transaction.Error/databaseError`` if there is a problem querying the
+  ///     database.
+  func getTransactions(
+    for userID: User.IDValue,
+    fields: [String],
+    filters: [String],
+    on database: Database
+  ) async throws -> [(
+    id: Transaction.IDValue,
+    description: String?,
+    date: Date?,
+    notes: String?,
+    type: Transaction.`Type`?,
+    outAmount: Int64?,
+    outCurrencySymbol: String?,
+    outCurrencySymbolPosition: Currency.SymbolPosition?,
+    inAmount: Int64?,
+    inCurrencySymbol: String?,
+    inCurrencySymbolPosition: Currency.SymbolPosition?,
+    transactionCategoryName: String?
+  )] {
+    do {
+      var query = Transaction.query(on: database).filter(\.$user.$id == userID)
+
+      if (
+        fields.contains("outCurrencySymbol") ||
+        fields.contains("outCurrencySymbolPosition")
+      ) {
+        query = query.with(\.$outAccount) { account in
+          account.with(\.$currency)
+        }
+      }
+
+      if (
+        fields.contains("inCurrencySymbol") ||
+        fields.contains("inCurrencySymbolPosition")
+      ) {
+        query = query.with(\.$inAccount) { account in
+          account.with(\.$currency)
+        }
+      }
+
+      if fields.contains("transactionCategoryName") {
+        query = query.with(\.$transactionCategory)
+      }
+
+      for filter in filters {
+        if filter.contains("_CONTAINS_") {
+          let entry = filter.components(separatedBy: "_CONTAINS_")
+          if entry.count < 2 {
+            continue
+          }
+
+          if entry[0] == "description" {
+            query = query.filter(\.$description ~~ entry[1])
+          }
+        } else if filter.contains("_EQUALS_") {
+          let entry = filter.components(separatedBy: "_EQUALS_")
+          if entry.count < 2 {
+            continue
+          }
+
+          if entry[0] == "type", let type = Int64(entry[1]) {
+            query = query.filter(\.$type == type)
+          }
+        }
+      }
+
+      return try await query.sort(\.$date, .descending).all()
+        .map { transaction in
+          let type: Transaction.`Type`? = .init(rawValue: transaction.type)
+
+          return (
+            id: try transaction.requireID(),
+            description: (
+              fields.contains("description") ? transaction.description : nil
+            ),
+            date: fields.contains("date") ? transaction.date : nil,
+            notes: fields.contains("notes") ? transaction.notes : nil,
+            type: (
+              fields.contains("type") ? type : nil
+            ),
+            outAmount: (
+              fields.contains("outAmount") && type != nil && type != .income
+                ? type == .transfer
+                  ? transaction.outAmount
+                  : (
+                    (transaction.outAmount ?? 0) -
+                    (transaction.outRefund ?? 0) +
+                    (transaction.outFee ?? 0)
+                  )
+                : nil
+            ),
+            outCurrencySymbol: (
+              fields.contains("outCurrencySymbol")
+                ? transaction.outAccount?.currency.symbol
+                : nil
+            ),
+            outCurrencySymbolPosition: (
+              fields.contains("outCurrencySymbolPosition")
+                ? .init(
+                  rawValue: transaction.outAccount?.currency.symbolPosition ?? 9
+                )
+                : nil
+            ),
+            inAmount: (
+              fields.contains("inAmount") && type != nil && type != .expense
+                ? transaction.inAmount
+                : nil
+            ),
+            inCurrencySymbol: (
+              fields.contains("inCurrencySymbol")
+                ? transaction.inAccount?.currency.symbol
+                : nil
+            ),
+            inCurrencySymbolPosition: (
+              fields.contains("inCurrencySymbolPosition")
+                ? .init(
+                  rawValue: transaction.inAccount?.currency.symbolPosition ?? 99
+                )
+                : nil
+            ),
+            transactionCategoryName: (
+              fields.contains("transactionCategoryName")
+                ? transaction.transactionCategory?.name
+                : nil
+            )
+          )
+        }
+    } catch {
+      throw Transaction.Error.databaseError
+    }
+  }
 }
