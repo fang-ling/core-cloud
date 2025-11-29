@@ -25,6 +25,6 @@ struct VersionCommand: AsyncCommand {
   let help = "Prints the version string."
 
   func run(using context: CommandContext, signature: Signature) async throws {
-    context.console.print("6.0")
+    context.console.print("6.1")
   }
 }
