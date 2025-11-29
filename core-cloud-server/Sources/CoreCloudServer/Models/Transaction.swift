@@ -150,21 +150,17 @@ extension Transaction.Plural {
 
 extension Transaction.Plural.Input {
   struct Insertion: Codable {
-    var transactions: [Item]
-
-    struct Item: Codable {
-      var description: String
-      var date: Int64
-      var notes: String?
-      var type: Int64
-      var outAmount: String?
-      var outRefund: String?
-      var outFee: String?
-      var outAccountID: Int64?
-      var inAmount: String?
-      var inAccountID: Int64?
-      var transactionCategoryID: Int64?
-    }
+    var description: String
+    var date: Int64
+    var notes: String?
+    var type: Int64
+    var outAmount: String?
+    var outRefund: String?
+    var outFee: String?
+    var outAccountID: Int64?
+    var inAmount: String?
+    var inAccountID: Int64?
+    var transactionCategoryID: Int64?
   }
 
   struct Retrieval: Codable {

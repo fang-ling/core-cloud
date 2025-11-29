@@ -45,7 +45,7 @@ struct TransactionController: RouteCollection {
     }
 
     guard let input = try? request.content.decode(
-      Transaction.Plural.Input.Insertion.self
+      [Transaction.Plural.Input.Insertion].self
     ) else {
       return .badRequest
     }
@@ -63,7 +63,7 @@ struct TransactionController: RouteCollection {
       inAccountID: Account.IDValue?,
       transactionCategoryID: TransactionCategory.IDValue?
     )] = []
-    for transaction in input.transactions {
+    for transaction in input {
       guard let type: Transaction.`Type` = .init(
         rawValue: transaction.type
       ) else {

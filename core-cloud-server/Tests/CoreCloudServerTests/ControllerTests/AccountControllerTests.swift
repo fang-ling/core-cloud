@@ -363,51 +363,47 @@ extension ControllerTests {
           let expenseType: Transaction.`Type` = .expense
           let incomeType: Transaction.`Type` = .income
           let transferType: Transaction.`Type` = .transfer
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Restaurant",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "test",
-                  type: expenseType.rawValue,
-                  outAmount: "193.58",
-                  outRefund: "123.33",
-                  outFee: "193.48",
-                  outAccountID: 1,
-                  inAmount: nil,
-                  inAccountID: nil,
-                  transactionCategoryID: 1
-                ),
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Paycheck",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: incomeType.rawValue,
-                  outAmount: nil,
-                  outRefund: nil,
-                  outFee: nil,
-                  outAccountID: nil,
-                  inAmount: "193.46",
-                  inAccountID: 1,
-                  transactionCategoryID: 2
-                ),
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Money laundering",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: transferType.rawValue,
-                  outAmount: "193.46",
-                  outRefund: nil,
-                  outFee: nil,
-                  outAccountID: 1,
-                  inAmount: "193.46",
-                  inAccountID: 2,
-                  transactionCategoryID: nil
-                )
-              ]
+              description: "Restaurant",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "test",
+              type: expenseType.rawValue,
+              outAmount: "193.58",
+              outRefund: "123.33",
+              outFee: "193.48",
+              outAccountID: 1,
+              inAmount: nil,
+              inAccountID: nil,
+              transactionCategoryID: 1
+            ),
+            Transaction.Plural.Input.Insertion(
+              description: "Paycheck",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: incomeType.rawValue,
+              outAmount: nil,
+              outRefund: nil,
+              outFee: nil,
+              outAccountID: nil,
+              inAmount: "193.46",
+              inAccountID: 1,
+              transactionCategoryID: 2
+            ),
+            Transaction.Plural.Input.Insertion(
+              description: "Money laundering",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: transferType.rawValue,
+              outAmount: "193.46",
+              outRefund: nil,
+              outFee: nil,
+              outAccountID: 1,
+              inAmount: "193.46",
+              inAccountID: 2,
+              transactionCategoryID: nil
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .created)

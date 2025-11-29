@@ -160,25 +160,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .expense
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Restaurant",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: nil,
-                  outRefund: nil,
-                  outFee: nil,
-                  outAccountID: nil,
-                  inAmount: "123",
-                  inAccountID: 2,
-                  transactionCategoryID: nil
-                )
-              ]
+              description: "Restaurant",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: nil,
+              outRefund: nil,
+              outFee: nil,
+              outAccountID: nil,
+              inAmount: "123",
+              inAccountID: 2,
+              transactionCategoryID: nil
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
@@ -197,25 +193,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .expense
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Restaurant",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: "193.58",
-                  outRefund: nil,
-                  outFee: nil,
-                  outAccountID: nil,
-                  inAmount: "123",
-                  inAccountID: 2,
-                  transactionCategoryID: nil
-                )
-              ]
+              description: "Restaurant",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: "193.58",
+              outRefund: nil,
+              outFee: nil,
+              outAccountID: nil,
+              inAmount: "123",
+              inAccountID: 2,
+              transactionCategoryID: nil
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
@@ -234,25 +226,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .expense
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Restaurant",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: "193.58",
-                  outRefund: "123.33",
-                  outFee: nil,
-                  outAccountID: nil,
-                  inAmount: "123",
-                  inAccountID: 2,
-                  transactionCategoryID: nil
-                )
-              ]
+              description: "Restaurant",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: "193.58",
+              outRefund: "123.33",
+              outFee: nil,
+              outAccountID: nil,
+              inAmount: "123",
+              inAccountID: 2,
+              transactionCategoryID: nil
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
@@ -271,25 +259,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .expense
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Restaurant",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: "193.58",
-                  outRefund: "123.33",
-                  outFee: "193.48",
-                  outAccountID: nil,
-                  inAmount: "123",
-                  inAccountID: 2,
-                  transactionCategoryID: nil
-                )
-              ]
+              description: "Restaurant",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: "193.58",
+              outRefund: "123.33",
+              outFee: "193.48",
+              outAccountID: nil,
+              inAmount: "123",
+              inAccountID: 2,
+              transactionCategoryID: nil
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
@@ -308,25 +292,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .expense
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Restaurant",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: "193.58",
-                  outRefund: "123.33",
-                  outFee: "193.48",
-                  outAccountID: 1,
-                  inAmount: "123",
-                  inAccountID: 2,
-                  transactionCategoryID: nil
-                )
-              ]
+              description: "Restaurant",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: "193.58",
+              outRefund: "123.33",
+              outFee: "193.48",
+              outAccountID: 1,
+              inAmount: "123",
+              inAccountID: 2,
+              transactionCategoryID: nil
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
@@ -345,25 +325,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .expense
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Restaurant",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: "193.58",
-                  outRefund: "123.33",
-                  outFee: "193.48",
-                  outAccountID: 1,
-                  inAmount: nil,
-                  inAccountID: 2,
-                  transactionCategoryID: nil
-                )
-              ]
+              description: "Restaurant",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: "193.58",
+              outRefund: "123.33",
+              outFee: "193.48",
+              outAccountID: 1,
+              inAmount: nil,
+              inAccountID: 2,
+              transactionCategoryID: nil
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
@@ -382,25 +358,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .expense
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Restaurant",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: "193.58",
-                  outRefund: "123.33",
-                  outFee: "193.48",
-                  outAccountID: 1,
-                  inAmount: nil,
-                  inAccountID: nil,
-                  transactionCategoryID: nil
-                )
-              ]
+              description: "Restaurant",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: "193.58",
+              outRefund: "123.33",
+              outFee: "193.48",
+              outAccountID: 1,
+              inAmount: nil,
+              inAccountID: nil,
+              transactionCategoryID: nil
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
@@ -448,25 +420,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .expense
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Restaurant",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: "193.58",
-                  outRefund: "123.33",
-                  outFee: "193.48",
-                  outAccountID: 1,
-                  inAmount: nil,
-                  inAccountID: nil,
-                  transactionCategoryID: 1
-                )
-              ]
+              description: "Restaurant",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: "193.58",
+              outRefund: "123.33",
+              outFee: "193.48",
+              outAccountID: 1,
+              inAmount: nil,
+              inAccountID: nil,
+              transactionCategoryID: 1
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .created)
@@ -485,25 +453,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .income
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Paycheck",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: nil,
-                  outRefund: nil,
-                  outFee: nil,
-                  outAccountID: nil,
-                  inAmount: "193.46",
-                  inAccountID: 1,
-                  transactionCategoryID: 1
-                )
-              ]
+              description: "Paycheck",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: nil,
+              outRefund: nil,
+              outFee: nil,
+              outAccountID: nil,
+              inAmount: "193.46",
+              inAccountID: 1,
+              transactionCategoryID: 1
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
@@ -551,25 +515,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .income
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Paycheck",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: nil,
-                  outRefund: nil,
-                  outFee: nil,
-                  outAccountID: nil,
-                  inAmount: "193.46",
-                  inAccountID: 1,
-                  transactionCategoryID: 2
-                )
-              ]
+              description: "Paycheck",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: nil,
+              outRefund: nil,
+              outFee: nil,
+              outAccountID: nil,
+              inAmount: "193.46",
+              inAccountID: 1,
+              transactionCategoryID: 2
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .created)
@@ -588,25 +548,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .transfer
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Money laundering",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: "193.46",
-                  outRefund: nil,
-                  outFee: nil,
-                  outAccountID: 1,
-                  inAmount: "193.46",
-                  inAccountID: 1,
-                  transactionCategoryID: 2
-                )
-              ]
+              description: "Money laundering",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: "193.46",
+              outRefund: nil,
+              outFee: nil,
+              outAccountID: 1,
+              inAmount: "193.46",
+              inAccountID: 1,
+              transactionCategoryID: 2
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
@@ -625,25 +581,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .transfer
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Money laundering",
-                  date: Int64(Date().timeIntervalSince1970 * 1000),
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: "193.46",
-                  outRefund: "193.24",
-                  outFee: nil,
-                  outAccountID: 1,
-                  inAmount: "193.46",
-                  inAccountID: 1,
-                  transactionCategoryID: nil
-                )
-              ]
+              description: "Money laundering",
+              date: Int64(Date().timeIntervalSince1970 * 1000),
+              notes: "",
+              type: type.rawValue,
+              outAmount: "193.46",
+              outRefund: "193.24",
+              outFee: nil,
+              outAccountID: 1,
+              inAmount: "193.46",
+              inAccountID: 1,
+              transactionCategoryID: nil
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .badRequest)
@@ -662,25 +614,21 @@ extension ControllerTests {
           )
 
           let type: Transaction.`Type` = .transfer
-          try request.content.encode(
+          try request.content.encode([
             Transaction.Plural.Input.Insertion(
-              transactions: [
-                Transaction.Plural.Input.Insertion.Item(
-                  description: "Money laundering",
-                  date: 1764362098000,
-                  notes: "",
-                  type: type.rawValue,
-                  outAmount: "193.46",
-                  outRefund: nil,
-                  outFee: nil,
-                  outAccountID: 1,
-                  inAmount: "193.46",
-                  inAccountID: 1,
-                  transactionCategoryID: nil
-                )
-              ]
+              description: "Money laundering",
+              date: 1764362098000,
+              notes: "",
+              type: type.rawValue,
+              outAmount: "193.46",
+              outRefund: nil,
+              outFee: nil,
+              outAccountID: 1,
+              inAmount: "193.46",
+              inAccountID: 1,
+              transactionCategoryID: nil
             )
-          )
+          ])
         },
         afterResponse: { response async throws in
           #expect(response.status == .created)
