@@ -416,7 +416,7 @@ extension ControllerTests {
 
       try await app.testing().test(
         .GET,
-        "api/accounts?fields=title,balance",
+        "api/accounts?fields=title,balance,logoURLs",
         beforeRequest: { request async throws in
           request.headers.cookie = .init(
             dictionaryLiteral: (
@@ -440,6 +440,7 @@ extension ControllerTests {
           #expect(accounts.last?.title == "Bank of American")
           #expect(accounts.last?.subtitle == nil)
           #expect(accounts.last?.balance == "193.46")
+          #expect(accounts.last?.logoURLs == "https://example.com/1.png")
         }
       )
     }

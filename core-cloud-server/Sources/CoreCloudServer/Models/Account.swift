@@ -177,5 +177,6 @@ extension Account.Plural.Output {
     var actualBalance: String?
     var currencySymbol: String?
     var currencySymbolPosition: Int64?
+    var logoURLs: String?
   }
 }

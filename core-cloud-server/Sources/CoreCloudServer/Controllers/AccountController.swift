@@ -215,7 +215,8 @@ struct AccountController: RouteCollection {
             balance: balance,
             actualBalance: actualBalance,
             currencySymbol: account.currencySymbol,
-            currencySymbolPosition: account.currencySymbolPosition?.rawValue
+            currencySymbolPosition: account.currencySymbolPosition?.rawValue,
+            logoURLs: account.logoURLs
           )
         )
       }
