@@ -169,6 +169,7 @@ struct AccountService {
   ///       - "currencySymbol": The symbol of the currency associated with the
   ///         account.
   ///       - "currencySymbolPosition": The position of the currency symbol.
+  ///       - "logoURLs": The URLs of logos associated with the account.
   ///   - database: The database instance from which to retrieve the accounts.
   ///
   /// - Returns: An array of tuples, each containing the following fields:
@@ -187,6 +188,7 @@ struct AccountService {
   ///     requested; otherwise, `nil`.
   ///   - `currencyMinorUnit`: The minor unit of the currency, if the balance or
   ///     the actual balance is requsted; otherwise, `nil`.
+  ///   - `logoURLs`: The URLs of logos, if requested; otherwise, `nil`.
   ///
   /// - Throws:
   ///   ``Account.Error/databaseError`` if the retrieval operation fails.
@@ -204,7 +206,8 @@ struct AccountService {
     actualBalance: Int64?,
     currencySymbol: String?,
     currencySymbolPosition: Currency.SymbolPosition?,
-    currencyMinorUnit: Int64?
+    currencyMinorUnit: Int64?,
+    logoURLs: String?
   )] {
     do {
       var query = Account.query(on: database)
@@ -244,7 +247,8 @@ struct AccountService {
             fields.contains("balance") || fields.contains("actualBalance")
               ? account.currency.minorUnit
               : nil
-          )
+          ),
+          logoURLs: fields.contains("logoURLs") ? account.logoURLs : nil
         )}
     } catch {
       throw Account.Error.databaseError

@@ -289,7 +289,7 @@ extension ServiceTests {
 
         accounts = try await accountService.getAccounts(
           for: 1,
-          fields: ["title", "subtitle", "number", "balance"],
+          fields: ["title", "subtitle", "number", "balance", "logoURLs"],
           on: app.db
         )
         #expect(accounts.count == 1)
@@ -298,6 +298,7 @@ extension ServiceTests {
         #expect(accounts.first?.number == "123456789")
         #expect(accounts.first?.currencyMinorUnit == 100)
         #expect(accounts.first?.balance == 19358)
+        #expect(accounts.first?.logoURLs == "https://example.com/1.png")
       }
     }
   }
