@@ -153,8 +153,15 @@
           <span>Type: {account.type} |</span>
           <span>Balance: {account.balance} |</span>
           <span>ActualBalance: {account.actualBalance} |</span>
-          <span>Difference: {
-            +(account.actualBalance ?? "0") - +(account.balance ?? "0")
+          <span
+            style={
+              +(account.actualBalance ?? "0") - +(account.balance ?? "0") !== 0
+                ? "color: red"
+                : undefined
+            }
+          >
+            Difference: {
+              +(account.actualBalance ?? "0") - +(account.balance ?? "0")
             } |
           </span>
           <span>Symbol: {account.currencySymbol}</span>
