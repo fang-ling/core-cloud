@@ -30,7 +30,11 @@ struct TransactionController: RouteCollection {
       .grouped("api")
       .grouped("transactions")
       .grouped(AuthenticatorMiddleware())
-      .post(use: insertTransactionsHandler)
+      .on(
+        .POST,
+        body: .collect(maxSize: "16mb"),
+        use: insertTransactionsHandler
+      )
 
     routes
       .grouped("api")
