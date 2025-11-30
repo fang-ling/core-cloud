@@ -135,6 +135,7 @@ struct AccountService {
     do {
       guard let account = try await Account.query(on: database)
         .filter(\.$user.$id == userID)
+        .filter(\.$id == id)
         .first()
       else {
         throw Account.Error.noSuchAccount

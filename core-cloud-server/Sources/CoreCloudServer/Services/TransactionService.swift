@@ -211,6 +211,7 @@ struct TransactionService {
       var query = Transaction.query(on: database).filter(\.$user.$id == userID)
 
       if (
+        fields.contains("outAmount") ||
         fields.contains("outCurrencySymbol") ||
         fields.contains("outCurrencySymbolPosition")
       ) {
@@ -220,6 +221,7 @@ struct TransactionService {
       }
 
       if (
+        fields.contains("inAmount") ||
         fields.contains("inCurrencySymbol") ||
         fields.contains("inCurrencySymbolPosition")
       ) {

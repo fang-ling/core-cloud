@@ -673,6 +673,121 @@ extension ControllerTests {
           #expect(transactions.first?.date == 1764362098000)
         }
       )
+
+      try await app.testing().test(
+        .POST,
+        "api/currency",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+          try request.content.encode(
+            Currency.Singular.Input.Insertion(
+              code: "XAU",
+              minorUnit: 10000,
+              symbol: "oz",
+              symbolPosition: 1
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+
+          let currencyIDOutput = try response.content.decode(
+            Currency.Singular.Output.Insertion.self
+          )
+          #expect(currencyIDOutput.id == 2)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/account",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+
+          let type: Account.`Type` = .asset
+          try request.content.encode(
+            Account.Singular.Input.Insertion(
+              title: "XAU Test",
+              subtitle: "",
+              number: "",
+              type: type.rawValue,
+              balance: "0",
+              actualBalance: "0",
+              logoURLs: "https://example.com/1.png",
+              currencyID: 2
+            )
+          )
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .POST,
+        "api/transactions",
+        beforeRequest: { request async throws in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+
+          let type: Transaction.`Type` = .transfer
+          try request.content.encode([
+            Transaction.Plural.Input.Insertion(
+              description: "_Buy_",
+              date: 1764362098000,
+              notes: "",
+              type: type.rawValue,
+              outAmount: "4000",
+              outRefund: nil,
+              outFee: nil,
+              outAccountID: 1,
+              inAmount: "2.5821",
+              inAccountID: 2,
+              transactionCategoryID: nil
+            )
+          ])
+        },
+        afterResponse: { response async throws in
+          #expect(response.status == .created)
+        }
+      )
+
+      try await app.testing().test(
+        .GET,
+        "api/transactions?filters=description_CONTAINS_Buy" +
+        "&fields=outAmount,inAmount,description",
+        beforeRequest: { request in
+          request.headers.cookie = .init(
+            dictionaryLiteral: (
+              CoreCloudServer.Cookie.Keys.jwt,
+              cookie!
+            )
+          )
+        },
+        afterResponse: { response in
+          let transactions = try response.content.decode(
+            [Transaction.Plural.Output.Retrieval].self
+          )
+          #expect(transactions.count == 1)
+          #expect(transactions.first?.description == "_Buy_")
+          #expect(transactions.first?.outAmount == "4000")
+          #expect(transactions.first?.inAmount == "2.5821")
+        }
+      )
     }
   }
 }
