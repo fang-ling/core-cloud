@@ -27,7 +27,7 @@ extension ControllerTests {
   @Test("SongControllerTests")
   func testSongController() async throws {
     try await withApp(configure: CoreCloudServer.configure) { app in
-      try? FileManager.default.removeItem(atPath: "/dev/shm/songcontrollertest")
+      try? FileManager.default.removeItem(atPath: "/tmp/songcontrollertest")
 
       try await app.testing().test(
         .POST,
@@ -164,7 +164,7 @@ extension ControllerTests {
           try request.content.encode(
             Location.Singular.Input.Insertion(
               name: "Tank2",
-              path: "/dev/shm/songcontrollertest"
+              path: "/tmp/songcontrollertest"
             )
           )
         },
