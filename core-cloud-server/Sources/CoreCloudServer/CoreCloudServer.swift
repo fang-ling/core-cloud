@@ -113,6 +113,7 @@ struct CoreCloudServer {
     app.migrations.add(AccountMigrationV1())
     app.migrations.add(TransactionCategoryMigrationV1())
     app.migrations.add(TransactionMigrationV1())
+    app.migrations.add(FileMigrationV3())
     try await app.autoMigrate()
 
     /* Routes */
@@ -154,7 +155,7 @@ extension CoreCloudServer {
     static let maxAge = 86400
   }
 
-  static let CHUNK_SIZE: Int64 = 4 * 1024 * 1024
+  static let chunkSize: Int64 = 4 * 1024 * 1024
 }
 
 extension CoreCloudServer {

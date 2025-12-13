@@ -29,7 +29,7 @@ extension ServiceTests {
       let diskService = DiskService()
 
       try await withApp(configure: CoreCloudServer.configure) { _ in
-        #expect(diskService.getDisks() == ["/dev/shm/tank1", "/dev/shm/tank2"])
+        #expect(diskService.getDisks() == ["/tmp/tank1", "/tmp/tank2"])
       }
     }
   }

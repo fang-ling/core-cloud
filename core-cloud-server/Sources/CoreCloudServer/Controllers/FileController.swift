@@ -64,68 +64,19 @@ struct FileController: RouteCollection {
    * upload.
    */
   func insertFileHandler(request: Request, webSocket: WebSocket) async {
-    @Sendable
-    func removeFiles(at path: FilePath, fileID: Int64) async throws {
-      _ = try await FileSystem.shared.withDirectoryHandle(
-        atPath: path
-      ) { directory in
-        for try await entry in directory.listContents() {
-          if (
-            entry.name.stem.starts(with: "\(fileID)-") &&
-            entry.name.extension == "sealedbox"
-          ) {
-            request.logger.notice("\(entry.path) is deleted.")
-            try await FileSystem.shared.removeItem(at: entry.path)
-          }
-        }
-      }
-    }
+    actor Store<T> {
+      var value: T
 
-    actor FilePathStore {
-      var path = FilePath()
-
-      func update(_ path: FilePath) {
-        self.path = path
+      init(_ value: T) {
+        self.value = value
       }
 
-      func get() -> FilePath {
-        return path
-      }
-    }
-
-    actor IndexStore {
-      var index: Int64 = 0
-
-      func update(_ index: Int64) {
-        self.index = index
+      func update(_ value: T) {
+        self.value = value
       }
 
-      func get() -> Int64 {
-        return index
-      }
-    }
-
-    actor SizeStore {
-      var size: Int64 = 0
-
-      func update(_ size: Int64) {
-        self.size = size
-      }
-
-      func get() -> Int64 {
-        return size
-      }
-    }
-
-    actor HasherStore {
-      var hasher = SHA512()
-
-      func update(_ hasher: SHA512) {
-        self.hasher = hasher
-      }
-
-      func get() -> SHA512 {
-        return hasher
+      func get() -> T {
+        return value
       }
     }
 
@@ -173,10 +124,11 @@ struct FileController: RouteCollection {
       userID: userID
     )
 
-    let pathStore = FilePathStore()
-    let indexStore = IndexStore()
-    let sizeStore = SizeStore()
-    let hasherStore = HasherStore()
+    let filePathStore = Store(FilePath())
+    let sizeStore = Store(Int64.zero)
+    let offsetStore = Store(Int64.zero)
+    let hasherStore = Store(SHA512())
+    let writeFileHandleStore = Store<WriteFileHandle?>(nil)
 
     webSocket.onText { webSocket, message in
       guard let data = message.data(using: .utf8),
@@ -211,8 +163,10 @@ struct FileController: RouteCollection {
         do {
           try await file.save(on: request.db)
         } catch {
-          request.logger.notice("Bad Request: \(file)")
+          request.logger.notice("Bad Request: \(json)")
           try? await webSocket.close()
+
+          return
         }
 
         do {
@@ -221,27 +175,37 @@ struct FileController: RouteCollection {
             .filter(\.$user.$id == userID)
             .first()
 
-          let path = try await pathStore
+          var filePath = try await filePathStore
             .get()
             .appending(location?.path ?? "")
             .appending("\(location?.requireID() ?? 0)")
             .appending("\(userID)")
             .appending("\(file.application)")
-            .appending("\(file.requireID())")
-          await pathStore.update(path)
 
-          let info = try await FileSystem.shared.info(forFileAt: path)
+          let info = try await FileSystem.shared.info(forFileAt: filePath)
           if info == nil {
-            request.logger.notice("Creating: \(path)")
+            request.logger.notice("Creating: \(filePath)")
             try await FileSystem.shared.createDirectory(
-              at: path,
+              at: filePath,
               withIntermediateDirectories: true
             )
           }
+
+          try filePath.append("\(file.requireID()).sealedbox")
+          await filePathStore.update(filePath)
+
+          try await writeFileHandleStore.update(
+            FileSystem.shared.openFile(
+              forWritingAt: filePath,
+              options: .newFile(replaceExisting: true)
+            )
+          )
         } catch {
           request.logger.notice("Bad Request: \(file)")
           try? await file.delete(on: request.db)
           try? await webSocket.close()
+
+          return
         }
 
         try? await webSocket.send(#"{"status":"metadata"}"#)
@@ -250,16 +214,24 @@ struct FileController: RouteCollection {
         let hasher = await hasherStore.get()
         let serverChecksum = hasher.finalize()
         let actualSize = await sizeStore.get()
-        let path = await pathStore.get()
+        let filePath = await filePathStore.get()
+        let writeFileHandle = await writeFileHandleStore.get()
+
+        try? await writeFileHandle?.close()
 
         if Data(serverChecksum) != file.checksum || actualSize != file.size {
           request.logger.notice(
             "\((try? file.requireID()) ?? -1) checksum or size not matched"
           )
-          try? await removeFiles(at: path, fileID: file.requireID())
+          _ = try? await FileSystem.shared.removeItem(at: filePath)
           try? await file.delete(on: request.db)
           try? await webSocket.close()
+
+          request.logger.notice("\(filePath) is deleted.")
+
+          return
         }
+
         try? await webSocket.send(#"{"status":"ok"}"#)
         try? await webSocket.close()
 
@@ -271,9 +243,11 @@ struct FileController: RouteCollection {
       var byteBuffer = byteBuffer
 
       var hasher = await hasherStore.get()
-      let path = await pathStore.get()
-      let index = await indexStore.get()
+      let filePath = await filePathStore.get()
       let size = await sizeStore.get()
+      let offset = await offsetStore.get()
+      let writeFileHandle = await writeFileHandleStore.get()
+
       do {
         let count = Int64(byteBuffer.readableBytes)
         if let buffer = byteBuffer.readData(length: Int(count)) {
@@ -284,28 +258,24 @@ struct FileController: RouteCollection {
           let sealedBox = try AES.GCM.seal(buffer, using: key)
 
           /* Write the file */
-          let filePath = try path.appending(
-            "\(file.requireID())-\(index).sealedbox"
+          try await writeFileHandle?.write(
+            contentsOf: sealedBox.combined!,
+            toAbsoluteOffset: offset
           )
-          request.logger.notice("Writing file at: \(filePath)")
-          _ = try await FileSystem.shared.withFileHandle(
-            forWritingAt: filePath
-          ) { file in
-            try await file.write(
-              contentsOf: sealedBox.combined!,
-              toAbsoluteOffset: 0
-            )
-          }
+
+          await offsetStore.update(offset + Int64(sealedBox.combined!.count))
         }
 
         await hasherStore.update(hasher)
-        await indexStore.update(index + 1)
         await sizeStore.update(size + count)
       } catch {
         request.logger.error("\(error)")
-        try? await removeFiles(at: path, fileID: file.requireID())
+
+        _ = try? await FileSystem.shared.removeItem(at: filePath)
         try? await file.delete(on: request.db)
         try? await webSocket.close()
+
+        return
       }
 
       try? await webSocket.send(#"{"status":"chunk"}"#)
@@ -320,10 +290,10 @@ struct FileController: RouteCollection {
    * file handling behavior
    */
   func insertFileHandler(request: Request) async -> HTTPStatus {
-    func saveFile(
+    func appendToFile(
       byteBuffer: inout ByteBuffer,
       hasher: inout SHA512,
-      index: Int64
+      offset: inout Int64
     ) async throws -> Int64 {
       let count = Int64(byteBuffer.readableBytes)
 
@@ -333,40 +303,17 @@ struct FileController: RouteCollection {
         /* Encryption */
         let sealedBox = try AES.GCM.seal(buffer, using: key)
         /* Save */
-        _ = try await FileSystem.shared.withFileHandle(
-          forWritingAt: FilePath(
-            "\(path)/\(file.requireID())-\(index).sealedbox"
-          )
-        ) { file in
-          try await file.write(
-            contentsOf: sealedBox.combined!,
-            toAbsoluteOffset: 0
-          )
-        }
+        try await writeFileHandle.write(
+          contentsOf: sealedBox.combined!,
+          toAbsoluteOffset: offset
+        )
+        offset += Int64(sealedBox.combined!.count)
       }
 
       return count
     }
 
-    func deleteFiles(path: FilePath, fileID: Int64) async throws {
-      _ = try await FileSystem.shared.withDirectoryHandle(
-        atPath: path
-      ) { directory in
-        for try await entry in directory.listContents() {
-          if (
-            entry.name.stem.starts(with: "\(fileID)-") &&
-            entry.name.extension == "sealedbox"
-          ) {
-            request.logger.notice("\(entry.path) is deleted.")
-            try await FileSystem.shared.removeItem(at: entry.path)
-          }
-        }
-      }
-    }
-
-    /* Using guard crashes the 6.2 compiler—only God knows why. */
-    let userID = request.userID ?? -1
-    if userID == -1 {
+    guard let userID = request.userID else {
       return .unauthorized
     }
 
@@ -419,7 +366,8 @@ struct FileController: RouteCollection {
       return .serviceUnavailable
     }
 
-    var path: String
+    var filePath: FilePath
+    var writeFileHandle: WriteFileHandle
     do {
       guard let location = try await Location.query(on: request.db)
         .filter(\.$id == insertRequest.locationID)
@@ -429,18 +377,24 @@ struct FileController: RouteCollection {
         return .badRequest
       }
 
-      path = "\(location.path)/"
-      path += "\(try location.requireID())/"
-      path += "\(userID)/"
-      path += "\(insertRequest.application)/"
-      path += "\(try file.requireID())"
+      filePath = FilePath("\(location.path)/")
+        .appending("\(try location.requireID())/")
+        .appending("\(userID)/")
+        .appending("\(insertRequest.application)/")
 
-      if (try await FileSystem.shared.info(forFileAt: FilePath(path))) == nil {
+      if (try await FileSystem.shared.info(forFileAt: filePath)) == nil {
         try await FileSystem.shared.createDirectory(
-          at: FilePath(path),
+          at: filePath,
           withIntermediateDirectories: true
         )
       }
+
+      try filePath.append("\(file.requireID()).sealedbox")
+
+      writeFileHandle = try await FileSystem.shared.openFile(
+        forWritingAt: filePath,
+        options: .newFile(replaceExisting: true)
+      )
     } catch {
       do {
         try await file.delete(on: request.db)
@@ -455,7 +409,7 @@ struct FileController: RouteCollection {
 
     do {
       var digest = SHA512()
-      var index: Int64 = 0
+      var offset = Int64.zero
       var accumulator = ByteBuffer()
       var actualSize: Int64 = 0
 
@@ -463,7 +417,7 @@ struct FileController: RouteCollection {
         var chunk = chunk
         while chunk.readableBytes > 0 {
           let neededBytes = (
-            Int(CoreCloudServer.CHUNK_SIZE) - accumulator.readableBytes
+            Int(CoreCloudServer.chunkSize) - accumulator.readableBytes
           )
           let bytesToRead = min(chunk.readableBytes, neededBytes)
 
@@ -471,25 +425,26 @@ struct FileController: RouteCollection {
             accumulator.writeBuffer(&slice)
           }
 
-          if accumulator.readableBytes == CoreCloudServer.CHUNK_SIZE {
-            actualSize += try await saveFile(
+          if accumulator.readableBytes == CoreCloudServer.chunkSize {
+            actualSize += try await appendToFile(
               byteBuffer: &accumulator,
               hasher: &digest,
-              index: index
+              offset: &offset
             )
             accumulator.clear()
-            index += 1
           }
         }
       }
       /* Process the (possible) remaining data. */
       if accumulator.readableBytes > 0 {
-        actualSize += try await saveFile(
+        actualSize += try await appendToFile(
           byteBuffer: &accumulator,
           hasher: &digest,
-          index: index
+          offset: &offset
         )
       }
+
+      try await writeFileHandle.close()
 
       let serverChecksum = digest.finalize()
       if (
@@ -499,7 +454,7 @@ struct FileController: RouteCollection {
         request.logger.notice(
           "\((try? file.requireID()) ?? -1) checksum or size not matched"
         )
-        try await deleteFiles(path: FilePath(path), fileID: file.requireID())
+        try await FileSystem.shared.removeItem(at: filePath)
         try await File.query(on: request.db)
           .filter(\.$id == file.requireID())
           .delete()
@@ -509,8 +464,10 @@ struct FileController: RouteCollection {
       return .created
     } catch {
       request.logger.warning("\(error)")
+
       do {
-        try await deleteFiles(path: FilePath(path), fileID: file.requireID())
+        try await writeFileHandle.close()
+        try await FileSystem.shared.removeItem(at: filePath)
         try await File.query(on: request.db)
           .filter(\.$id == file.requireID())
           .delete()
@@ -575,7 +532,7 @@ struct FileController: RouteCollection {
       return Response(status: .unauthorized)
     }
 
-    let path: String
+    let filePath: FilePath
     do {
       guard let location = try await Location.query(on: request.db)
         .filter(\.$id == file.$location.id)
@@ -585,13 +542,11 @@ struct FileController: RouteCollection {
         return Response(status: .badRequest)
       }
 
-      var _path = "\(location.path)/"
-      _path += "\(try location.requireID())/"
-      _path += "\(userID)/"
-      _path += "\(fetchRequest.application)/"
-      _path += "\(try file.requireID())"
-
-      path = _path
+      filePath = FilePath("\(location.path)/")
+        .appending("\(try location.requireID())/")
+        .appending("\(userID)/")
+        .appending("\(fetchRequest.application)/")
+        .appending("\(try file.requireID()).sealedbox")
     } catch {
       return Response(status: .serviceUnavailable)
     }
@@ -633,31 +588,40 @@ struct FileController: RouteCollection {
       ]),
       body: .init(
         managedAsyncStream: { writer in
-          let startIndex = startByte / CoreCloudServer.CHUNK_SIZE
-          let endIndex = endByte / CoreCloudServer.CHUNK_SIZE
+          let startIndex = startByte / CoreCloudServer.chunkSize
+          let endIndex = endByte / CoreCloudServer.chunkSize
 
-          let startOffset = startByte - startIndex * CoreCloudServer.CHUNK_SIZE
-          let endOffset = endByte - endIndex * CoreCloudServer.CHUNK_SIZE
+          let startOffset = startByte - startIndex * CoreCloudServer.chunkSize
+          let endOffset = endByte - endIndex * CoreCloudServer.chunkSize
 
           do {
-            for index in startIndex ... endIndex {
-              let filePath = try FilePath(
-                "\(path)/\(file.requireID())-\(index).sealedbox"
-              )
-              try await FileSystem.shared.withFileHandle(
-                forReadingAt: filePath
-              ) { file in
-                var chunk = try await file.readToEnd(
-                  maximumSizeAllowed: .bytes(
-                    CoreCloudServer.CHUNK_SIZE + 16 + 12 /* tag + nonce */
-                  )
-                )
+            guard let info = try await FileSystem.shared.info(
+              forFileAt: filePath
+            ) else {
+              throw Abort(.notFound)
+            }
 
-                guard let sealedBoxData = chunk.readData(
-                  length: chunk.readableBytes
-                ) else {
-                  throw Abort(.internalServerError)
+            let readFileHandle = try await FileSystem.shared.openFile(
+              forReadingAt: filePath
+            )
+
+            for index in startIndex ... endIndex {
+              let fileStartOffset = index * (CoreCloudServer.chunkSize + 28)
+              let fileEndOffset = min(
+                (index + 1) * (CoreCloudServer.chunkSize + 28),
+                info.size
+              )
+
+              do {
+                var sealedBoxData = Data()
+                for try await var buffer in readFileHandle.readChunks(
+                  in: fileStartOffset ..< fileEndOffset
+                ) {
+                  if let chunk = buffer.readData(length: buffer.readableBytes) {
+                    sealedBoxData.append(chunk)
+                  }
                 }
+
                 let sealedBox = try AES.GCM.SealedBox(combined: sealedBoxData)
                 let plaintext = try AES.GCM.open(
                   sealedBox,
@@ -685,8 +649,16 @@ struct FileController: RouteCollection {
                 } else {
                   try await writer.writeBuffer(ByteBuffer(data: plaintext))
                 }
+              } catch {
+                request.logger.error("\(error)")
+
+                try await readFileHandle.close()
+
+                throw Abort(.internalServerError)
               }
             }
+
+            try await readFileHandle.close()
           } catch {
             request.logger.warning("\(error)")
           }
