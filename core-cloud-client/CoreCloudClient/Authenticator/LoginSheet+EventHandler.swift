@@ -1,8 +1,8 @@
 //
-//  CoreCloudClientApp.swift
+//  LoginSheet+EventHandler.swift
 //  CoreCloudClient
 //
-//  Created by Fang Ling on 2025/12/5.
+//  Created by Fang Ling on 2025/12/14.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,19 +17,11 @@
 //  limitations under the License.
 //
 
-import SwiftUI
-
-@main
-struct CoreCloudClientApp: App {
-  @State var isLoginSheetPresented = true
-
-  var body: some Scene {
-    Window("Home", id: "Home") {
-      Text("Hello, world!")
-        .sheet(isPresented: $isLoginSheetPresented) {
-          LoginSheet()
-        }
+extension LoginSheet {
+  func signInButtonDidClick() {
+    if !isPasswordFieldPresented {
+      isPasswordFieldPresented = true
+      focusedField = .password
     }
-    .windowStyle(.hiddenTitleBar)
   }
 }
